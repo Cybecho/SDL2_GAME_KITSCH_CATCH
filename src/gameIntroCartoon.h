@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SDL.h"
+#include "include.h"
 #include "gameIntro.h"
 
 class Cartoon{

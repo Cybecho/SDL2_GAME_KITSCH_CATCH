@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SDL.h"
+#include "include.h"
 #include "gameClass.h"
 
 class gameEndingGameover : public gameClass {
