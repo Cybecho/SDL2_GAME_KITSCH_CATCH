@@ -1,8 +1,6 @@
 #pragma once
 
-#include "SDL.h"
-#include <vector>
-#include <string>
+#include "include.h"
 #include "gameClass.h"
 #include "gameIntroCartoon.h"
 

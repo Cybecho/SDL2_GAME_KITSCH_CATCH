@@ -19,7 +19,7 @@ gameIntro::gameIntro() {
 		cartoon[i].destination_rect.x = g_window_margin;
 		
 		// 만화 w & h: 윈도우 크기 - 2 * margin
-		cartoon[i].destination_rect.w = SDL_GetWindowSurface(g_window)->w - 2 * g_window_margin;
+		cartoon[i].destination_rect.w = WINDOW_WIDTH - 2 * g_window_margin;
 		cartoon[i].destination_rect.h = 280;
 	}
 	
