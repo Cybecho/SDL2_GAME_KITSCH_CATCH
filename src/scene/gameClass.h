@@ -25,8 +25,8 @@ const int PHASE_INTRO = 0;
 const int PHASE_ENDINGCLEAR = 1;
 const int PHASE_ENDINGGAMEOVER = 2;
 const int PHASE_MAIN = 3;
-//const int PHASE_PLAY = 2;
-//const int PHASE_PAUSE = 5;
+const int PHASE_PLAY = 2;
+const int PHASE_PAUSE = 5;
 
 extern int g_current_game_phase;
 extern bool g_flag_running;
