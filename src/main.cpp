@@ -2,6 +2,7 @@
 #include "gameIntro.h"
 #include "gameEndingClear.h"
 #include "gameEndingGameover.h"
+#include "MainScreen.h"
 
 SDL_Window* g_window;
 SDL_Renderer* g_renderer;
@@ -34,11 +35,11 @@ int main(int argc, char* argv[]) {
 
 	InitGame();
 	
-	gameClass* game_phases[3];
+	gameClass* game_phases[4];
 	game_phases[0] = new gameIntro();
 	game_phases[1] = new gameEndingClear();
 	game_phases[2] = new gameEndingGameover();
-	//game_phases[1] = new gameMain();
+	game_phases[3] = new MainScreen();
 	//game_phases[2] = new gamePlay();
 	//game_phases[5] = new gamePause();
 
@@ -63,6 +64,7 @@ int main(int argc, char* argv[]) {
 	delete game_phases[0];
 	delete game_phases[1];
 	delete game_phases[2];
+	delete game_phases[3];
 
 	ClearGame();
 
