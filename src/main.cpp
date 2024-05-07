@@ -8,7 +8,7 @@ SDL_Renderer* g_renderer;
 bool g_flag_running;
 Uint32 g_last_time_ms;
 
-// 윈도우 여백
+// Window Margin 20px
 const int g_window_margin = 20; 
 
 // Game Phases
