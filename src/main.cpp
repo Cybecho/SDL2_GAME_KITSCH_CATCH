@@ -32,13 +32,18 @@ int main(int argc, char* argv[]) {
 
 	InitGame();
 	
-	gameClass* game_phases[4];
-	game_phases[PHASE_INTRO] = new gameIntro();
-	game_phases[PHASE_ENDING_CLEAR] = new gameEndingClear();
-	game_phases[PHASE_ENDING_GAMEOVER] = new gameEndingGameover();
-	game_phases[PHASE_MAIN] = new MainScreen();
-	game_phases[PHASE_PLAY] = new gamePlay();
-	//game_phases[5] = new gamePause();
+	//! 게임 페이즈 객체를 담는 벡터(순서대로 배치해야 ENUM과 매칭됨)
+	/*! ENUM 순서는 
+	PHASE_INTRO 		/ PHASE_MAIN 			/ PHASE_PLAYING
+	PHASE_ENDING_CLEAR / PHASE_ENDING_GAMEOVER / PHASE_PAUSE
+	*/
+	std::vector<gameClass*> game_phases;
+    game_phases.push_back(new gameIntro()); // PHASE_INTRO
+	game_phases.push_back(new MainScreen()); // PHASE_MAIN
+	game_phases.push_back(new gamePlay()); // PHASE_PLAYING
+    game_phases.push_back(new gameEndingClear()); // PHASE_ENDING_CLEAR
+    game_phases.push_back(new gameEndingGameover()); // PHASE_ENDING_GAMEOVER
+    // game_phases.push_back(new gamePause());
 
 	g_current_game_phase = PHASE_INTRO;
 
