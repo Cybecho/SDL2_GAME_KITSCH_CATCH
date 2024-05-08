@@ -1,0 +1,12 @@
+# Ignore all directories
+*/
+
+# Ignore files with .sln extension
+*.sln
+
+# Except the following directories
+!/doc/
+!/include/
+!/lib/
+!/res/
+!/src/
