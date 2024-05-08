@@ -91,11 +91,11 @@ $(TargetDir)
   ### 💡 링커 - 입력 - 추가 종속성
 
 ```latex
-..\lib\x64\SDL2.lib
-..\lib\x64\SDL2main.lib
-..\lib\x64\SDL2_mixer.lib
-..\lib\x64\SDL2_image.lib
-..\lib\x64\SDL2_ttf.lib
+../lib/x64/SDL2.lib
+../lib/x64/SDL2main.lib
+../lib/x64/SDL2_mixer.lib
+../lib/x64/SDL2_image.lib
+../lib/x64/SDL2_ttf.lib
 ```
 
 ![Untitled 3](https://github.com/Cybecho/Windows_Setting_dotfiles/assets/42949995/bd0dc698-de0f-4f49-97be-a17349ba83f2)
