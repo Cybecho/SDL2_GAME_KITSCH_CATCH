@@ -1,29 +1,29 @@
-#include "gameIntro.h"
+#include "obj_gameIntro.h"
 
 gameIntro::gameIntro() {
-	// ¸¸È­ ·Îµù
+	// ï¿½ï¿½È­ ï¿½Îµï¿½
 	cartoon.resize(cartoon_cut);
 
 	cartoon[0].surface = IMG_Load("../../Resources/testCartoon1.jpg");
 	cartoon[1].surface = IMG_Load("../../Resources/testCartoon2.jpg");
 	cartoon[2].surface = IMG_Load("../../Resources/testCartoon3.jpg");
 
-	// ¸¸È­ Surface Ã³¸®
+	// ï¿½ï¿½È­ Surface Ã³ï¿½ï¿½
 	for (int i = 0; i < cartoon_cut; i++) {
 		cartoon[i].texture = SDL_CreateTextureFromSurface(g_renderer, cartoon[i].surface);
 		SDL_FreeSurface(cartoon[i].surface);
 		SDL_QueryTexture(cartoon[i].texture, NULL, NULL, &cartoon[i].source_rect.w, &cartoon[i].source_rect.h);
 		cartoon[i].source_rect.x = cartoon[i].source_rect.y = 0;
 		
-		// ¸¸È­ xÁÂÇ¥: margin ¸¸Å­ ¶³¾î¶ß¸²
+		// ï¿½ï¿½È­ xï¿½ï¿½Ç¥: margin ï¿½ï¿½Å­ ï¿½ï¿½ï¿½ï¿½ß¸ï¿½
 		cartoon[i].destination_rect.x = g_window_margin;
 		
-		// ¸¸È­ w & h: À©µµ¿ì Å©±â - 2 * margin
+		// ï¿½ï¿½È­ w & h: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ - 2 * margin
 		cartoon[i].destination_rect.w = WINDOW_WIDTH - 2 * g_window_margin;
 		cartoon[i].destination_rect.h = 280;
 	}
 	
-	// ¸¸È­ yÁÂÇ¥ ÁöÁ¤
+	// ï¿½ï¿½È­ yï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½
 	cartoon[0].destination_rect.y = g_window_margin;
 	cartoon[1].destination_rect.y = cartoon[0].destination_rect.y + cartoon[0].destination_rect.h + g_window_margin;
 	cartoon[2].destination_rect.y = cartoon[1].destination_rect.y + cartoon[1].destination_rect.h + g_window_margin;
@@ -45,7 +45,7 @@ gameIntro::~gameIntro() {
 }
 
 void gameIntro::HandleEvents() {
-	// Å×½ºÆ®¿ë print
+	// ï¿½×½ï¿½Æ®ï¿½ï¿½ print
 	//std::cout << cartoon[1].fade_delta<<" " << cartoon[1].fade_alpha << " " << cartoon[1].fade_value << std::endl;
 	
 	SDL_Event event;
@@ -56,13 +56,13 @@ void gameIntro::HandleEvents() {
 			break;
 
 		case SDL_KEYDOWN:
-			// ½ºÆäÀÌ½º¹Ù ´­·¶À» ¶§(Ä¡Æ®Å°)
+			// ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½(Ä¡Æ®Å°)
 			if (event.key.keysym.sym == SDLK_SPACE) {
 				//g_current_game_phase = PHASE_MAIN;
 				g_current_game_phase = PHASE_ENDINGCLEAR;
 				Mix_HaltMusic();
 			}
-			// ½ºÆäÀÌ½º¹Ù¸¦ Á¦¿ÜÇÑ ¾Æ¹«Å° ´­·¶À» ¶§
+			// ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ¹ï¿½Å° ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 			else {
 				//g_current_game_phase = PHASE_MAIN;
 				g_current_game_phase = PHASE_ENDINGCLEAR;
@@ -84,12 +84,12 @@ void gameIntro::Render() {
 	SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 255);
 	SDL_RenderClear(g_renderer);
 
-	/** ¸¸È­
-	* 1. SDL°ÔÀÓ ±¸Á¶»ó Sleep()ÀÌ³ª SDL_Delay() ¾²¸é °ÔÀÓ ¸ÔÅëµÊ
-	* 2. FadeIn()ÀÌ ³¡³ª¸é is_fade_finished = true·Î ¹Ù²ñ
-	*	 Delay()°¡ ³¡³ª¸é is_delay_finished = true·Î ¹Ù²ñ
-	* 3. ´ÙÀ½ ¸¸È­ÄÆ Ãâ·ÂÀ» FadeIn ÈÄ¿¡ ÇÒ°ÇÁö, Delay ÈÄ¿¡ ÇÒ°ÇÁö¸¦
-	*	 Á¶°Ç¹®À» ÀÌ¿ëÇÏ¿© ¼±ÅÃÀûÀ¸·Î ÀÛ¼º
+	/** ï¿½ï¿½È­
+	* 1. SDLï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Sleep()ï¿½Ì³ï¿½ SDL_Delay() ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
+	* 2. FadeIn()ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ is_fade_finished = trueï¿½ï¿½ ï¿½Ù²ï¿½
+	*	 Delay()ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ is_delay_finished = trueï¿½ï¿½ ï¿½Ù²ï¿½
+	* 3. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ FadeIn ï¿½Ä¿ï¿½ ï¿½Ò°ï¿½ï¿½ï¿½, Delay ï¿½Ä¿ï¿½ ï¿½Ò°ï¿½ï¿½ï¿½ï¿½ï¿½
+	*	 ï¿½ï¿½ï¿½Ç¹ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½
 	**/
 	
 	cartoon[0].FadeIn(1);

@@ -9,9 +9,6 @@ SDL_Renderer* g_renderer;
 bool g_flag_running;
 Uint32 g_last_time_ms;
 
-// Window Margin 20px
-const int g_window_margin = 20; 
-
 // Game Phases
 int g_current_game_phase;
 
@@ -36,11 +33,11 @@ int main(int argc, char* argv[]) {
 	InitGame();
 	
 	gameClass* game_phases[4];
-	game_phases[0] = new gameIntro();
-	game_phases[1] = new gameEndingClear();
-	game_phases[2] = new gameEndingGameover();
-	game_phases[3] = new MainScreen();
-	//game_phases[2] = new gamePlay();
+	game_phases[PHASE_INTRO] = new gameIntro();
+	game_phases[PHASE_ENDING_CLEAR] = new gameEndingClear();
+	game_phases[PHASE_ENDING_GAMEOVER] = new gameEndingGameover();
+	game_phases[PHASE_MAIN] = new MainScreen();
+	game_phases[PHASE_PLAY] = new gamePlay();
 	//game_phases[5] = new gamePause();
 
 	g_current_game_phase = PHASE_INTRO;
@@ -61,11 +58,10 @@ int main(int argc, char* argv[]) {
 		g_last_time_ms = cur_time_ms;
 	}
 
-	delete game_phases[0];
-	delete game_phases[1];
-	delete game_phases[2];
-	delete game_phases[3];
-
+	// game_phases 배열의 동적 할당된 객체 삭제
+	for (size_t i = 0; i < sizeof(game_phases) / sizeof(game_phases[0]); ++i) {
+		delete game_phases[i];
+	}
 	ClearGame();
 
 	return 0;

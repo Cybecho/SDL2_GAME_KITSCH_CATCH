@@ -2,6 +2,17 @@
 #define MOVE_SPEED 20.0f // 이동 속도
 #define WINDOW_WIDTH 540 // 창 너비
 #define WINDOW_HEIGHT 960 // 창 높이
+#define g_window_margin 20 // 윈도우 마진 간격
+
+//! Game Phases Enum
+enum GamePhase {
+    PHASE_INTRO,
+    PHASE_MAIN,
+    PHASE_PLAYING,
+    PHASE_ENDING_CLEAR,
+    PHASE_ENDING_GAMEOVER,
+    PHASE_PAUSE
+};
 
 //! 기본 헤더
 #include <iostream>
