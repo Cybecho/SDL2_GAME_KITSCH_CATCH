@@ -54,6 +54,7 @@ $(TargetDir)
 
 ```latex
 ../include
+../include/SDL2
 ```
 
 ![Untitled 1](https://github.com/Cybecho/Windows_Setting_dotfiles/assets/42949995/fec514ff-ef05-46be-93bb-279ce37b6eec)
