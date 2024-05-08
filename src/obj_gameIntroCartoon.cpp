@@ -1,4 +1,4 @@
-#include "gameIntroCartoon.h"
+#include "obj_gameIntroCartoon.h"
 
 Cartoon::Cartoon() {
 	surface = 0;

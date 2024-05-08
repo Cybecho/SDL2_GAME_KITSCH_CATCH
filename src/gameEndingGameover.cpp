@@ -2,7 +2,7 @@
 
 gameEndingGameover::gameEndingGameover() {
 	// For Texture
-	surface = IMG_Load("../../Resources/testGameover.jpg");
+	surface = IMG_Load("../../res/testGameover.jpg");
 	texture = SDL_CreateTextureFromSurface(g_renderer, surface);
 	SDL_FreeSurface(surface);
 
@@ -13,7 +13,7 @@ gameEndingGameover::gameEndingGameover() {
 	destination_rect.h = source_rect.h;
 
 	// For BGM
-	gameover_music = Mix_LoadMUS("../../Resources/testBGM3.mp3");
+	gameover_music = Mix_LoadMUS("../../res/testBGM3.mp3");
 	if (gameover_music == 0) {
 		printf("Couldn't load the wav: %s\n", Mix_GetError());
 	}

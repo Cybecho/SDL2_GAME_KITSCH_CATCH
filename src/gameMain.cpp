@@ -18,10 +18,10 @@ SDL_Texture* score_text; //����(����ġ)
 SDL_Rect exp_rect;
 SDL_Rect score_rect;
 
-MainScreen::MainScreen() {
+gameMain::gameMain() {
 	score = 0;
 	// BG
-	SDL_Surface* bg_surface = IMG_Load("../../Resources/testMainBG.png");
+	SDL_Surface* bg_surface = IMG_Load("../../res/testMainBG.png");
 	main_bg = SDL_CreateTextureFromSurface(g_renderer, bg_surface);
 	SDL_FreeSurface(bg_surface);
 
@@ -29,7 +29,7 @@ MainScreen::MainScreen() {
 
 
 	//cat
-	SDL_Surface* cat_surface = IMG_Load("../../Resources/testMainCat.png");
+	SDL_Surface* cat_surface = IMG_Load("../../res/testMainCat.png");
 	cat = SDL_CreateTextureFromSurface(g_renderer, cat_surface);
 
 	cat_rect.x = 0;
@@ -43,7 +43,7 @@ MainScreen::MainScreen() {
 
 
 	//��ȣ�ۿ��ư
-	SDL_Surface* inter_surface = IMG_Load("../../Resources/testMainInteractionBT.png");
+	SDL_Surface* inter_surface = IMG_Load("../../res/testMainInteractionBT.png");
 	inter_bt = SDL_CreateTextureFromSurface(g_renderer, inter_surface);
 
 	interBT_rect.x = 0;
@@ -57,7 +57,7 @@ MainScreen::MainScreen() {
 
 
 	//�÷��̹�ư
-	SDL_Surface* play_surface = IMG_Load("../../Resources/testMainPlayBT.png");
+	SDL_Surface* play_surface = IMG_Load("../../res/testMainPlayBT.png");
 	play_bt = SDL_CreateTextureFromSurface(g_renderer, play_surface);
 
 	playBT_rect.x = 0;
@@ -71,7 +71,7 @@ MainScreen::MainScreen() {
 
 
 	//������ư
-	SDL_Surface* setting_surface = IMG_Load("../../Resources/testMainSettingBT.png");
+	SDL_Surface* setting_surface = IMG_Load("../../res/testMainSettingBT.png");
 	setting_bt = SDL_CreateTextureFromSurface(g_renderer, setting_surface);
 
 	settingBT_rect.x = 0;
@@ -86,7 +86,7 @@ MainScreen::MainScreen() {
 	//text
 
 	{ //exp text
-		TTF_Font* font = TTF_OpenFont("../../Resources/Galmuri14.ttf", 30);
+		TTF_Font* font = TTF_OpenFont("../../res/Galmuri14.ttf", 30);
 		SDL_Color white = { 255,255,255,0 };
 		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, "EXP : ", white);
 
@@ -103,7 +103,7 @@ MainScreen::MainScreen() {
 
 
 	{ //score text
-		TTF_Font* font = TTF_OpenFont("../../Resources/Galmuri14.ttf", 30);
+		TTF_Font* font = TTF_OpenFont("../../res/Galmuri14.ttf", 30);
 		SDL_Color white = { 255,255,255,0 };
 		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, std::to_string(score).c_str(), white);
 
@@ -120,11 +120,11 @@ MainScreen::MainScreen() {
 
 }
 
-MainScreen::~MainScreen() {
+gameMain::~gameMain() {
 
 }
 
-void MainScreen::HandleEvents() {
+void gameMain::HandleEvents() {
 	SDL_Event event;
 	if (SDL_PollEvent(&event)) {
 		switch (event.type) {
@@ -144,10 +144,10 @@ void MainScreen::HandleEvents() {
 	}
 }
  
-void MainScreen::Update() {
+void gameMain::Update() {
 }
 
-void MainScreen::Render() {
+void gameMain::Render() {
 	SDL_RenderCopy(g_renderer, main_bg, NULL, NULL);
 	
 	{ //�÷��̹�ư

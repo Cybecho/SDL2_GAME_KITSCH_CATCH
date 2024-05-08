@@ -1,12 +1,12 @@
-#include "obj_gameIntro.h"
+#include "gameIntro.h"
 
 gameIntro::gameIntro() {
 	// ��ȭ �ε�
 	cartoon.resize(cartoon_cut);
 
-	cartoon[0].surface = IMG_Load("../../Resources/testCartoon1.jpg");
-	cartoon[1].surface = IMG_Load("../../Resources/testCartoon2.jpg");
-	cartoon[2].surface = IMG_Load("../../Resources/testCartoon3.jpg");
+	cartoon[0].surface = IMG_Load("../../res/testCartoon1.jpg");
+	cartoon[1].surface = IMG_Load("../../res/testCartoon2.jpg");
+	cartoon[2].surface = IMG_Load("../../res/testCartoon3.jpg");
 
 	// ��ȭ Surface ó��
 	for (int i = 0; i < cartoon_cut; i++) {
@@ -29,7 +29,7 @@ gameIntro::gameIntro() {
 	cartoon[2].destination_rect.y = cartoon[1].destination_rect.y + cartoon[1].destination_rect.h + g_window_margin;
 
 	// Init Sound
-	intro_music = Mix_LoadMUS("../../Resources/testBGM1.mp3");
+	intro_music = Mix_LoadMUS("../../res/testBGM1.mp3");
 	if (intro_music == 0) {
 		printf("Couldn't load the wav: %s\n", Mix_GetError());
 	}
