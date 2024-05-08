@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 	*/
 	std::vector<gameClass*> game_phases;
     game_phases.push_back(new gameIntro()); // PHASE_INTRO
-	game_phases.push_back(new MainScreen()); // PHASE_MAIN
+	game_phases.push_back(new gameMain()); // PHASE_MAIN
 	game_phases.push_back(new gamePlay()); // PHASE_PLAYING
     game_phases.push_back(new gameEndingClear()); // PHASE_ENDING_CLEAR
     game_phases.push_back(new gameEndingGameover()); // PHASE_ENDING_GAMEOVER

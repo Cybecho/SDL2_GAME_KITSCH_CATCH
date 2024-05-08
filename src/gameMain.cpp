@@ -1,4 +1,4 @@
-#include "MainScreen.h"
+#include "gameMain.h"
 
 int score;
 SDL_Texture* main_bg;
@@ -13,8 +13,8 @@ SDL_Rect interBT_rect;
 SDL_Rect settingBT_rect;
 
 //text
-SDL_Texture* exp_text; //"°æÇèÄ¡" ±Û¾¾
-SDL_Texture* score_text; //Á¡¼ö(°æÇèÄ¡)
+SDL_Texture* exp_text; //"ï¿½ï¿½ï¿½ï¿½Ä¡" ï¿½Û¾ï¿½
+SDL_Texture* score_text; //ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½Ä¡)
 SDL_Rect exp_rect;
 SDL_Rect score_rect;
 
@@ -42,7 +42,7 @@ MainScreen::MainScreen() {
 
 
 
-	//»óÈ£ÀÛ¿ë¹öÆ°
+	//ï¿½ï¿½È£ï¿½Û¿ï¿½ï¿½Æ°
 	SDL_Surface* inter_surface = IMG_Load("../../Resources/testMainInteractionBT.png");
 	inter_bt = SDL_CreateTextureFromSurface(g_renderer, inter_surface);
 
@@ -56,7 +56,7 @@ MainScreen::MainScreen() {
 
 
 
-	//ÇÃ·¹ÀÌ¹öÆ°
+	//ï¿½Ã·ï¿½ï¿½Ì¹ï¿½Æ°
 	SDL_Surface* play_surface = IMG_Load("../../Resources/testMainPlayBT.png");
 	play_bt = SDL_CreateTextureFromSurface(g_renderer, play_surface);
 
@@ -70,7 +70,7 @@ MainScreen::MainScreen() {
 
 
 
-	//¼³Á¤¹öÆ°
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ°
 	SDL_Surface* setting_surface = IMG_Load("../../Resources/testMainSettingBT.png");
 	setting_bt = SDL_CreateTextureFromSurface(g_renderer, setting_surface);
 
@@ -150,7 +150,7 @@ void MainScreen::Update() {
 void MainScreen::Render() {
 	SDL_RenderCopy(g_renderer, main_bg, NULL, NULL);
 	
-	{ //ÇÃ·¹ÀÌ¹öÆ°
+	{ //ï¿½Ã·ï¿½ï¿½Ì¹ï¿½Æ°
 		SDL_Rect tmp_r;
 		tmp_r.x = g_window_margin;
 		tmp_r.y = 800;
@@ -159,7 +159,7 @@ void MainScreen::Render() {
 		SDL_RenderCopy(g_renderer, play_bt, &playBT_rect, &tmp_r);
 	}
 
-	{ //»óÈ£ÀÛ¿ë¹öÆ°
+	{ //ï¿½ï¿½È£ï¿½Û¿ï¿½ï¿½Æ°
 		SDL_Rect tmp_r;
 		tmp_r.x = g_window_margin;
 		tmp_r.y = 120;
@@ -168,7 +168,7 @@ void MainScreen::Render() {
 		SDL_RenderCopy(g_renderer, inter_bt, &interBT_rect, &tmp_r);
 	}
 
-	{ //¼³Á¤¹öÆ°
+	{ //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ°
 		SDL_Rect tmp_r;
 		tmp_r.x = 440;
 		tmp_r.y = 20;
@@ -177,7 +177,7 @@ void MainScreen::Render() {
 		SDL_RenderCopy(g_renderer, setting_bt, &settingBT_rect, &tmp_r);
 	}
 
-	{ //°í¾çÀÌ»çÁø
+	{ //ï¿½ï¿½ï¿½ï¿½ï¿½Ì»ï¿½ï¿½ï¿½
 		SDL_Rect tmp_r;
 		tmp_r.x = 70;
 		tmp_r.y = 400;
