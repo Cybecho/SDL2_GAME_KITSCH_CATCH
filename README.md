@@ -10,6 +10,10 @@
   
   -> 시작 기준이 exe가 존재하는 디렉토리를 기준으로 파일을 탐색합니다
 
+```
+$(TargetDir)
+```
+
 ![image](https://github.com/Cybecho/SDL2_GAME_KITSCH_CATCH/assets/42949995/07b5af6d-6520-44fa-97b7-a521bb90237a)
 
 </aside>
