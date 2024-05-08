@@ -2,17 +2,16 @@
 #include "Include.h"
 
 // 가상 부모 클래스
-class Mahjong{
+class Mahjong : public blockType_1{
   public:
     //~ 생성자
-    virtual Majong() = 0;
-    virtual ~Majong() = 0;
-    
-    //~ 부모함수에서 구현할 함수 & 공통 외부 함수
-    void bonk(); // 펑 터지는 이펙트 함수
-    void swap2stack(); // 클릭되었을때 stack으로 이동
-    void getPos(); // 단순 위치 반환 함수
-    
+    blockType_1();
+    blockType_1();
+
+    //~ 멤버 함수
+    static void destroyTexture();
+    static void loadTexture(SDL_Renderer* renderer);
+
     //~ SDL전용 함수
     void 
   private:
@@ -20,4 +19,6 @@ class Mahjong{
     int mY;
     int mScore;
     bool m_clickEnable;
+
+    
 };
