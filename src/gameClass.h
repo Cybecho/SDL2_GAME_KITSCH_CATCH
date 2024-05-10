@@ -5,8 +5,8 @@
 class gameClass {
 public:
 	gameClass();
-	~gameClass();
-	//virtual ~gameClass() {};
+	virtual ~gameClass();
+	//virtual ~gameClass() {}; // {} is implemented in gameClass.cpp
 
 	virtual void HandleEvents() = 0;
 	virtual void Update() = 0;
