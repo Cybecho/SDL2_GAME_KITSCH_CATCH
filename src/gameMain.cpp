@@ -3,10 +3,10 @@
 gameMain::gameMain() {
 
 	//text
-	SDL_Texture* exp_text; //"����ġ" �۾�
-	SDL_Texture* score_text; //����(����ġ)
-	SDL_Rect exp_rect;
-	SDL_Rect score_rect;
+	//SDL_Texture* exp_text; //"����ġ" �۾�
+	//SDL_Texture* score_text; //����(����ġ)
+	//SDL_Rect exp_rect;
+	//SDL_Rect score_rect;
 
 
 
