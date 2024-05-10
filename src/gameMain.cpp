@@ -1,27 +1,20 @@
 #include "gameMain.h"
 
-int score;
-SDL_Texture* main_bg;
-SDL_Texture* cat;
-SDL_Texture* inter_bt;
-SDL_Texture* play_bt;
-SDL_Texture* setting_bt;
-
-SDL_Rect playBT_rect;
-SDL_Rect cat_rect;
-SDL_Rect interBT_rect;
-SDL_Rect settingBT_rect;
-
-//text
-SDL_Texture* exp_text; //"����ġ" �۾�
-SDL_Texture* score_text; //����(����ġ)
-SDL_Rect exp_rect;
-SDL_Rect score_rect;
-
 gameMain::gameMain() {
+
+	//text
+	SDL_Texture* exp_text; //"����ġ" �۾�
+	SDL_Texture* score_text; //����(����ġ)
+	SDL_Rect exp_rect;
+	SDL_Rect score_rect;
+
+
+
+
+
 	score = 0;
 	// BG
-	SDL_Surface* bg_surface = IMG_Load("../../res/testMainBG.png");
+	SDL_Surface* bg_surface = IMG_Load("../../res/testRes/testMainBG.png");
 	main_bg = SDL_CreateTextureFromSurface(g_renderer, bg_surface);
 	SDL_FreeSurface(bg_surface);
 
@@ -29,7 +22,7 @@ gameMain::gameMain() {
 
 
 	//cat
-	SDL_Surface* cat_surface = IMG_Load("../../res/testMainCat.png");
+	SDL_Surface* cat_surface = IMG_Load("../../res/testRes/testMainCat.png");
 	cat = SDL_CreateTextureFromSurface(g_renderer, cat_surface);
 
 	cat_rect.x = 0;
@@ -43,7 +36,7 @@ gameMain::gameMain() {
 
 
 	//��ȣ�ۿ��ư
-	SDL_Surface* inter_surface = IMG_Load("../../res/testMainInteractionBT.png");
+	SDL_Surface* inter_surface = IMG_Load("../../res/testRes/testMainInteractionBT.png");
 	inter_bt = SDL_CreateTextureFromSurface(g_renderer, inter_surface);
 
 	interBT_rect.x = 0;
@@ -57,7 +50,7 @@ gameMain::gameMain() {
 
 
 	//�÷��̹�ư
-	SDL_Surface* play_surface = IMG_Load("../../res/testMainPlayBT.png");
+	SDL_Surface* play_surface = IMG_Load("../../res/testRes/testMainPlayBT.png");
 	play_bt = SDL_CreateTextureFromSurface(g_renderer, play_surface);
 
 	playBT_rect.x = 0;
@@ -71,7 +64,7 @@ gameMain::gameMain() {
 
 
 	//������ư
-	SDL_Surface* setting_surface = IMG_Load("../../res/testMainSettingBT.png");
+	SDL_Surface* setting_surface = IMG_Load("../../res/testRes/testMainSettingBT.png");
 	setting_bt = SDL_CreateTextureFromSurface(g_renderer, setting_surface);
 
 	settingBT_rect.x = 0;
@@ -86,7 +79,7 @@ gameMain::gameMain() {
 	//text
 
 	{ //exp text
-		TTF_Font* font = TTF_OpenFont("../../res/Galmuri14.ttf", 30);
+		TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
 		SDL_Color white = { 255,255,255,0 };
 		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, "EXP : ", white);
 
@@ -103,7 +96,7 @@ gameMain::gameMain() {
 
 
 	{ //score text
-		TTF_Font* font = TTF_OpenFont("../../res/Galmuri14.ttf", 30);
+		TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
 		SDL_Color white = { 255,255,255,0 };
 		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, std::to_string(score).c_str(), white);
 
