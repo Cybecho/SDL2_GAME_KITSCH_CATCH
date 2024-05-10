@@ -1,35 +1,35 @@
 #include "gameIntro.h"
 
 gameIntro::gameIntro() {
-	// ��ȭ �ε�
+	// Load cartoons
 	cartoon.resize(cartoon_cut);
 
-	cartoon[0].surface = IMG_Load("../../res/testCartoon1.jpg");
-	cartoon[1].surface = IMG_Load("../../res/testCartoon2.jpg");
-	cartoon[2].surface = IMG_Load("../../res/testCartoon3.jpg");
+	cartoon[0].surface = IMG_Load("../../res/testRes/testCartoon1.jpg");
+	cartoon[1].surface = IMG_Load("../../res/testRes/testCartoon2.jpg");
+	cartoon[2].surface = IMG_Load("../../res/testRes/testCartoon3.jpg");
 
-	// ��ȭ Surface ó��
+	// Cartoon surfaces
 	for (int i = 0; i < cartoon_cut; i++) {
 		cartoon[i].texture = SDL_CreateTextureFromSurface(g_renderer, cartoon[i].surface);
 		SDL_FreeSurface(cartoon[i].surface);
 		SDL_QueryTexture(cartoon[i].texture, NULL, NULL, &cartoon[i].source_rect.w, &cartoon[i].source_rect.h);
 		cartoon[i].source_rect.x = cartoon[i].source_rect.y = 0;
 		
-		// ��ȭ x��ǥ: margin ��ŭ ����߸�
+		// Set cartoon x-position
 		cartoon[i].destination_rect.x = g_window_margin;
 		
-		// ��ȭ w & h: ������ ũ�� - 2 * margin
+		// Set cartoon width and height
 		cartoon[i].destination_rect.w = WINDOW_WIDTH - 2 * g_window_margin;
 		cartoon[i].destination_rect.h = 280;
 	}
 	
-	// ��ȭ y��ǥ ����
+	// Set cartoon y-position
 	cartoon[0].destination_rect.y = g_window_margin;
 	cartoon[1].destination_rect.y = cartoon[0].destination_rect.y + cartoon[0].destination_rect.h + g_window_margin;
 	cartoon[2].destination_rect.y = cartoon[1].destination_rect.y + cartoon[1].destination_rect.h + g_window_margin;
 
 	// Init Sound
-	intro_music = Mix_LoadMUS("../../res/testBGM1.mp3");
+	intro_music = Mix_LoadMUS("../../res/testRes/testBGM1.mp3");
 	if (intro_music == 0) {
 		printf("Couldn't load the wav: %s\n", Mix_GetError());
 	}
@@ -45,9 +45,9 @@ gameIntro::~gameIntro() {
 }
 
 void gameIntro::HandleEvents() {
-	// �׽�Ʈ�� print
-	//std::cout << cartoon[1].fade_delta<<" " << cartoon[1].fade_alpha << " " << cartoon[1].fade_value << std::endl;
-	
+	// Debug Print
+	//std::cout << " " << std::endl
+
 	SDL_Event event;
 	if (SDL_PollEvent(&event)) {
 		switch (event.type) {
@@ -56,16 +56,16 @@ void gameIntro::HandleEvents() {
 			break;
 
 		case SDL_KEYDOWN:
-			// �����̽��� ������ ��(ġƮŰ)
+			// Spacebar (cheat key)
 			if (event.key.keysym.sym == SDLK_SPACE) {
 				//g_current_game_phase = PHASE_MAIN;
-				g_current_game_phase = PHASE_ENDINGCLEAR;
+				g_current_game_phase = PHASE_MAIN;
 				Mix_HaltMusic();
 			}
-			// �����̽��ٸ� ������ �ƹ�Ű ������ ��
+			// Any keys (except spacebar)
 			else {
 				//g_current_game_phase = PHASE_MAIN;
-				g_current_game_phase = PHASE_ENDINGCLEAR;
+				g_current_game_phase = PHASE_MAIN;
 				Mix_PlayMusic(clear_music, -1);
 			}
 			break;
@@ -84,14 +84,14 @@ void gameIntro::Render() {
 	SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 255);
 	SDL_RenderClear(g_renderer);
 
-	/** ��ȭ
-	* 1. SDL���� ������ Sleep()�̳� SDL_Delay() ���� ���� �����
-	* 2. FadeIn()�� ������ is_fade_finished = true�� �ٲ�
-	*	 Delay()�� ������ is_delay_finished = true�� �ٲ�
-	* 3. ���� ��ȭ�� ����� FadeIn �Ŀ� �Ұ���, Delay �Ŀ� �Ұ�����
-	*	 ���ǹ��� �̿��Ͽ� ���������� �ۼ�
-	**/
-	
+	/*
+	* Cartoon functions
+	* 1. We can't use Sleep() and SDL_Delay(), so use these functions
+	* 2. When FadeIn() function finished, "is_fade_finished" = true
+	*	 When Delay() function finished, "is_delay_finished" = true
+	* 3. Use these Functions selectively for next cartoons
+	*/
+
 	cartoon[0].FadeIn(1);
 	if (cartoon[0].is_fade_finished) {
 		cartoon[0].Delay(3);
@@ -103,6 +103,6 @@ void gameIntro::Render() {
 		cartoon[1].FadeIn(4);
 	}
 
-	// draw to the screen
+	// Draw to the screen
 	SDL_RenderPresent(g_renderer);
 }

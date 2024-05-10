@@ -2,7 +2,7 @@
 
 gameEndingClear::gameEndingClear() {
 	// For Texture
-	surface = IMG_Load("../../Resources/testClear.jpg");
+	surface = IMG_Load("../../res/testRes/testClear.jpg");
 	texture = SDL_CreateTextureFromSurface(g_renderer, surface);
 	SDL_FreeSurface(surface);
 
@@ -13,7 +13,7 @@ gameEndingClear::gameEndingClear() {
 	destination_rect.h = source_rect.h;
 
 	// For BGM
-	clear_music = Mix_LoadMUS("../../Resources/testBGM2.mp3");
+	clear_music = Mix_LoadMUS("../../res/testRes/testBGM2.mp3");
 	if (clear_music == 0) {
 		printf("Couldn't load the wav: %s\n", Mix_GetError());
 	}
@@ -33,15 +33,15 @@ void gameEndingClear::HandleEvents() {
 			break;
 
 		case SDL_KEYDOWN:
-			// 스페이스바 눌렀을 때(치트키)
+			// Spacebar (cheat key)
 			if (event.key.keysym.sym == SDLK_SPACE) {
-				g_current_game_phase = PHASE_ENDINGGAMEOVER;
+				g_current_game_phase = PHASE_ENDING_GAMEOVER;
 				Mix_HaltMusic();
 			}
-			// 스페이스바를 제외한 아무키 눌렀을 때
+			// Any keys (except spacebar)
 			else {
 				//g_current_game_phase = PHASE_MAIN;
-				g_current_game_phase = PHASE_ENDINGGAMEOVER;
+				g_current_game_phase = PHASE_ENDING_GAMEOVER;
 				Mix_PlayMusic(gameover_music, -1);
 			}
 			break;

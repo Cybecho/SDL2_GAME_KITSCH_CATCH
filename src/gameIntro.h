@@ -4,10 +4,10 @@
 #include "gameClass.h"
 #include "obj_gameIntroCartoon.h"
 
-// ��Ʈ�� ��ȭ �� ��
-#define cartoon_cut 3 // �迭�� ũ��� ������ �ƴ� ����� ���� ��, �ٵ� const�� �ƴ� define���� �ؾ���
+// Number of cartoons
+#define cartoon_cut 3
 
-class Cartoon; // ������ ���� �߻� ����
+class Cartoon; // Prevent compile error
 class gameIntro : public gameClass {
 public:
 	gameIntro();

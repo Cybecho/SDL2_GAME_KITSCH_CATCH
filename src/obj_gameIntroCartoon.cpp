@@ -20,7 +20,7 @@ void Cartoon::FadeIn(int seconds) {
 		fade_alpha = 255;
 		is_fade_finished = true;
 	}
-	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND); // 알파값 적용시키려면 필요
+	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND); // Required to apply ALPHA VALUE
 	SDL_SetTextureAlphaMod(texture, fade_alpha);
 	SDL_RenderCopy(g_renderer, texture, &source_rect, &destination_rect);
 }
