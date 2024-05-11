@@ -1,18 +1,10 @@
 #include "gameMain.h"
 
+SDL_Texture* exp_text; //"EXP" text
+SDL_Texture* score_text; //get score from txt file
+
 gameMain::gameMain() {
 
-	//text
-	//SDL_Texture* exp_text; //"����ġ" �۾�
-	//SDL_Texture* score_text; //����(����ġ)
-	//SDL_Rect exp_rect;
-	//SDL_Rect score_rect;
-
-
-
-
-
-	score = 0;
 	// BG
 	SDL_Surface* bg_surface = IMG_Load("../../res/testRes/testMainBG.png");
 	main_bg = SDL_CreateTextureFromSurface(g_renderer, bg_surface);
@@ -35,7 +27,7 @@ gameMain::gameMain() {
 
 
 
-	//��ȣ�ۿ��ư
+	//interaction button
 	SDL_Surface* inter_surface = IMG_Load("../../res/testRes/testMainInteractionBT.png");
 	inter_bt = SDL_CreateTextureFromSurface(g_renderer, inter_surface);
 
@@ -49,7 +41,7 @@ gameMain::gameMain() {
 
 
 
-	//�÷��̹�ư
+	//play button
 	SDL_Surface* play_surface = IMG_Load("../../res/testRes/testMainPlayBT.png");
 	play_bt = SDL_CreateTextureFromSurface(g_renderer, play_surface);
 
@@ -63,7 +55,7 @@ gameMain::gameMain() {
 
 
 
-	//������ư
+	//setting button
 	SDL_Surface* setting_surface = IMG_Load("../../res/testRes/testMainSettingBT.png");
 	setting_bt = SDL_CreateTextureFromSurface(g_renderer, setting_surface);
 
@@ -96,10 +88,13 @@ gameMain::gameMain() {
 
 
 	{ //score text
+		ifstream file("../../res/testRes/scoreboard.txt"); //read scoreboard
+		getline(file, score);
+
 		TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
 		SDL_Color white = { 255,255,255,0 };
-		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, std::to_string(score).c_str(), white);
-
+		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, score.c_str(), white);
+		//std::to_string(score).c_str()
 		score_rect.x = 0;
 		score_rect.y = 0;
 		score_rect.w = tmp_surface->w;
@@ -108,13 +103,31 @@ gameMain::gameMain() {
 		score_text = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
 		SDL_FreeSurface(tmp_surface);
 		TTF_CloseFont(font);
-
+		file.close();
 	}
 
+
+
+	//music
+	main_music = Mix_LoadMUS("../../res/testRes/testBGM2.mp3");
+	if (main_music == 0) {
+		std::cout << "Mix_LoadMUS(\"testBGM2.mp3\"): " << Mix_GetError() << std::endl;
+	}
+	//Mix_VolumeMusic(128);
+	Mix_PlayMusic(main_music, -1);
 }
 
 gameMain::~gameMain() {
-
+	Mix_FreeMusic(main_music);
+	SDL_DestroyTexture(exp_text);
+	SDL_DestroyTexture(score_text);
+	SDL_DestroyTexture(main_bg);
+	SDL_DestroyTexture(cat);
+	SDL_DestroyTexture(inter_bt);
+	SDL_DestroyTexture(play_bt);
+	SDL_DestroyTexture(setting_bt);
+	SDL_Quit();
+	TTF_Quit();
 }
 
 void gameMain::HandleEvents() {
@@ -136,14 +149,14 @@ void gameMain::HandleEvents() {
 
 	}
 }
- 
+
 void gameMain::Update() {
 }
 
 void gameMain::Render() {
 	SDL_RenderCopy(g_renderer, main_bg, NULL, NULL);
-	
-	{ //�÷��̹�ư
+
+	{ //play button
 		SDL_Rect tmp_r;
 		tmp_r.x = g_window_margin;
 		tmp_r.y = 800;
@@ -152,7 +165,7 @@ void gameMain::Render() {
 		SDL_RenderCopy(g_renderer, play_bt, &playBT_rect, &tmp_r);
 	}
 
-	{ //��ȣ�ۿ��ư
+	{ //interaction button
 		SDL_Rect tmp_r;
 		tmp_r.x = g_window_margin;
 		tmp_r.y = 120;
@@ -161,7 +174,7 @@ void gameMain::Render() {
 		SDL_RenderCopy(g_renderer, inter_bt, &interBT_rect, &tmp_r);
 	}
 
-	{ //������ư
+	{ //setting button
 		SDL_Rect tmp_r;
 		tmp_r.x = 440;
 		tmp_r.y = 20;
@@ -170,7 +183,7 @@ void gameMain::Render() {
 		SDL_RenderCopy(g_renderer, setting_bt, &settingBT_rect, &tmp_r);
 	}
 
-	{ //�����̻���
+	{ //cat image
 		SDL_Rect tmp_r;
 		tmp_r.x = 70;
 		tmp_r.y = 400;
