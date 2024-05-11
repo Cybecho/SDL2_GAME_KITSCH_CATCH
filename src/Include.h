@@ -24,6 +24,7 @@ enum GamePhase {
 #include <ctime>
 #include <atlstr.h>
 #include <windows.h>
+#include <fstream>
 
 //! SDL 헤더
 #include "SDL.h"

@@ -1,4 +1,5 @@
 #include "gameMain.h"
+#include "Include.h"
 
 SDL_Texture* exp_text; //"EXP" text
 SDL_Texture* score_text; //get score from txt file
