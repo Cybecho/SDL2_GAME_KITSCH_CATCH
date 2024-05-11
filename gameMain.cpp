@@ -1,27 +1,12 @@
-#include "gameMain.h"
+﻿#include "gameMain.h"
 
-int score;
-SDL_Texture* main_bg;
-SDL_Texture* cat;
-SDL_Texture* inter_bt;
-SDL_Texture* play_bt;
-SDL_Texture* setting_bt;
-
-SDL_Rect playBT_rect;
-SDL_Rect cat_rect;
-SDL_Rect interBT_rect;
-SDL_Rect settingBT_rect;
-
-//text
-SDL_Texture* exp_text; //"����ġ" �۾�
-SDL_Texture* score_text; //����(����ġ)
-SDL_Rect exp_rect;
-SDL_Rect score_rect;
+SDL_Texture* exp_text; //"EXP" text
+SDL_Texture* score_text; //get score from txt file
 
 gameMain::gameMain() {
-	score = 0;
+
 	// BG
-	SDL_Surface* bg_surface = IMG_Load("../../res/testMainBG.png");
+	SDL_Surface* bg_surface = IMG_Load("../../res/testRes/testMainBG.png");
 	main_bg = SDL_CreateTextureFromSurface(g_renderer, bg_surface);
 	SDL_FreeSurface(bg_surface);
 
@@ -29,7 +14,7 @@ gameMain::gameMain() {
 
 
 	//cat
-	SDL_Surface* cat_surface = IMG_Load("../../res/testMainCat.png");
+	SDL_Surface* cat_surface = IMG_Load("../../res/testRes/testMainCat.png");
 	cat = SDL_CreateTextureFromSurface(g_renderer, cat_surface);
 
 	cat_rect.x = 0;
@@ -42,8 +27,8 @@ gameMain::gameMain() {
 
 
 
-	//��ȣ�ۿ��ư
-	SDL_Surface* inter_surface = IMG_Load("../../res/testMainInteractionBT.png");
+	//interaction button
+	SDL_Surface* inter_surface = IMG_Load("../../res/testRes/testMainInteractionBT.png");
 	inter_bt = SDL_CreateTextureFromSurface(g_renderer, inter_surface);
 
 	interBT_rect.x = 0;
@@ -56,8 +41,8 @@ gameMain::gameMain() {
 
 
 
-	//�÷��̹�ư
-	SDL_Surface* play_surface = IMG_Load("../../res/testMainPlayBT.png");
+	//play button
+	SDL_Surface* play_surface = IMG_Load("../../res/testRes/testMainPlayBT.png");
 	play_bt = SDL_CreateTextureFromSurface(g_renderer, play_surface);
 
 	playBT_rect.x = 0;
@@ -70,8 +55,8 @@ gameMain::gameMain() {
 
 
 
-	//������ư
-	SDL_Surface* setting_surface = IMG_Load("../../res/testMainSettingBT.png");
+	//setting button
+	SDL_Surface* setting_surface = IMG_Load("../../res/testRes/testMainSettingBT.png");
 	setting_bt = SDL_CreateTextureFromSurface(g_renderer, setting_surface);
 
 	settingBT_rect.x = 0;
@@ -86,7 +71,7 @@ gameMain::gameMain() {
 	//text
 
 	{ //exp text
-		TTF_Font* font = TTF_OpenFont("../../res/Galmuri14.ttf", 30);
+		TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
 		SDL_Color white = { 255,255,255,0 };
 		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, "EXP : ", white);
 
@@ -103,10 +88,13 @@ gameMain::gameMain() {
 
 
 	{ //score text
-		TTF_Font* font = TTF_OpenFont("../../res/Galmuri14.ttf", 30);
-		SDL_Color white = { 255,255,255,0 };
-		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, std::to_string(score).c_str(), white);
+		ifstream file("../../res/testRes/scoreboard.txt"); //read scoreboard
+		getline(file, score);
 
+		TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
+		SDL_Color white = { 255,255,255,0 };
+		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, score.c_str(), white);
+		//std::to_string(score).c_str()
 		score_rect.x = 0;
 		score_rect.y = 0;
 		score_rect.w = tmp_surface->w;
@@ -115,13 +103,31 @@ gameMain::gameMain() {
 		score_text = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
 		SDL_FreeSurface(tmp_surface);
 		TTF_CloseFont(font);
-
+		file.close();
 	}
 
+
+
+	//music
+	main_music = Mix_LoadMUS("../../res/testRes/testBGM2.mp3");
+	if (main_music == 0) {
+		std::cout << "Mix_LoadMUS(\"testBGM2.mp3\"): " << Mix_GetError() << std::endl;
+	}
+	//Mix_VolumeMusic(128);
+	Mix_PlayMusic(main_music, -1);
 }
 
 gameMain::~gameMain() {
-
+	Mix_FreeMusic(main_music);
+	SDL_DestroyTexture(exp_text);
+	SDL_DestroyTexture(score_text);
+	SDL_DestroyTexture(main_bg);
+	SDL_DestroyTexture(cat);
+	SDL_DestroyTexture(inter_bt);
+	SDL_DestroyTexture(play_bt);
+	SDL_DestroyTexture(setting_bt);
+	SDL_Quit();
+	TTF_Quit();
 }
 
 void gameMain::HandleEvents() {
@@ -143,14 +149,14 @@ void gameMain::HandleEvents() {
 
 	}
 }
- 
+
 void gameMain::Update() {
 }
 
 void gameMain::Render() {
 	SDL_RenderCopy(g_renderer, main_bg, NULL, NULL);
-	
-	{ //�÷��̹�ư
+
+	{ //play button
 		SDL_Rect tmp_r;
 		tmp_r.x = g_window_margin;
 		tmp_r.y = 800;
@@ -159,7 +165,7 @@ void gameMain::Render() {
 		SDL_RenderCopy(g_renderer, play_bt, &playBT_rect, &tmp_r);
 	}
 
-	{ //��ȣ�ۿ��ư
+	{ //interaction button
 		SDL_Rect tmp_r;
 		tmp_r.x = g_window_margin;
 		tmp_r.y = 120;
@@ -168,7 +174,7 @@ void gameMain::Render() {
 		SDL_RenderCopy(g_renderer, inter_bt, &interBT_rect, &tmp_r);
 	}
 
-	{ //������ư
+	{ //setting button
 		SDL_Rect tmp_r;
 		tmp_r.x = 440;
 		tmp_r.y = 20;
@@ -177,7 +183,7 @@ void gameMain::Render() {
 		SDL_RenderCopy(g_renderer, setting_bt, &settingBT_rect, &tmp_r);
 	}
 
-	{ //�����̻���
+	{ //cat image
 		SDL_Rect tmp_r;
 		tmp_r.x = 70;
 		tmp_r.y = 400;
