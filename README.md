@@ -23,6 +23,8 @@ $(TargetDir)
 <aside>
 💡 dll 파일 아래 디렉토리에 포함시켜주세요
 
+기본적으로 x64 디렉토리에 dll파일 넣어뒀습니다
+
 ```latex
 .\x64\Releas
 ```
