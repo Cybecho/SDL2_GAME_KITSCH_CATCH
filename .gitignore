@@ -11,3 +11,5 @@
 !/res/
 !/src/
 !.md
+!/x64/Release/*.dll
+!/x64/Debug/*.dll
