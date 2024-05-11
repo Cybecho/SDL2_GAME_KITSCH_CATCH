@@ -1,0 +1,26 @@
+﻿  gameClass.cpp
+C:\Users\ASUS\Desktop\Ccode\GameProgramming\KitschCatch\KitschCatch\gameClass.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  (소스 파일 'gameClass.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\ASUS\Desktop\Ccode\GameProgramming\KitschCatch\KitschCatch\Include.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  (소스 파일 'gameClass.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\ASUS\Desktop\Ccode\GameProgramming\KitschCatch\KitschCatch\gameClass.cpp(10,13): error C2084: 'gameClass::~gameClass(void)' 함수에 이미 본문이 있습니다.
+  C:\Users\ASUS\Desktop\Ccode\GameProgramming\KitschCatch\KitschCatch\gameClass.h(8,11):
+  '{dtor}'의 이전 정의를 참조하십시오.
+  
+  gameMain.cpp
+C:\Users\ASUS\Desktop\Ccode\GameProgramming\KitschCatch\KitschCatch\gameMain.cpp(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\ASUS\Desktop\Ccode\GameProgramming\KitschCatch\KitschCatch\gameMain.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  (소스 파일 'gameMain.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\ASUS\Desktop\Ccode\GameProgramming\KitschCatch\KitschCatch\gameClass.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  (소스 파일 'gameMain.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\ASUS\Desktop\Ccode\GameProgramming\KitschCatch\KitschCatch\Include.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  (소스 파일 'gameMain.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\ASUS\Desktop\Ccode\GameProgramming\KitschCatch\KitschCatch\gameMain.cpp(123,12): error C2084: 'gameMain::~gameMain(void)' 함수에 이미 본문이 있습니다.
+  C:\Users\ASUS\Desktop\Ccode\GameProgramming\KitschCatch\KitschCatch\gameMain.h(11,11):
+  '{dtor}'의 이전 정의를 참조하십시오.
+  
