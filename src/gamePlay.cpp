@@ -146,7 +146,7 @@ void gamePlay::HandleEvents() {
 
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_SPACE) {
-				//changePhaseToEnding();
+				changePhaseToEnding();
 			}
 			else {
 				Mix_PlayMusic(play_music, -1);
