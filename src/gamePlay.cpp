@@ -41,10 +41,10 @@ gamePlay::gamePlay() {
 	SDL_Surface* timebar_surface = IMG_Load("../../res/testRes/testPlayTimebar.png");
 	timebar_bg = SDL_CreateTextureFromSurface(g_renderer, timebar_surface);
 
-	timebar_rect.x = 0;
-	timebar_rect.y = 0;
-	timebar_rect.w = timebar_surface->w;
-	timebar_rect.h = timebar_surface->h;
+	timebar_bg_rect.x = 0;
+	timebar_bg_rect.y = 0;
+	timebar_bg_rect.w = timebar_surface->w;
+	timebar_bg_rect.h = timebar_surface->h;
 
 	SDL_FreeSurface(timebar_surface);
 
@@ -118,7 +118,7 @@ gamePlay::gamePlay() {
 		std::cout << "Mix_LoadMUS(\"testBGM2.mp3\"): " << Mix_GetError() << std::endl;
 	}
 	//Mix_VolumeMusic(128);
-	Mix_PlayMusic(play_music, -1);
+	//Mix_PlayMusic(play_music, -1);
 }
 
 gamePlay::~gamePlay() {
@@ -146,7 +146,10 @@ void gamePlay::HandleEvents() {
 
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_SPACE) {
-				//g_current_game_phase = PHASE_PLAY;
+				//changePhaseToEnding();
+			}
+			else {
+				Mix_PlayMusic(play_music, -1);
 			}break;
 
 		default: break;
@@ -156,12 +159,20 @@ void gamePlay::HandleEvents() {
 }
 
 void gamePlay::Update() {
+	
+	timebar_rect.w = timebar_bg_dir_rect.w / 4;
 }
 
 void gamePlay::Render() {
 	SDL_RenderCopy(g_renderer, play_bg, NULL, NULL);
 
+
 	
+
+
+
+
+
 
 	{ //setting button
 		SDL_Rect tmp_r;
@@ -182,14 +193,24 @@ void gamePlay::Render() {
 	}
 
 	{ //timebar bg
-		SDL_Rect tmp_r;
-		tmp_r.x = g_window_margin;
-		tmp_r.y = 405;
-		tmp_r.w = timebar_rect.w;
-		tmp_r.h = timebar_rect.h;
-		SDL_RenderCopy(g_renderer, timebar_bg, &timebar_rect, &tmp_r);
+		timebar_bg_dir_rect.x = g_window_margin;
+		timebar_bg_dir_rect.y = 405;
+		timebar_bg_dir_rect.w = timebar_bg_rect.w;
+		timebar_bg_dir_rect.h = timebar_bg_rect.h;
+		SDL_RenderCopy(g_renderer, timebar_bg, &timebar_bg_rect, &timebar_bg_dir_rect);
 	}
 
+	{ //timebar
+		timebar_rect.x = timebar_bg_dir_rect.x;
+		timebar_rect.y = timebar_bg_dir_rect.y;
+		//timebar_rect.w = timebar_bg_dir_rect.w;
+		timebar_rect.h = timebar_bg_dir_rect.h;
+
+		SDL_SetRenderDrawColor(g_renderer, 255, 0, 0, 255); //set time bar red
+		SDL_RenderFillRect(g_renderer, &timebar_rect);
+
+
+	}
 
 	{//stack img
 		SDL_Rect tmp_r;
@@ -229,4 +250,11 @@ void gamePlay::Render() {
 	}
 
 	SDL_RenderPresent(g_renderer);
+}
+
+void gamePlay::changePhaseToEnding() {
+	g_current_game_phase = PHASE_ENDING_CLEAR;
+	Mix_HaltMusic();
+	Mix_PlayMusic(clear_music, -1);
+
 }
