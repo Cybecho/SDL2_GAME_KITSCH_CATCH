@@ -10,6 +10,9 @@ bonk::bonk() {
 
 bonk::bonk(int x, int y, SDL_Renderer* renderer)
     {
+    mX = x;
+    mY = y;
+
     if (!m_texture) {loadTexture(renderer);}
     if (!m_sound) {Set2Sound();}
     Mix_PlayChannel(-1, m_sound, 0);
@@ -20,6 +23,6 @@ bonk::bonk(int x, int y, SDL_Renderer* renderer)
     cout << "bonk Create" << " x : " << mX << " y : " << mY << endl;
 }
 
-~bonk::bonk() {
+bonk::~bonk() {
     cout << "bonk Destroy" << " x : " << mX << " y : " << mY << endl;
 }

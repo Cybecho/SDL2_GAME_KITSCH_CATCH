@@ -6,7 +6,7 @@ class bonk{
 public:
     //~ 생성자와 소멸자
     bonk();
-    bonk(int x, int y);  
+    bonk(int x, int y, SDL_Renderer* renderer);  
     ~bonk();
 
     //~ 초기화 함수
@@ -27,6 +27,10 @@ public:
 private:
     int mX;
     int mY;
+    int m_frame;
+    int m_frameCount;
+    int m_frameDelay;
+    int m_frameTimer;
 
     //~ 메모리 절약을 위해 재사용되는 텍스쳐와 사운드는 정적 변수로 선언
     static SDL_Texture* m_texture;
