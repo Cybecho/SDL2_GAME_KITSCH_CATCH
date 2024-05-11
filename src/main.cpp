@@ -17,6 +17,7 @@ int g_current_game_phase;
 Mix_Music* intro_music;
 Mix_Music* clear_music;
 Mix_Music* gameover_music;
+Mix_Music* main_music;
 
 int main(int argc, char* argv[]) {
 	// Initializing SDL library
