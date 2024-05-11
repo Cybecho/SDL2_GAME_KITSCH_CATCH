@@ -9,6 +9,7 @@ public:
 	gamePlay();
 	~gamePlay();
 
+	void changePhaseToEnding();
 	void HandleEvents();
 	void Update();
 	void Render();
@@ -24,6 +25,8 @@ public:
 
 	SDL_Rect playground_rect;
 	SDL_Rect stack_rect;
+	SDL_Rect timebar_bg_rect;
+	SDL_Rect timebar_bg_dir_rect;
 	SDL_Rect timebar_rect;
 	SDL_Rect cat_rect;
 	SDL_Rect settingBT_rect;
@@ -34,3 +37,4 @@ public:
 };
 
 extern Mix_Music* play_music;
+extern Mix_Music* clear_music;

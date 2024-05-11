@@ -3,7 +3,7 @@
 #include "gameEndingClear.h"
 #include "gameEndingGameover.h"
 #include "gameMain.h"
-//#include "gamePlay.h"
+#include "gamePlay.h"
 
 SDL_Window* g_window;
 SDL_Renderer* g_renderer;
@@ -17,6 +17,8 @@ int g_current_game_phase;
 Mix_Music* intro_music;
 Mix_Music* clear_music;
 Mix_Music* gameover_music;
+Mix_Music* main_music;
+Mix_Music* play_music;
 
 int main(int argc, char* argv[]) {
 	// Initializing SDL library
@@ -32,6 +34,7 @@ int main(int argc, char* argv[]) {
 	g_renderer = SDL_CreateRenderer(g_window, -1, 0);
 
 	InitGame();
+
 	
 	//! 게임 페이즈 객체를 담는 벡터(순서대로 배치해야 ENUM과 매칭됨)
 	/*! ENUM 순서는 
@@ -39,14 +42,14 @@ int main(int argc, char* argv[]) {
 	PHASE_ENDING_CLEAR / PHASE_ENDING_GAMEOVER / PHASE_PAUSE
 	*/
 	std::vector<gameClass*> game_phases;
-    game_phases.push_back(new gameIntro()); // PHASE_INTRO
+   game_phases.push_back(new gameIntro()); // PHASE_INTRO
 	game_phases.push_back(new gameMain()); // PHASE_MAIN
-	//game_phases.push_back(new gamePlay()); // PHASE_PLAYING
+	game_phases.push_back(new gamePlay()); // PHASE_PLAYING
     game_phases.push_back(new gameEndingClear()); // PHASE_ENDING_CLEAR
     game_phases.push_back(new gameEndingGameover()); // PHASE_ENDING_GAMEOVER
-    // game_phases.push_back(new gamePause());
+     game_phases.push_back(new gamePause());
 
-	g_current_game_phase = PHASE_INTRO;
+	g_current_game_phase = PHASE_MAIN;
 
 	g_last_time_ms = SDL_GetTicks();
 

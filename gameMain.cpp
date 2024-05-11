@@ -3,6 +3,8 @@
 SDL_Texture* exp_text; //"EXP" text
 SDL_Texture* score_text; //get score from txt file
 
+
+
 gameMain::gameMain() {
 
 	// BG
@@ -115,10 +117,15 @@ gameMain::gameMain() {
 	}
 	//Mix_VolumeMusic(128);
 	Mix_PlayMusic(main_music, -1);
+
+
+	//sound effect(play button)
+	SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
 }
 
 gameMain::~gameMain() {
 	Mix_FreeMusic(main_music);
+	Mix_FreeChunk(SoundEffect);
 	SDL_DestroyTexture(exp_text);
 	SDL_DestroyTexture(score_text);
 	SDL_DestroyTexture(main_bg);
@@ -133,6 +140,7 @@ gameMain::~gameMain() {
 void gameMain::HandleEvents() {
 	SDL_Event event;
 	if (SDL_PollEvent(&event)) {
+
 		switch (event.type) {
 
 		case SDL_QUIT:
@@ -141,10 +149,25 @@ void gameMain::HandleEvents() {
 
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_SPACE) {
-				//g_current_game_phase = PHASE_PLAY;
+				changePhaseToPlay();
+			}
+			else {
+				Mix_PlayMusic(main_music, -1);
 			}break;
 
 		default: break;
+		}
+
+		if (event.type == SDL_MOUSEBUTTONDOWN) {
+			if (event.button.button == SDL_BUTTON_LEFT) {
+				int mouseX = event.button.x;
+				int mouseY = event.button.y;
+				if (mouseX > playBT_dir_rect.x && mouseY > playBT_dir_rect.y && 
+					mouseX < playBT_dir_rect.x + playBT_dir_rect.w && mouseY < playBT_dir_rect.y + playBT_dir_rect.h) {
+					changePhaseToPlay();
+					Mix_PlayChannel(-1, SoundEffect, 0);
+				}
+			}
 		}
 
 	}
@@ -157,12 +180,11 @@ void gameMain::Render() {
 	SDL_RenderCopy(g_renderer, main_bg, NULL, NULL);
 
 	{ //play button
-		SDL_Rect tmp_r;
-		tmp_r.x = g_window_margin;
-		tmp_r.y = 800;
-		tmp_r.w = playBT_rect.w;
-		tmp_r.h = playBT_rect.h;
-		SDL_RenderCopy(g_renderer, play_bt, &playBT_rect, &tmp_r);
+		playBT_dir_rect.x = g_window_margin;
+		playBT_dir_rect.y = 800;
+		playBT_dir_rect.w = playBT_rect.w;
+		playBT_dir_rect.h = playBT_rect.h;
+		SDL_RenderCopy(g_renderer, play_bt, &playBT_rect, &playBT_dir_rect);
 	}
 
 	{ //interaction button
@@ -212,4 +234,11 @@ void gameMain::Render() {
 	}
 
 	SDL_RenderPresent(g_renderer);
+}
+
+void gameMain::changePhaseToPlay() { 
+	g_current_game_phase = PHASE_PLAYING;
+	Mix_HaltMusic();
+	Mix_PlayMusic(play_music, -1);
+
 }

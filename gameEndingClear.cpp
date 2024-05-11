@@ -35,13 +35,13 @@ void gameEndingClear::HandleEvents() {
 		case SDL_KEYDOWN:
 			// 스페이스바 눌렀을 때(치트키)
 			if (event.key.keysym.sym == SDLK_SPACE) {
-				g_current_game_phase = PHASE_ENDINGGAMEOVER;
+				g_current_game_phase = PHASE_ENDING_CLEAR;
 				Mix_HaltMusic();
 			}
 			// 스페이스바를 제외한 아무키 눌렀을 때
 			else {
 				//g_current_game_phase = PHASE_MAIN;
-				g_current_game_phase = PHASE_ENDINGGAMEOVER;
+				g_current_game_phase = PHASE_ENDING_GAMEOVER;
 				Mix_PlayMusic(gameover_music, -1);
 			}
 			break;

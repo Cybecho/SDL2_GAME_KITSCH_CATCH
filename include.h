@@ -6,12 +6,12 @@
 
 //! Game Phases Enum
 enum GamePhase {
-    PHASE_INTRO,
-    PHASE_MAIN,
-    PHASE_PLAYING,
-    PHASE_ENDING_CLEAR,
-    PHASE_ENDING_GAMEOVER,
-    PHASE_PAUSE
+  PHASE_INTRO,
+  PHASE_MAIN,
+  PHASE_PLAYING,
+  PHASE_ENDING_CLEAR,
+  PHASE_ENDING_GAMEOVER,
+  PHASE_PAUSE
 };
 
 //! 기본 헤더
@@ -24,6 +24,7 @@ enum GamePhase {
 #include <ctime>
 #include <atlstr.h>
 #include <windows.h>
+#include <fstream>
 
 //! SDL 헤더
 #include "SDL.h"

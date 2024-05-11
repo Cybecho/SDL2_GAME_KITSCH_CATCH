@@ -1,5 +1,4 @@
 //메인화면
-//메인화면
 #pragma once
 #include "gameClass.h"
 
@@ -10,6 +9,7 @@ class gameMain : public gameClass {
 public:
 	gameMain();
 	~gameMain();
+	void changePhaseToPlay();
 
 	void HandleEvents();
 	void Update();
@@ -23,6 +23,7 @@ public:
 	SDL_Texture* setting_bt;
 
 	SDL_Rect playBT_rect;
+	SDL_Rect playBT_dir_rect;
 	SDL_Rect cat_rect;
 	SDL_Rect interBT_rect;
 	SDL_Rect settingBT_rect;
@@ -31,6 +32,8 @@ public:
 	SDL_Rect exp_rect;
 	SDL_Rect score_rect;
 
+	Mix_Chunk* SoundEffect;
 	
 };
 extern Mix_Music* main_music;
+extern Mix_Music* play_music;

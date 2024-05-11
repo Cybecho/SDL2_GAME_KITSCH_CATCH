@@ -12,6 +12,7 @@ gameClass::~gameClass() {
 
 void InitGame() {
 	g_flag_running = true;
+	g_last_time_ms = 0;
 }
 
 void ClearGame() {

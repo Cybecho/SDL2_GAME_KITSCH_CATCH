@@ -59,13 +59,13 @@ void gameIntro::HandleEvents() {
 			// �����̽��� ������ ��(ġƮŰ)
 			if (event.key.keysym.sym == SDLK_SPACE) {
 				//g_current_game_phase = PHASE_MAIN;
-				g_current_game_phase = PHASE_ENDINGCLEAR;
+				//g_current_game_phase = PHASE_ENDINGCLEAR;
 				Mix_HaltMusic();
 			}
 			// �����̽��ٸ� ������ �ƹ�Ű ������ ��
 			else {
 				//g_current_game_phase = PHASE_MAIN;
-				g_current_game_phase = PHASE_ENDINGCLEAR;
+				//g_current_game_phase = PHASE_ENDINGCLEAR;
 				Mix_PlayMusic(clear_music, -1);
 			}
 			break;
