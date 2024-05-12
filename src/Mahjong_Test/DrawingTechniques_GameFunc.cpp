@@ -16,14 +16,12 @@ TTF_Font* game_font_;
 SDL_Rect g_bg_source_rect;
 SDL_Rect g_bg_destination_rect;
 
-int g_score;
-int g_input;
+int g_scale;
 
 void InitGame() {
     g_flag_running = true;
 
-    g_input = 0;
-    g_score = 0;
+    g_scale = BLOCK_SCALE;
 
     g_bg_source_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
     g_bg_destination_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
@@ -47,8 +45,13 @@ void HandleEvents() {
                     block.Play2Sound();
                     cout << "Clicked! : " << mouse_x << " , " << mouse_y << endl;
 
-                    // 클릭된 위치에 bonk 객체 생성
-                    g_bonks.emplace_back(mouse_x - (BLOCK_SIZE / (BLOCK_SCALE*BLOCK_SCALE)), mouse_y - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), g_renderer);
+                    //! 클릭된 위치에 bonk 객체 생성
+                    if (BLOCK_SCALE == 1) {
+                        g_bonks.emplace_back(mouse_x - (BLOCK_SIZE / 2), mouse_y - (BLOCK_SIZE / 2), g_renderer);
+                    }
+					else {
+                        g_bonks.emplace_back(mouse_x - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), mouse_y - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), g_renderer);
+					}
                     break;
                 }
             }
