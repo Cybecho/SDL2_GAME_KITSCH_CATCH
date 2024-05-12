@@ -1,8 +1,6 @@
 // Include.h
 #pragma once
 
-#define BLOCK_SIZE 15
-
 #define WINDOW_WIDTH 540
 #define WINDOW_HEIGHT 960
 #define g_window_margin 20

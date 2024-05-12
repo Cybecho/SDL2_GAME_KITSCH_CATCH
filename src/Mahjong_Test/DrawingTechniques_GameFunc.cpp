@@ -18,7 +18,6 @@ SDL_Rect g_bg_destination_rect;
 
 int g_score;
 int g_input;
-int g_blockCount = BLOCK_SIZE;
 
 void InitGame() {
     g_flag_running = true;
@@ -35,14 +34,7 @@ void HandleEvents() {
 
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
-            if (g_blocks.size() < g_blockCount) {
-                g_blocks.emplace_back(WINDOW_WIDTH / 2 - 50, WINDOW_HEIGHT / 2, g_renderer);
-                cout << "MAGAZINE : " << g_blocks.size() << "/" << BLOCK_SIZE << endl;
-                g_score += 10;
-            }
-            else {
-                cout << "Maximum fire count reached!" << endl;
-            }
+            g_blocks.emplace_back(WINDOW_WIDTH / 2 - 50, WINDOW_HEIGHT / 2, g_renderer);
         }
 
         if (event.type == SDL_MOUSEBUTTONDOWN) {
