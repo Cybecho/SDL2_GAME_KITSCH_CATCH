@@ -11,6 +11,9 @@
 !/res/**
 !/src/**
 
+# Explicitly include .csv files in the res/level/0 directory
+!/res/level/0/*.csv
+
 # Except specific files
 !.md
 !/x64/Release/*.dll
