@@ -46,12 +46,12 @@ void Mahjong::Clear2Sound() {
 }
 
 void Mahjong::render(SDL_Renderer* renderer) const {
-    SDL_Rect dstRect = { m_x, m_y, 200, 200 };
+    SDL_Rect dstRect = { m_x, m_y, BLOCK_SIZE, BLOCK_SIZE };
     SDL_RenderCopy(renderer, m_texture, &m_sourceRect, &dstRect);
 }
 
 bool Mahjong::isOutOfScreen() {
-    return m_y < -200;
+    return m_y < -BLOCK_SIZE;
 }
 
 void Mahjong::destroyTexture() {

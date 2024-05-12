@@ -1,6 +1,7 @@
 #pragma once
-
 #include "Include.h"
+
+#define BLOCK_SIZE 100
 
 class Mahjong {
 public:
