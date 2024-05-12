@@ -3,7 +3,8 @@
 Mix_Chunk* Mahjong::m_sound = nullptr;
 SDL_Texture* Mahjong::m_texture = nullptr;
 
-Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer) : m_x(x), m_y(y), m_speed(FIRE_SPEED), m_frame(0), m_frameCount(3), m_frameDelay(5), m_frameTimer(0) {
+Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRect)
+    : m_x(x), m_y(y), m_speed(FIRE_SPEED), m_sourceRect(sourceRect) {
     if (!m_texture) {
         loadTexture(renderer);
     }
@@ -14,10 +15,6 @@ Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer) : m_x(x), m_y(y), m_speed
 
     Mix_PlayChannel(-1, m_sound, 0);
 
-    for (int i = 0; i < m_frameCount; ++i) {
-        m_sourceRects[i] = { i * 200, 0, 200, 200 };
-    }
-
     cout << "Mahjong Create" << " x : " << this->m_x << " y : " << this->m_y << endl;
 }
 
@@ -27,15 +24,6 @@ Mahjong::~Mahjong() {
 
 void Mahjong::update() {
     m_y -= m_speed;
-
-    ++m_frameTimer;
-    if (m_frameTimer >= m_frameDelay) {
-        m_frameTimer = 0;
-        ++m_frame;
-        if (m_frame >= m_frameCount) {
-            m_frame = 0;
-        }
-    }
 }
 
 void Mahjong::Set2Sound() {
@@ -58,8 +46,8 @@ void Mahjong::Clear2Sound() {
 }
 
 void Mahjong::render(SDL_Renderer* renderer) const {
-    SDL_Rect dstRect = { m_x - 100, m_y, 200, 200 };
-    SDL_RenderCopy(renderer, m_texture, &m_sourceRects[m_frame], &dstRect);
+    SDL_Rect dstRect = { m_x, m_y, 200, 200 };
+    SDL_RenderCopy(renderer, m_texture, &m_sourceRect, &dstRect);
 }
 
 bool Mahjong::isOutOfScreen() {
@@ -69,4 +57,10 @@ bool Mahjong::isOutOfScreen() {
 void Mahjong::destroyTexture() {
     SDL_DestroyTexture(m_texture);
     m_texture = nullptr;
+}
+
+void Mahjong::loadTexture(SDL_Renderer* renderer) {
+    SDL_Surface* surface = IMG_Load("../Resources/Mahjong.png");
+    m_texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
 }

@@ -4,7 +4,7 @@
 
 class Mahjong {
 public:
-    Mahjong(int x, int y, SDL_Renderer* renderer);
+    Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRect);
     virtual ~Mahjong();
     void update();
     void render(SDL_Renderer* renderer) const;
@@ -14,15 +14,11 @@ public:
     static void Clear2Sound();
 
 protected:
-    virtual void loadTexture(SDL_Renderer* renderer) = 0;
+    static void loadTexture(SDL_Renderer* renderer);
     int m_x;
     int m_y;
     int m_speed;
-    int m_frame;
-    int m_frameCount;
-    int m_frameDelay;
-    int m_frameTimer;
-    SDL_Rect m_sourceRects[3];
+    SDL_Rect m_sourceRect;
     static Mix_Chunk* m_sound;
     static SDL_Texture* m_texture;
 };
