@@ -13,9 +13,6 @@ Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRec
         Set2Sound();
     }
 
-    //! 积己瞪锭付促 家府 犁积
-    //Play2Sound();
-
     cout << "Mahjong Create" << " x : " << this->m_x << " y : " << this->m_y << endl;
 }
 
