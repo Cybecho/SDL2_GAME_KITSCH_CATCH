@@ -1,11 +1,13 @@
 // Include.h
 #pragma once
 
-#define WINDOW_WIDTH 540
-#define WINDOW_HEIGHT 960
-#define g_window_margin 20
-#define BLOCK_SIZE 100
-#define BLOCK_SCALE 1
+#define WINDOW_WIDTH 540    // 윈도우 너비
+#define WINDOW_HEIGHT 960   // 윈도우 높이
+#define PIVOT_X 20          // 고정 피벗 x좌표
+#define PIVOT_Y 300         // 고정 피벗 y좌표
+#define g_window_margin 20  // 윈도우 마진
+#define BLOCK_SIZE 100      // 블록 기본 크기
+#define BLOCK_SCALE 1.0f    // 블록 크기 배율
 
 enum GamePhase {
     PHASE_INTRO,
@@ -26,12 +28,15 @@ enum GamePhase {
 #include <atlstr.h>
 #include <windows.h>
 #include <fstream>
+#include <sstream>
 #include <memory>
 
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDL_mixer.h"
 #include "SDL_ttf.h"
+
+//#include <xlnt/xlnt.hpp> // 이거 안쓰고 그냥 sstream으로 대체함
 
 using int8 = std::int8_t;
 using int16 = std::int16_t;

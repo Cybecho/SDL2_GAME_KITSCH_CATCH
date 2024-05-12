@@ -5,12 +5,12 @@
 *.sln
 
 # Except the following directories
-!/doc/
-!/include/
-!/lib/
-!/res/
-!/src/
-!/src/Mahjong_Test
+!/doc/*
+!/include/*
+!/lib/*
+!/res/*
+!/src/*
+!/src/Mahjong_Test/*
 !.md
 !/x64/Release/*.dll
 !/x64/Debug/*.dll

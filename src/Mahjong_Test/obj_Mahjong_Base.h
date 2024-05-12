@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Include.h"
 #include "obj_VFX.h"
 
@@ -14,13 +14,19 @@ public:
     static void Play2Sound();
     static void Clear2Sound();
 
-    //! Å¬¸¯ °¡´ÉÇÑÁö
+    //! í´ë¦­ ê°€ëŠ¥í•œì§€
     bool isClickable() const { return clickEnable; }
     void setClickable(bool value) { clickEnable = value; }
-    //! Å¬¸¯ µÇ¾úÀ»¶§
+    //! í´ë¦­ ë˜ì—ˆì„ë•Œ
     bool isClicked(int x, int y) const;
     void setClicked(bool value) { clicked = value; }
     void handleClick();
+
+    // ì¶”ê°€ëœ ë©¤ë²„ í•¨ìˆ˜
+    int getX() const { return m_x; }
+    int getY() const { return m_y; }
+    void setX(int x) { m_x = x; }
+    void setY(int y) { m_y = y; }
 
 protected:
     static void loadTexture(SDL_Renderer* renderer);
@@ -28,7 +34,7 @@ protected:
     int m_y;
     int m_blockScale;
     int m_blockSize;
-    bool clickEnable = true; //! Drawing¸Ó½Ã±â¿¡¼­ setClickable·Î ¼³Á¤ÇØÁÖ¼¼¿ä
+    bool clickEnable = true; //! Drawingï¿½Ó½Ã±â¿¡ï¿½ï¿½ setClickableï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½
     bool clicked;
     SDL_Rect m_sourceRect;
     static Mix_Chunk* m_sound;

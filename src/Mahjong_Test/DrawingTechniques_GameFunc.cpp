@@ -2,7 +2,6 @@
 #include "DrawingTechniques_GameFunc.h"
 #include "obj_Mahjong_Derived.h"
 #include "obj_VFX.h"
-#include <memory>
 
 std::vector<std::unique_ptr<Mahjong>> g_vector; // 마작 블록 생성 벡터
 std::vector<std::unique_ptr<Mahjong>> g_stack; // 마작 블록 스택 벡터
@@ -27,6 +26,58 @@ void InitGame() {
 
     g_bg_source_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
     g_bg_destination_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+
+    // csv 파일 읽기
+    std::vector<std::vector<std::vector<std::unique_ptr<Mahjong>>>> mahjong_blocks(3);
+
+    for (int dim = 0; dim < 3; ++dim) {
+        std::string filename = "../Resources/level/0/0-" + std::to_string(dim) + ".csv";
+        std::ifstream file(filename);
+        if (!file.is_open()) {
+            std::cerr << "Failed to open file: " << filename << std::endl;
+            continue;
+        }
+        std::string line;
+        int row = 0;
+
+        while (std::getline(file, line)) {
+            std::istringstream iss(line);
+            std::string cell;
+            int col = 0;
+
+            mahjong_blocks[dim].emplace_back();
+
+            while (std::getline(iss, cell, ',')) {
+                int data = std::stoi(cell);
+
+                int x = col * BLOCK_SIZE + PIVOT_X + (dim * BLOCK_SIZE/2);
+                int y = row * BLOCK_SIZE + PIVOT_Y + (dim * BLOCK_SIZE/2);
+
+                if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT) {
+                    switch (data) {
+                    case 1:
+                        g_vector.emplace_back(std::make_unique<Mahjong_A>(x, y, g_renderer));
+                        break;
+                    case 2:
+                        g_vector.emplace_back(std::make_unique<Mahjong_B>(x, y, g_renderer));
+                        break;
+                    case 3:
+                        g_vector.emplace_back(std::make_unique<Mahjong_C>(x, y, g_renderer));
+                        break;
+                    case 4:
+                        g_vector.emplace_back(std::make_unique<Mahjong_D>(x, y, g_renderer));
+                        break;
+                    default:
+                        break;
+                    }
+                }
+
+                ++col;
+            }
+
+            ++row;
+        }
+    }
 }
 
 void HandleEvents() {
@@ -34,6 +85,7 @@ void HandleEvents() {
 
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
+            
             g_vector.emplace_back(std::make_unique<Mahjong_A>(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, g_renderer));
         }
 
@@ -122,6 +174,7 @@ void ClearGame() {
         block->destroyTexture();
         block->Clear2Sound();
     }
+    g_vector.clear();
     g_stack.clear();
     g_bonks.clear();
 
