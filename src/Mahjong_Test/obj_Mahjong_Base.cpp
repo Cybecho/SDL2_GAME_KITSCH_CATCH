@@ -4,7 +4,7 @@ Mix_Chunk* Mahjong::m_sound = nullptr;
 SDL_Texture* Mahjong::m_texture = nullptr;
 
 Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRect)
-    : m_x(x), m_y(y), m_speed(FIRE_SPEED), m_sourceRect(sourceRect) {
+    : m_x(x), m_y(y), m_speed(FIRE_SPEED), clicked(false), m_sourceRect(sourceRect) {
     if (!m_texture) {
         loadTexture(renderer);
     }
@@ -23,7 +23,17 @@ Mahjong::~Mahjong() {
 }
 
 void Mahjong::update() {
-    m_y -= m_speed;
+}
+
+void Mahjong::handleClick() {
+    if (clicked) {
+        m_x = 0;
+        m_y = 0;
+    }
+}
+
+bool Mahjong::isClicked(int x, int y) const {
+    return x >= m_x && x < m_x + BLOCK_SIZE && y >= m_y && y < m_y + BLOCK_SIZE;
 }
 
 void Mahjong::Set2Sound() {
@@ -48,10 +58,6 @@ void Mahjong::Clear2Sound() {
 void Mahjong::render(SDL_Renderer* renderer) const {
     SDL_Rect dstRect = { m_x, m_y, BLOCK_SIZE, BLOCK_SIZE };
     SDL_RenderCopy(renderer, m_texture, &m_sourceRect, &dstRect);
-}
-
-bool Mahjong::isOutOfScreen() {
-    return m_y < -BLOCK_SIZE;
 }
 
 void Mahjong::destroyTexture() {

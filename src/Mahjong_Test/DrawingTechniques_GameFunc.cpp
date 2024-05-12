@@ -72,14 +72,14 @@ void InitGame() {
 	g_bg_destination_rect.w = WINDOW_WIDTH;
 	g_bg_destination_rect.h = WINDOW_HEIGHT;
 
-	
+
 
 	// Player Character
 	g_player_sprite_num = 3;
 	g_current_player_id = 0;
 
 	SDL_Surface* player_sheet_surface = IMG_Load("../Resources/plane_9_direction.png");
-	
+
 	g_player_sheet_texture = SDL_CreateTextureFromSurface(g_renderer, player_sheet_surface);
 	SDL_FreeSurface(player_sheet_surface);
 	// 중괄호로 묶은건 구조체에서 초기화한 변수에 차례대로 들어감
@@ -96,8 +96,8 @@ void InitGame() {
 
 
 	// 그려질 위치
-	g_player_destination_rect.x = WINDOW_WIDTH /2 - 100;
-	g_player_destination_rect.y = WINDOW_HEIGHT/2;
+	g_player_destination_rect.x = WINDOW_WIDTH / 2 - 100;
+	g_player_destination_rect.y = WINDOW_HEIGHT / 2;
 	g_player_destination_rect.w = g_player_source_rects[0].w; // 이미지의 너비
 	g_player_destination_rect.h = g_player_source_rects[0].h;
 
@@ -165,10 +165,25 @@ void HandleEvents() {
 				break;
 			}
 		}
+
+		//! 마작 객체 마우스 클릭시 이벤트 처리
+		if (event.type == SDL_MOUSEBUTTONDOWN) {
+			
+			int x = event.button.x;
+			int y = event.button.y;
+
+			for (auto& fire : g_fires) {
+				if (fire.isClicked(x, y)) {
+					fire.setClicked(true);
+					cout << "Clicked!" << endl;
+					break;
+				}
+			}
+		}
 	}
 }
-void Update() {
 
+void Update() {
 	//! 캐릭터 이동
 	const float speed = MOVE_SPEED; // 이동 속도
 	float dx = 0, dy = 0;
@@ -230,15 +245,9 @@ void Update() {
 		g_player_destination_rect.y = WINDOW_HEIGHT - g_player_destination_rect.h;
 	}
 
-	//! 총알 이동
-	for (auto it = g_fires.begin(); it != g_fires.end();) {
-		it->update();
-		if (it->isOutOfScreen()) {
-			it = g_fires.erase(it);
-		}
-		else {
-			++it;
-		}
+	for (auto& fire : g_fires) {
+		fire.handleClick();
+		fire.update();
 	}
 }
 
@@ -291,7 +300,6 @@ void RenderScore() {
 	SDL_RenderCopy(g_renderer, text_score_, nullptr, &text_score_rect_);
 	SDL_DestroyTexture(text_score_);
 }
-
 
 void ClearGame() {
 	SDL_DestroyTexture(g_player_sheet_texture);

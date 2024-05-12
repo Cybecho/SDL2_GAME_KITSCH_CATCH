@@ -1,5 +1,5 @@
 #pragma once // 헤더가드 대신 pragma once 사용
-#define MAGAZINE_SIZE 3 // 총알 최대 발사 수
+#define MAGAZINE_SIZE 10 // 총알 최대 발사 수
 #define FIRE_SPEED 40 // 총알 속도
 #define MOVE_SPEED 20.0f // 플레이어 이동 속도
 

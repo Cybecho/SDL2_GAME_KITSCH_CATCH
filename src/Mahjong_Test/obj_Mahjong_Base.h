@@ -9,16 +9,20 @@ public:
     virtual ~Mahjong();
     void update();
     void render(SDL_Renderer* renderer) const;
-    bool isOutOfScreen();
     static void destroyTexture();
     static void Set2Sound();
     static void Clear2Sound();
+
+    bool isClicked(int x, int y) const;
+    void setClicked(bool value) { clicked = value; }
+    void handleClick();
 
 protected:
     static void loadTexture(SDL_Renderer* renderer);
     int m_x;
     int m_y;
     int m_speed;
+    bool clicked;
     SDL_Rect m_sourceRect;
     static Mix_Chunk* m_sound;
     static SDL_Texture* m_texture;
