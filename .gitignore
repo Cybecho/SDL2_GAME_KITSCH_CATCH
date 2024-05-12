@@ -4,13 +4,14 @@
 # Ignore files with .sln extension
 *.sln
 
-# Except the following directories
-!/doc/*
-!/include/*
-!/lib/*
-!/res/*
-!/src/*
-!/src/Mahjong_Test/*
+# Except the following directories and their contents
+!/doc/**
+!/include/**
+!/lib/**
+!/res/**
+!/src/**
+
+# Except specific files
 !.md
 !/x64/Release/*.dll
 !/x64/Debug/*.dll
