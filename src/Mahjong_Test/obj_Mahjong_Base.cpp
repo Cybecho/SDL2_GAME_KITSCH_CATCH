@@ -57,7 +57,16 @@ void Mahjong::Clear2Sound() {
 
 void Mahjong::render(SDL_Renderer* renderer) const {
     SDL_Rect dstRect = { m_x, m_y, static_cast<int>(m_blockSize / m_blockScale), static_cast<int>(m_blockSize / m_blockScale) };
-    SDL_RenderCopy(renderer, m_texture, &m_sourceRect, &dstRect);
+
+    if (clickEnable) { //! 클릭 가능한 경우
+        SDL_RenderCopy(renderer, m_texture, &m_sourceRect, &dstRect);
+    }
+    else { //! 클릭 불가능한 경우
+        Uint8 alpha = 128; // 반투명도 설정 (0-255)
+        SDL_SetTextureAlphaMod(m_texture, alpha); // 투명도 설정
+        SDL_RenderCopy(renderer, m_texture, &m_sourceRect, &dstRect);
+        SDL_SetTextureAlphaMod(m_texture, 255); // 원래 투명도로 복구
+    }
 }
 
 void Mahjong::destroyTexture() {
