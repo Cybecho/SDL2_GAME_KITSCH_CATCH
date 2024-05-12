@@ -3,27 +3,27 @@
 //! Mahjong_A
 Mahjong_A::Mahjong_A(int x, int y, SDL_Renderer* renderer)
     : Mahjong(x, y, renderer, { 0 * BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE }) {
-    cout << "Mahjong_A" << endl;
+    cout << "create A" << endl;
 }
-Mahjong_A::~Mahjong_A() {}
+Mahjong_A::~Mahjong_A() { cout << "delete A" << endl; }
 
 //! Mahjong_B
 Mahjong_B::Mahjong_B(int x, int y, SDL_Renderer* renderer)
     : Mahjong(x, y, renderer, { 1 * BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE }) {
-    cout << "Mahjong_B" << endl;
+    cout << "create B" << endl;
 }
-Mahjong_B::~Mahjong_B() {}
+Mahjong_B::~Mahjong_B() { cout << "delete B" << endl; }
 
 //! Mahjong_C
 Mahjong_C::Mahjong_C(int x, int y, SDL_Renderer* renderer)
     : Mahjong(x, y, renderer, { 2 * BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE }) {
-    cout << "Mahjong_C" << endl;
+    cout << "create C" << endl;
 }
-Mahjong_C::~Mahjong_C() {}
+Mahjong_C::~Mahjong_C() { cout << "delete C" << endl; }
 
 //! Mahjong_D
 Mahjong_D::Mahjong_D(int x, int y, SDL_Renderer* renderer)
     : Mahjong(x, y, renderer, { 3 * BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE }) {
-    cout << "Mahjong_D" << endl;
+    cout << "create Dq" << endl;
 }
-Mahjong_D::~Mahjong_D() {}
+Mahjong_D::~Mahjong_D() { cout << "delete D" << endl; }

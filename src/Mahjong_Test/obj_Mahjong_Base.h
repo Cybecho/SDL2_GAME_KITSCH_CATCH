@@ -6,7 +6,7 @@
 class Mahjong {
 public:
     Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRect);
-    virtual ~Mahjong();
+    virtual ~Mahjong() {};
     void update();
     void render(SDL_Renderer* renderer) const;
     static void destroyTexture();

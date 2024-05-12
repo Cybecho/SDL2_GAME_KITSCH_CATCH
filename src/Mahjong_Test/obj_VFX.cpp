@@ -16,11 +16,11 @@ bonk::bonk(int x, int y, SDL_Renderer* renderer, int blockScale)
     }
 
     m_createTime = SDL_GetTicks();
-    cout << "bonk! ON" << endl;
+    //~ cout << "bonk! ON" << endl;
 }
 
 bonk::~bonk() {
-    cout << "bonk! OFF" << endl;
+    //~ cout << "bonk! OFF" << endl;
 }
 
 void bonk::update() {

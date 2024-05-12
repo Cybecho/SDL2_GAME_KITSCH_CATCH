@@ -16,10 +16,6 @@ Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRec
     cout << "Mahjong Create" << " x : " << this->m_x << " y : " << this->m_y << endl;
 }
 
-Mahjong::~Mahjong() {
-    cout << "Mahjong Delete" << endl;
-}
-
 void Mahjong::update() {
 }
 
