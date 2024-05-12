@@ -2,7 +2,6 @@
 #include "Include.h"
 #include "obj_VFX.h"
 
-#define BLOCK_SIZE 100
 
 class Mahjong {
 public:
@@ -23,6 +22,8 @@ protected:
     static void loadTexture(SDL_Renderer* renderer);
     int m_x;
     int m_y;
+    int m_blockScale;
+    int m_blockSize;
     bool clicked;
     SDL_Rect m_sourceRect;
     static Mix_Chunk* m_sound;

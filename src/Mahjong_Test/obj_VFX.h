@@ -7,7 +7,7 @@
 
 class bonk {
 public:
-    bonk(int x, int y, SDL_Renderer* renderer);
+    bonk(int x, int y, SDL_Renderer* renderer, int blockScale = 1);
     ~bonk();
     void update();
     void render(SDL_Renderer* renderer) const;
@@ -23,4 +23,6 @@ private:
     Uint32 m_createTime;
     SDL_Rect m_sourceRects[VFX_FRAME];
     static SDL_Texture* m_texture;
+    int m_blockScale;
+    int m_blockSize;
 };

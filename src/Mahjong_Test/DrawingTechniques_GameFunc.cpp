@@ -34,21 +34,21 @@ void HandleEvents() {
 
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
-            g_blocks.emplace_back(WINDOW_WIDTH / 2 - 50, WINDOW_HEIGHT / 2, g_renderer);
+            g_blocks.emplace_back(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, g_renderer);
         }
 
         if (event.type == SDL_MOUSEBUTTONDOWN) {
-            int x = event.button.x;
-            int y = event.button.y;
+            int mouse_x = event.button.x;
+            int mouse_y = event.button.y;
 
             for (auto& block : g_blocks) {
-                if (block.isClicked(x, y)) {
+                if (block.isClicked(mouse_x, mouse_y)) {
                     block.setClicked(true);
                     block.Play2Sound();
-                    cout << "Clicked!" << endl;
+                    cout << "Clicked! : " << mouse_x << " , " << mouse_y << endl;
 
                     // 클릭된 위치에 bonk 객체 생성
-                    g_bonks.emplace_back(x - (BLOCK_SIZE/2), y - (BLOCK_SIZE / 2), g_renderer);
+                    g_bonks.emplace_back(mouse_x - (BLOCK_SIZE / (BLOCK_SCALE*BLOCK_SCALE)), mouse_y - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), g_renderer);
                     break;
                 }
             }

@@ -4,6 +4,8 @@
 #define WINDOW_WIDTH 540
 #define WINDOW_HEIGHT 960
 #define g_window_margin 20
+#define BLOCK_SIZE 100
+#define BLOCK_SCALE 4
 
 enum GamePhase {
     PHASE_INTRO,
