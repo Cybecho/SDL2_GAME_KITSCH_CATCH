@@ -4,7 +4,7 @@ Mix_Chunk* Mahjong::m_sound = nullptr;
 SDL_Texture* Mahjong::m_texture = nullptr;
 
 Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRect)
-    : m_x(x), m_y(y), m_speed(FIRE_SPEED), clicked(false), m_sourceRect(sourceRect) {
+    : m_x(x), m_y(y), clicked(false), m_sourceRect(sourceRect) {
     if (!m_texture) {
         loadTexture(renderer);
     }
@@ -13,7 +13,8 @@ Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRec
         Set2Sound();
     }
 
-    Mix_PlayChannel(-1, m_sound, 0);
+    //! 积己瞪锭付促 家府 犁积
+    //Play2Sound();
 
     cout << "Mahjong Create" << " x : " << this->m_x << " y : " << this->m_y << endl;
 }
@@ -38,13 +39,19 @@ bool Mahjong::isClicked(int x, int y) const {
 
 void Mahjong::Set2Sound() {
     if (!m_sound) {
-        m_sound = Mix_LoadWAV("../Resources/Bullett_Classic.mp3");
+        m_sound = Mix_LoadWAV("../Resources/ClickBlock.mp3");
         if (!m_sound) {
             printf("Failed to load sound effect! SDL_mixer Error: %s\n", Mix_GetError());
         }
         else {
             Mix_VolumeChunk(m_sound, 32);
         }
+    }
+}
+
+void Mahjong::Play2Sound() {
+    if (m_sound) {
+        Mix_PlayChannel(-1, m_sound, 0);
     }
 }
 

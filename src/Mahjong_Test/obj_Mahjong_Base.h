@@ -1,5 +1,6 @@
 #pragma once
 #include "Include.h"
+#include "obj_VFX.h"
 
 #define BLOCK_SIZE 100
 
@@ -11,6 +12,7 @@ public:
     void render(SDL_Renderer* renderer) const;
     static void destroyTexture();
     static void Set2Sound();
+    static void Play2Sound();
     static void Clear2Sound();
 
     bool isClicked(int x, int y) const;
@@ -21,7 +23,6 @@ protected:
     static void loadTexture(SDL_Renderer* renderer);
     int m_x;
     int m_y;
-    int m_speed;
     bool clicked;
     SDL_Rect m_sourceRect;
     static Mix_Chunk* m_sound;
