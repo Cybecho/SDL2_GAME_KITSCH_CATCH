@@ -26,6 +26,7 @@ enum GamePhase {
 #include <atlstr.h>
 #include <windows.h>
 #include <fstream>
+#include <memory>
 
 #include "SDL.h"
 #include "SDL_image.h"
