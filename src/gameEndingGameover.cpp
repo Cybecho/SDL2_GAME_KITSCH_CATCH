@@ -35,15 +35,15 @@ void gameEndingGameover::HandleEvents() {
 		case SDL_KEYDOWN:
 			// Spacebar (cheat key)
 			if (event.key.keysym.sym == SDLK_SPACE) {
-				//g_current_game_phase = PHASE_PAUSE;
+				std::cout << "Cheat key has been used!" << std::endl;
 				g_current_game_phase = PHASE_INTRO;
 				Mix_HaltMusic();
+				intro_reset = true;
 			}
 			// Any keys (except spacebar)
 			else {
-				//g_current_game_phase = PHASE_MAIN;
-				g_current_game_phase = PHASE_INTRO;
-				Mix_PlayMusic(intro_music, -1);
+				g_current_game_phase = PHASE_MAIN;
+				Mix_HaltMusic();
 			}
 			break;
 

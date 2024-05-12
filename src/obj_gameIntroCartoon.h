@@ -8,8 +8,8 @@ public:
 	Cartoon();
 	~Cartoon();
 
-	void FadeIn(int seconds);
-	void Delay(int seconds);
+	void FadeIn(double seconds);
+	void Delay(double seconds);
 
 	SDL_Surface* surface;
 	SDL_Texture* texture;
@@ -23,6 +23,6 @@ public:
 	bool is_fade_finished = false;
 
 	// Delay() Variables
-	int delay_elapsed_time = 0;
+	double delay_elapsed_time = 0;
 	bool is_delay_finished = false;
 };

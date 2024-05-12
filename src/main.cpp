@@ -3,7 +3,7 @@
 #include "gameEndingClear.h"
 #include "gameEndingGameover.h"
 #include "gameMain.h"
-//#include "gamePlay.h"
+#include "gamePlay.h"
 
 SDL_Window* g_window;
 SDL_Renderer* g_renderer;
@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
 	std::vector<gameClass*> game_phases;
     game_phases.push_back(new gameIntro()); // PHASE_INTRO
 	game_phases.push_back(new gameMain()); // PHASE_MAIN
-	//game_phases.push_back(new gamePlay()); // PHASE_PLAYING
+	game_phases.push_back(new gamePlay()); // PHASE_PLAYING
     game_phases.push_back(new gameEndingClear()); // PHASE_ENDING_CLEAR
     game_phases.push_back(new gameEndingGameover()); // PHASE_ENDING_GAMEOVER
     // game_phases.push_back(new gamePause());
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
 			continue;
 
 		game_phases[g_current_game_phase]->HandleEvents();
-		game_phases[g_current_game_phase]->Update();
+ 		game_phases[g_current_game_phase]->Update();
 		game_phases[g_current_game_phase]->Render();
 
 		g_last_time_ms = cur_time_ms;

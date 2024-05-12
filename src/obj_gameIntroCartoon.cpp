@@ -10,7 +10,7 @@ Cartoon::Cartoon() {
 Cartoon::~Cartoon() {
 }
 
-void Cartoon::FadeIn(int seconds) {
+void Cartoon::FadeIn(double seconds) {
 	fade_delta = 255. / (seconds * 33.);
 	if (fade_value + fade_delta < 255) {
 		fade_value = fade_value + fade_delta;
@@ -25,7 +25,7 @@ void Cartoon::FadeIn(int seconds) {
 	SDL_RenderCopy(g_renderer, texture, &source_rect, &destination_rect);
 }
 
-void Cartoon::Delay(int seconds) {
+void Cartoon::Delay(double seconds) {
 	if (delay_elapsed_time < seconds * 33) {
 		delay_elapsed_time++;
 	}
