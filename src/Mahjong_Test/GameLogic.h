@@ -17,7 +17,7 @@ void ClearGame();
 //! 사용자 정의 함수
 void LoadMahjongBlocksFromCSV(int level, int seed, int numDims);
 void vector2stack(std::vector<std::unique_ptr<Mahjong>>::iterator it);
-void createBonk(int mouse_x, int mouse_y); // 추가된 함수 선언
+void createBonk(int x, int y); // 추가된 함수 선언
 
 //! 업데이트 함수
 void LoadMahjongBlocksIfEmpty();

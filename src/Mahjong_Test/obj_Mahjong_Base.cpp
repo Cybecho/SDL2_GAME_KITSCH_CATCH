@@ -4,7 +4,8 @@ Mix_Chunk* Mahjong::m_sound = nullptr;
 SDL_Texture* Mahjong::m_texture = nullptr;
 
 Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRect)
-    : m_x(x), m_y(y), clicked(false), m_sourceRect(sourceRect), m_blockSize(BLOCK_SIZE), m_blockScale(BLOCK_SCALE), clickEnable(true) {
+    : m_x(x), m_y(y), clicked(false), m_sourceRect(sourceRect), m_blockSize(BLOCK_SIZE), m_blockScale(BLOCK_SCALE), clickEnable(true),
+    m_originalX(x), m_originalY(y), m_shakeTimer(0), m_isShaking(false) {
     if (!m_texture) {
         loadTexture(renderer);
     }
@@ -20,7 +21,15 @@ void Mahjong::update() {
     if (clicked) {
 		// 추후에 구현
 	}
-
+    if (m_isShaking) {
+        m_shakeTimer++;
+        if (m_shakeTimer >= 30) { // 30 프레임 동안 떨림 애니메이션 재생
+            m_x = m_originalX;
+            m_y = m_originalY;
+            m_isShaking = false;
+            m_shakeTimer = 0;
+        }
+    }
 }
 
 void Mahjong::handleClick() {
@@ -56,6 +65,21 @@ void Mahjong::Clear2Sound() {
     if (m_sound) {
         Mix_FreeChunk(m_sound);
         m_sound = nullptr;
+    }
+}
+
+void Mahjong::shakeBlocks() {
+    if (!m_isShaking) {
+        m_isShaking = true;
+        m_shakeTimer = 0;
+    }
+
+    if (m_isShaking) {
+        int shakeRange = 5;
+        int offsetX = rand() % (shakeRange * 2 + 1) - shakeRange;
+        int offsetY = rand() % (shakeRange * 2 + 1) - shakeRange;
+        m_x = m_originalX + offsetX;
+        m_y = m_originalY + offsetY;
     }
 }
 

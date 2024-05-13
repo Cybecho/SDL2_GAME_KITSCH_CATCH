@@ -157,12 +157,12 @@ void vector2stack(std::vector<std::unique_ptr<Mahjong>>::iterator it) {
 }
 
 //! 클릭된 위치에 bonk 객체 생성
-void createBonk(int mouse_x, int mouse_y) {
+void createBonk(int x, int y) {
     if (BLOCK_SCALE == 1) {
-        g_bonks.emplace_back(mouse_x - (BLOCK_SIZE / 2), mouse_y - (BLOCK_SIZE / 2), g_renderer);
+        g_bonks.emplace_back(x - (BLOCK_SIZE / 2), y - (BLOCK_SIZE / 2), g_renderer);
     }
     else {
-        g_bonks.emplace_back(mouse_x - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), mouse_y - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), g_renderer);
+        g_bonks.emplace_back(x - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), y - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), g_renderer);
     }
 }
 
@@ -187,6 +187,14 @@ void RemoveSameTypeBlocks() {
         int localScore = 0;
         if (typeCount[(*it)->getType()] >= 3) {
             typeCount[(*it)->getType()] -= 3;
+
+            // 제거되는 블록의 위치에서 createBonk() 호출
+            for (int i = 0; i < 3; ++i) {
+                int x = (it + i)->get()->getX() + BLOCK_SIZE / 2;
+                int y = (it + i)->get()->getY() + BLOCK_SIZE / 2;
+                createBonk(x, y);
+            }
+
             it = g_stack.erase(it, it + 3);
         }
         else {

@@ -33,15 +33,26 @@ public:
     //! 하위 객체들의 정보를 받아올 가상함수 
     virtual string getType() const = 0;
 
+    //! 흔들림 효과
+    void shakeBlocks();
+
 protected:
     static void loadTexture(SDL_Renderer* renderer);
+    //! 기본 멤버 변수
     int m_x;
     int m_y;
     int m_blockScale;
     int m_blockSize;
     int m_score = 100;
+    //! 흔들림 효과
+    int m_originalX;
+    int m_originalY;
+    int m_shakeTimer;
+    bool m_isShaking;
+    //! 클릭 가능 여부
     bool clickEnable;
     bool clicked;
+    //! 리소스 정보
     SDL_Rect m_sourceRect;
     static Mix_Chunk* m_sound;
     static SDL_Texture* m_texture;
