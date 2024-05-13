@@ -1,4 +1,4 @@
-#include "gameLogic.h"
+#include "DrawingTechniques_GameFunc.h"
 
 SDL_Window* g_window;
 SDL_Renderer* g_renderer;
