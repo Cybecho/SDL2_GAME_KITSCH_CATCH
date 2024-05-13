@@ -1,15 +1,8 @@
+# Ignore all directories
+*/
+
 # Ignore files with .sln extension
 *.sln
-*.vsidx
-*.ipch
-*.suo
-*.db
-*.pdb
-*.exe
-# Ignore all
-/FileContentIndex/**
-/SDL2_GAME_KITSCH_CATCH/**
-
 
 # Except the following directories and their contents
 !/doc/**
