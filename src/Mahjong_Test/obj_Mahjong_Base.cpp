@@ -4,7 +4,7 @@ Mix_Chunk* Mahjong::m_sound = nullptr;
 SDL_Texture* Mahjong::m_texture = nullptr;
 
 Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRect)
-    : m_x(x), m_y(y), clicked(false), m_sourceRect(sourceRect),m_blockSize(BLOCK_SIZE), m_blockScale(BLOCK_SCALE) {
+    : m_x(x), m_y(y), clicked(false), m_sourceRect(sourceRect), m_blockSize(BLOCK_SIZE), m_blockScale(BLOCK_SCALE) {
     if (!m_texture) {
         loadTexture(renderer);
     }
@@ -12,10 +12,9 @@ Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRec
     if (!m_sound) {
         Set2Sound();
     }
-
-    cout << "Mahjong Create" << " x : " << this->m_x << " y : " << this->m_y << endl;
+    //! »ý¼ºÀÚ ¸àÆ®
+    // cout << "Mahjong Create" << " x : " << this->m_x << " y : " << this->m_y << endl;
 }
-
 void Mahjong::update() {
 }
 

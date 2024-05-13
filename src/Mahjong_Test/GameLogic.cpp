@@ -38,7 +38,7 @@ void HandleEvents() {
 
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
-            
+
             g_vector.emplace_back(std::make_unique<Mahjong_A>(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, g_renderer));
         }
 
@@ -50,17 +50,9 @@ void HandleEvents() {
                 if ((*it)->isClicked(mouse_x, mouse_y)) {
                     (*it)->setClicked(true);
                     (*it)->Play2Sound();
-                    cout << "Clicked! : " << mouse_x << " , " << mouse_y << endl;
 
-                    vector2stack(it); // 수정된 부분
-
-                    // bonk 객체 생성
-                    if (BLOCK_SCALE == 1) {
-                        g_bonks.emplace_back(mouse_x - (BLOCK_SIZE / 2), mouse_y - (BLOCK_SIZE / 2), g_renderer);
-                    }
-                    else {
-                        g_bonks.emplace_back(mouse_x - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), mouse_y - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), g_renderer);
-                    }
+                    vector2stack(it); //! 클릭된 블록을 g_stack으로 이동
+                    createBonk(mouse_x, mouse_y); //! 클릭 위치에 bonk 객체 생성
                     break;
                 }
             }
@@ -102,7 +94,7 @@ void Update() {
 }
 
 void Render() {
-    SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255); // 배경색 설정
     SDL_RenderClear(g_renderer);
 
     // 블록 객체 렌더링
@@ -175,10 +167,36 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
 void vector2stack(std::vector<std::unique_ptr<Mahjong>>::iterator it) {
     auto block = std::move(*it);
     g_vector.erase(it);
-    g_stack.emplace_back(std::move(block));
+
+    //! 객체의 위치를 수정합니다.
+    int x = g_stack.size() * BLOCK_SIZE + PIVOT_X;
+    int y = BLOCK_SIZE + PIVOT_Y - (BLOCK_SIZE*2);
+
+    //! 객체의 타입에 따라 새로운 객체를 생성하고 위치를 설정합니다.
+    if (dynamic_cast<Mahjong_A*>(block.get())) {
+        g_stack.emplace_back(std::make_unique<Mahjong_A>(x, y, g_renderer));
+    }
+    else if (dynamic_cast<Mahjong_B*>(block.get())) {
+        g_stack.emplace_back(std::make_unique<Mahjong_B>(x, y, g_renderer));
+    }
+    else if (dynamic_cast<Mahjong_C*>(block.get())) {
+        g_stack.emplace_back(std::make_unique<Mahjong_C>(x, y, g_renderer));
+    }
+    else if (dynamic_cast<Mahjong_D*>(block.get())) {
+        g_stack.emplace_back(std::make_unique<Mahjong_D>(x, y, g_renderer));
+    }
 
     //! g_blocks와 g_stack의 사이즈 출력
     std::cout << "g_blocks size: " << g_vector.size() << "| g_stack size: " << g_stack.size() << std::endl;
+}
+
+void createBonk(int mouse_x, int mouse_y) {
+    if (BLOCK_SCALE == 1) {
+        g_bonks.emplace_back(mouse_x - (BLOCK_SIZE / 2), mouse_y - (BLOCK_SIZE / 2), g_renderer);
+    }
+    else {
+        g_bonks.emplace_back(mouse_x - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), mouse_y - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), g_renderer);
+    }
 }
 
 void ClearGame() {
