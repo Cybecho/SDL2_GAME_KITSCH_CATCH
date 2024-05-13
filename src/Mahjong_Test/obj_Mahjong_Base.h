@@ -34,6 +34,7 @@ protected:
     int m_y;
     int m_blockScale;
     int m_blockSize;
+    int m_score = 100;
     bool clickEnable = true; //! gameLogic에서 구현해주세요
     bool clicked;
     SDL_Rect m_sourceRect;
