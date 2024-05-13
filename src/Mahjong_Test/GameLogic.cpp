@@ -1,4 +1,3 @@
-// DrawingTechniques_GameFunc.cpp
 #include "GameLogic.h"
 
 std::vector<std::unique_ptr<Mahjong>> g_vector; // 마작 블록 생성 벡터
@@ -15,12 +14,8 @@ TTF_Font* game_font_;
 SDL_Rect g_bg_source_rect;
 SDL_Rect g_bg_destination_rect;
 
-int g_scale;
-
 void InitGame() {
     g_flag_running = true;
-
-    g_scale = BLOCK_SCALE;
 
     g_bg_source_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
     g_bg_destination_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
@@ -63,42 +58,12 @@ void HandleEvents() {
 }
 
 void Update() {
-    // 마작 객체 업데이트
-    for (auto& block : g_vector) {
-        block->handleClick();
-        block->update();
-
-        // g_stack의 size가 7이 되면 g_vector의 모든 객체를 클릭 불가능 상태로 설정
-        if (g_stack.size() == 7) {
-            block->setClickable(false);
-        }
-    }
-
-    for (auto& block : g_stack) {
-        block->handleClick();
-        block->update();
-    }
-
-    // bonk 객체 업데이트
-    for (auto it = g_bonks.begin(); it != g_bonks.end();) {
-        it->update();
-        if (it->isTimeToDestroy()) {
-            it = g_bonks.erase(it);
-        }
-        else {
-            ++it;
-        }
-    }
-
-    //! 벡터 영역이 비었을 때 csv 파일을 읽어와서 다시 로드
-    if (g_vector.empty()) {
-        if (g_vector.empty()) {
-            int level = 1;
-            int seed = 0;
-            int numDims = 3;
-            LoadMahjongBlocksFromCSV(level, seed, numDims);
-        }
-    }
+    LoadMahjongBlocksIfEmpty();
+    RemoveSameTypeBlocks();
+    AlignStackBlocks();
+    UpdateVectorBlocks();
+    UpdateStackBlocks();
+    UpdateBonks();
 }
 
 void Render() {
@@ -179,7 +144,7 @@ void vector2stack(std::vector<std::unique_ptr<Mahjong>>::iterator it) {
     g_vector.erase(it);
 
     // 객체의 위치를 g_stack의 크기에 따라 동적으로 계산합니다.
-    int x = g_stack.size() * BLOCK_SIZE + PIVOT_X;
+    int x = g_stack.size() * (BLOCK_SIZE / 2) + PIVOT_X;
     int y = BLOCK_SIZE + PIVOT_Y - (BLOCK_SIZE * 2);
 
     block->setX(x);
@@ -199,6 +164,82 @@ void createBonk(int mouse_x, int mouse_y) {
     else {
         g_bonks.emplace_back(mouse_x - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), mouse_y - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), g_renderer);
     }
+}
+
+//! update 함수 : 벡터 영역이 비었을 때 csv 파일을 읽어와서 다시 로드
+void LoadMahjongBlocksIfEmpty() {
+    if (g_vector.empty()) {
+        int level = 1;
+        int seed = 0;
+        int numDims = 3;
+        LoadMahjongBlocksFromCSV(level, seed, numDims);
+    }
+}
+
+//! update 함수 :  g_stack에서 같은 객체가 3개 이상 존재할 경우 pop 처리
+void RemoveSameTypeBlocks() {
+    map<string, int> typeCount;
+    for (const auto& block : g_stack) {
+        typeCount[block->getType()]++;
+    }
+
+    for (auto it = g_stack.begin(); it != g_stack.end();) {
+        int localScore = 0;
+        if (typeCount[(*it)->getType()] >= 3) {
+            typeCount[(*it)->getType()] -= 3;
+            it = g_stack.erase(it, it + 3);
+        }
+        else {
+            ++it;
+        }
+    }
+}
+
+//! update 함수 :  g_stack에 남은 객체들 순서대로 위치 조정
+void AlignStackBlocks() {
+    for (size_t i = 0; i < g_stack.size(); ++i) {
+        int x = i * (BLOCK_SIZE / 2) + PIVOT_X;
+        int y = BLOCK_SIZE + PIVOT_Y - (BLOCK_SIZE * 2);
+        g_stack[i]->setX(x);
+        g_stack[i]->setY(y);
+    }
+}
+
+//! update 함수 :  g_stack의 객체들이 7개가 되면 g_vector의 객체들을 비활성화
+void UpdateVectorBlocks() {
+    for (auto& block : g_vector) {
+        block->handleClick();
+        block->update();
+
+        if (g_stack.size() == 7) {
+            block->setClickable(false);
+        }
+    }
+}
+
+//! update 함수 :  g_stack의 객체들이 7개가 되면 g_vector의 객체들을 비활성화
+void UpdateStackBlocks() {
+    for (auto& block : g_stack) {
+        block->handleClick();
+        block->update();
+    }
+}
+
+//! update 함수 :  bonk 객체 업데이트
+void UpdateBonks() {
+    for (auto it = g_bonks.begin(); it != g_bonks.end();) {
+        it->update();
+        if (it->isTimeToDestroy()) {
+            it = g_bonks.erase(it);
+        }
+        else {
+            ++it;
+        }
+    }
+}
+
+//! update 함수 :  점수 업데이트
+void UpdateScore(int score) {
 }
 
 //! 게임 종료 시 메모리 꼭! 해제

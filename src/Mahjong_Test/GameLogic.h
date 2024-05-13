@@ -19,6 +19,15 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims);
 void vector2stack(std::vector<std::unique_ptr<Mahjong>>::iterator it);
 void createBonk(int mouse_x, int mouse_y); // 추가된 함수 선언
 
+//! 업데이트 함수
+void LoadMahjongBlocksIfEmpty();
+void RemoveSameTypeBlocks();
+void AlignStackBlocks();
+void UpdateVectorBlocks();
+void UpdateStackBlocks();
+void UpdateBonks();
+void UpdateScore(int score);
+
 //! 전역 변수
 extern bool g_flag_running;
 extern SDL_Renderer* g_renderer;

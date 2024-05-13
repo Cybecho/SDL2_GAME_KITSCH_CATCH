@@ -30,6 +30,7 @@ enum GamePhase {
 #include <fstream>
 #include <sstream>
 #include <memory>
+#include <map>
 
 #include "SDL.h"
 #include "SDL_image.h"
