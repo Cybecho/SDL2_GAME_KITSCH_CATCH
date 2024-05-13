@@ -239,6 +239,7 @@ void UpdateBonks() {
 }
 
 //! update 함수 :  점수 업데이트
+//~ 미구현
 void UpdateScore(int score) {
 }
 
