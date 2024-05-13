@@ -1,7 +1,5 @@
 // DrawingTechniques_GameFunc.cpp
-#include "DrawingTechniques_GameFunc.h"
-#include "obj_Mahjong_Derived.h"
-#include "obj_VFX.h"
+#include "GameLogic.h"
 
 std::vector<std::unique_ptr<Mahjong>> g_vector; // 마작 블록 생성 벡터
 std::vector<std::unique_ptr<Mahjong>> g_stack; // 마작 블록 스택 벡터
@@ -54,13 +52,7 @@ void HandleEvents() {
                     (*it)->Play2Sound();
                     cout << "Clicked! : " << mouse_x << " , " << mouse_y << endl;
 
-                    //! g_blocks와 g_stack 간 swap
-                    auto block = std::move(*it);
-                    g_vector.erase(it);
-                    g_stack.emplace_back(std::move(block));
-
-                    //! g_blocks와 g_stack의 사이즈 출력
-                    std::cout << "g_blocks size: " << g_vector.size() << "| g_stack size: " << g_stack.size() << std::endl;
+                    vector2stack(it); // 수정된 부분
 
                     // bonk 객체 생성
                     if (BLOCK_SCALE == 1) {
@@ -101,7 +93,7 @@ void Update() {
     //! 벡터 영역이 비었을 때 csv 파일을 읽어와서 다시 로드
     if (g_vector.empty()) {
         if (g_vector.empty()) {
-            int level = 0;
+            int level = 1;
             int seed = 0;
             int numDims = 3;
             LoadMahjongBlocksFromCSV(level, seed, numDims);
@@ -178,6 +170,15 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
             ++row;
         }
     }
+}
+
+void vector2stack(std::vector<std::unique_ptr<Mahjong>>::iterator it) {
+    auto block = std::move(*it);
+    g_vector.erase(it);
+    g_stack.emplace_back(std::move(block));
+
+    //! g_blocks와 g_stack의 사이즈 출력
+    std::cout << "g_blocks size: " << g_vector.size() << "| g_stack size: " << g_stack.size() << std::endl;
 }
 
 void ClearGame() {
