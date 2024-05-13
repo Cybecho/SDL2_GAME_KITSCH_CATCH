@@ -38,7 +38,6 @@ void HandleEvents() {
 
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
-
             g_vector.emplace_back(std::make_unique<Mahjong_A>(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, g_renderer));
         }
 
@@ -47,7 +46,8 @@ void HandleEvents() {
             int mouse_y = event.button.y;
 
             for (auto it = g_vector.begin(); it != g_vector.end(); ++it) {
-                if ((*it)->isClicked(mouse_x, mouse_y)) {
+                //! clickEnable이 true인 경우에만 클릭 이벤트 처리
+                if ((*it)->isClickable() && (*it)->isClicked(mouse_x, mouse_y)) {
                     (*it)->setClicked(true);
                     (*it)->Play2Sound();
 
@@ -65,7 +65,13 @@ void Update() {
     for (auto& block : g_vector) {
         block->handleClick();
         block->update();
+
+        // g_stack의 size가 7이 되면 g_vector의 모든 객체를 클릭 불가능 상태로 설정
+        if (g_stack.size() == 7) {
+            block->setClickable(false);
+        }
     }
+
     for (auto& block : g_stack) {
         block->handleClick();
         block->update();
@@ -168,25 +174,16 @@ void vector2stack(std::vector<std::unique_ptr<Mahjong>>::iterator it) {
     auto block = std::move(*it);
     g_vector.erase(it);
 
-    //! 객체의 위치를 수정합니다.
+    // 객체의 위치를 g_stack의 크기에 따라 동적으로 계산합니다.
     int x = g_stack.size() * BLOCK_SIZE + PIVOT_X;
-    int y = BLOCK_SIZE + PIVOT_Y - (BLOCK_SIZE*2);
+    int y = BLOCK_SIZE + PIVOT_Y - (BLOCK_SIZE * 2);
 
-    //! 객체의 타입에 따라 새로운 객체를 생성하고 위치를 설정합니다.
-    if (dynamic_cast<Mahjong_A*>(block.get())) {
-        g_stack.emplace_back(std::make_unique<Mahjong_A>(x, y, g_renderer));
-    }
-    else if (dynamic_cast<Mahjong_B*>(block.get())) {
-        g_stack.emplace_back(std::make_unique<Mahjong_B>(x, y, g_renderer));
-    }
-    else if (dynamic_cast<Mahjong_C*>(block.get())) {
-        g_stack.emplace_back(std::make_unique<Mahjong_C>(x, y, g_renderer));
-    }
-    else if (dynamic_cast<Mahjong_D*>(block.get())) {
-        g_stack.emplace_back(std::make_unique<Mahjong_D>(x, y, g_renderer));
-    }
+    block->setX(x);
+    block->setY(y);
 
-    //! g_blocks와 g_stack의 사이즈 출력
+    g_stack.emplace_back(std::move(block));
+
+    // g_blocks와 g_stack의 사이즈 출력
     std::cout << "g_blocks size: " << g_vector.size() << "| g_stack size: " << g_stack.size() << std::endl;
 }
 

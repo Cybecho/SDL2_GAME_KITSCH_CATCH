@@ -4,7 +4,7 @@ Mix_Chunk* Mahjong::m_sound = nullptr;
 SDL_Texture* Mahjong::m_texture = nullptr;
 
 Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRect)
-    : m_x(x), m_y(y), clicked(false), m_sourceRect(sourceRect), m_blockSize(BLOCK_SIZE), m_blockScale(BLOCK_SCALE) {
+    : m_x(x), m_y(y), clicked(false), m_sourceRect(sourceRect), m_blockSize(BLOCK_SIZE), m_blockScale(BLOCK_SCALE), clickEnable(true) {
     if (!m_texture) {
         loadTexture(renderer);
     }
@@ -15,13 +15,18 @@ Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRec
     //! 생성자 멘트
     // cout << "Mahjong Create" << " x : " << this->m_x << " y : " << this->m_y << endl;
 }
+
 void Mahjong::update() {
+    if (clicked) {
+		// 추후에 구현
+	}
+
 }
 
 void Mahjong::handleClick() {
-    if (clicked) {
-        m_x = 0;
-        m_y = 0;
+    if (clicked) 
+    {
+        // 추후에 구현
     }
 }
 

@@ -24,6 +24,6 @@ Mahjong_C::~Mahjong_C() { cout << "delete C" << endl; }
 //! Mahjong_D
 Mahjong_D::Mahjong_D(int x, int y, SDL_Renderer* renderer)
     : Mahjong(x, y, renderer, { 3 * BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE }) {
-    cout << "create Dq" << endl;
+    cout << "create D" << endl;
 }
 Mahjong_D::~Mahjong_D() { cout << "delete D" << endl; }
