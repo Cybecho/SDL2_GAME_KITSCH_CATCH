@@ -85,7 +85,20 @@ void Mahjong::shakeBlocks(int duration) {
 }
 
 bool Mahjong::isHovered(int x, int y) const {
-    return x >= m_x && x < m_x + (m_blockSize / m_blockScale) && y >= m_y && y < m_y + (m_blockSize / m_blockScale);
+    float scale = m_blockScale;
+    int blockWidth = static_cast<int>(m_blockSize * scale);
+    int blockHeight = static_cast<int>(m_blockSize * scale);
+    int blockX = static_cast<int>(m_x - ((m_blockSize * scale) - m_blockSize) / 2);
+    int blockY = static_cast<int>(m_y - ((m_blockSize * scale) - m_blockSize) / 2);
+
+    // 호버링 영역을 블록 크기의 80%로 조정
+    float hoverRatio = 0.8f;
+    int hoverWidth = static_cast<int>(blockWidth * hoverRatio);
+    int hoverHeight = static_cast<int>(blockHeight * hoverRatio);
+    int hoverX = blockX + (blockWidth - hoverWidth) / 2;
+    int hoverY = blockY + (blockHeight - hoverHeight) / 2;
+
+    return x >= hoverX && x < hoverX + hoverWidth && y >= hoverY && y < hoverY + hoverHeight;
 }
 
 void Mahjong::render(SDL_Renderer* renderer) const {
