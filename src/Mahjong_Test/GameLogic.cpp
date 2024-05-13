@@ -222,7 +222,7 @@ void RemoveSameTypeBlocks() {
 //! update 함수 :  g_stack에 남은 객체들 순서대로 위치 조정
 void AlignStackBlocks() {
     for (size_t i = 0; i < g_stack.size(); ++i) {
-        int x = i * (BLOCK_SIZE / 2 + 20) + PIVOT_X;
+        int x = i * (BLOCK_SIZE / 2 + 15) + PIVOT_X;
         int y = BLOCK_SIZE + PIVOT_Y - (BLOCK_SIZE * 2);
         g_stack[i]->setX(x);
         g_stack[i]->setY(y);
