@@ -221,6 +221,8 @@ void RemoveSameTypeBlocks() {
 
 //! update 함수 :  g_stack에 남은 객체들 순서대로 위치 조정
 void AlignStackBlocks() {
+    sortPairedBlocks(); //~ 쌍이 2개 이상인 객체들만 정렬
+
     for (size_t i = 0; i < g_stack.size(); ++i) {
         int x = i * (BLOCK_SIZE / 2 + 15) + PIVOT_X;
         int y = BLOCK_SIZE + PIVOT_Y - (BLOCK_SIZE * 2);
@@ -265,6 +267,74 @@ void UpdateBonks() {
 //! update 함수 :  점수 업데이트
 //~ 미구현
 void UpdateScore(int score) {
+}
+
+//! Sort 함수 : 퀵 정렬을 위한 비교 함수
+bool compareBlocks(const std::unique_ptr<Mahjong>& a, const std::unique_ptr<Mahjong>& b) {
+    if (a->getType() == b->getType()) {
+        return a->getX() < b->getX();
+    }
+    return a->getType() < b->getType();
+}
+
+//! Sort 함수 : 퀵 정렬 함수
+void quickSort(std::vector<std::unique_ptr<Mahjong>>& blocks, int left, int right) {
+    if (left >= right) {
+        return;
+    }
+
+    int pivot = left;
+    int i = left + 1;
+    int j = right;
+
+    while (i <= j) {
+        while (i <= right && compareBlocks(blocks[i], blocks[pivot])) {
+            i++;
+        }
+        while (j > left && !compareBlocks(blocks[j], blocks[pivot])) {
+            j--;
+        }
+
+        if (i > j) {
+            swap(blocks[pivot], blocks[j]);
+        }
+        else {
+            swap(blocks[i], blocks[j]);
+        }
+    }
+
+    quickSort(blocks, left, j - 1);
+    quickSort(blocks, j + 1, right);
+}
+
+//! Sort 함수 : 쌍이 2개 이상인 객체들만 정렬하는 함수
+void sortPairedBlocks() {
+    std::map<std::string, int> typeCount;
+    for (const auto& block : g_stack) {
+        typeCount[block->getType()]++;
+    }
+
+    std::vector<std::unique_ptr<Mahjong>> pairedBlocks;
+    std::vector<std::unique_ptr<Mahjong>> singleBlocks;
+
+    for (auto& block : g_stack) {
+        if (typeCount[block->getType()] >= 2) {
+            pairedBlocks.push_back(std::move(block));
+        }
+        else {
+            singleBlocks.push_back(std::move(block));
+        }
+    }
+
+    quickSort(pairedBlocks, 0, pairedBlocks.size() - 1);
+
+    g_stack.clear();
+    for (auto& block : pairedBlocks) {
+        g_stack.push_back(std::move(block));
+    }
+    for (auto& block : singleBlocks) {
+        g_stack.push_back(std::move(block));
+    }
 }
 
 //! 게임 종료 시 메모리 꼭! 해제

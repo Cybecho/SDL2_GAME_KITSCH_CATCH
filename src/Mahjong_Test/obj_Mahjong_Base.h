@@ -22,7 +22,7 @@ public:
     void handleClick();
     int getScore() const { return m_score; }//! Getter & Setter
     void setScore(int score) { m_score = score; }
-    int getX() const { return m_x; }//! 위치 정보
+    int getX() const { return m_x; }
     int getY() const { return m_y; }
     void setX(int x) { m_x = x; m_originalX = x; }
     void setY(int y) { m_y = y; m_originalY = y; }
