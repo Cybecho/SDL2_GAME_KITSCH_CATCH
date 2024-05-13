@@ -34,7 +34,7 @@ protected:
     int m_y;
     int m_blockScale;
     int m_blockSize;
-    bool clickEnable; //! gameLogic에서 구현해주세요
+    bool clickEnable;
     bool clicked;
     SDL_Rect m_sourceRect;
     static Mix_Chunk* m_sound;

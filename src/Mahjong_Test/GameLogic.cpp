@@ -37,10 +37,13 @@ void HandleEvents() {
     SDL_Event event;
 
     while (SDL_PollEvent(&event)) {
+        //! 스페이스바 누르면 벡터&스택 초기화
         if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
-            g_vector.emplace_back(std::make_unique<Mahjong_A>(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, g_renderer));
+            g_vector.clear();
+            g_stack.clear();
         }
 
+        //! 마우스 클릭 이벤트 처리
         if (event.type == SDL_MOUSEBUTTONDOWN) {
             int mouse_x = event.button.x;
             int mouse_y = event.button.y;
@@ -48,7 +51,6 @@ void HandleEvents() {
             for (auto it = g_vector.begin(); it != g_vector.end(); ++it) {
                 //! clickEnable이 true인 경우에만 클릭 이벤트 처리
                 if ((*it)->isClickable() && (*it)->isClicked(mouse_x, mouse_y)) {
-                    (*it)->setClicked(true);
                     (*it)->Play2Sound();
 
                     vector2stack(it); //! 클릭된 블록을 g_stack으로 이동
@@ -119,6 +121,7 @@ void Render() {
     SDL_RenderPresent(g_renderer);
 }
 
+//! CSV 파일에서 마작 블록을 읽어와서 g_vector에 생성
 void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
     g_vector.clear();
 
@@ -170,6 +173,7 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
     }
 }
 
+//! 클릭된 블록을 g_vector에서 g_stack으로 이동
 void vector2stack(std::vector<std::unique_ptr<Mahjong>>::iterator it) {
     auto block = std::move(*it);
     g_vector.erase(it);
@@ -187,6 +191,7 @@ void vector2stack(std::vector<std::unique_ptr<Mahjong>>::iterator it) {
     std::cout << "g_blocks size: " << g_vector.size() << "| g_stack size: " << g_stack.size() << std::endl;
 }
 
+//! 클릭된 위치에 bonk 객체 생성
 void createBonk(int mouse_x, int mouse_y) {
     if (BLOCK_SCALE == 1) {
         g_bonks.emplace_back(mouse_x - (BLOCK_SIZE / 2), mouse_y - (BLOCK_SIZE / 2), g_renderer);
@@ -196,6 +201,7 @@ void createBonk(int mouse_x, int mouse_y) {
     }
 }
 
+//! 게임 종료 시 메모리 꼭! 해제
 void ClearGame() {
     for (auto& block : g_vector) {
         block->destroyTexture();
