@@ -5,7 +5,7 @@ SDL_Texture* Mahjong::m_texture = nullptr;
 
 Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRect)
     : m_x(x), m_y(y), clicked(false), m_sourceRect(sourceRect), m_blockSize(BLOCK_SIZE), m_blockScale(BLOCK_SCALE), clickEnable(true),
-    m_originalX(x), m_originalY(y), m_shakeTimer(0), m_isShaking(false) {
+    m_originalX(x), m_originalY(y), m_shakeDuration(0), m_shakeTimer(0), m_isShaking(false), hovered(false), m_hoverScale(1.1f) {
     if (!m_texture) {
         loadTexture(renderer);
     }
@@ -19,15 +19,23 @@ Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRec
 
 void Mahjong::update() {
     if (clicked) {
-		// 추후에 구현
-	}
+        // ...
+    }
+
     if (m_isShaking) {
         m_shakeTimer++;
-        if (m_shakeTimer >= 30) { // 30 프레임 동안 떨림 애니메이션 재생
+        if (m_shakeTimer >= m_shakeDuration) {
             m_x = m_originalX;
             m_y = m_originalY;
             m_isShaking = false;
             m_shakeTimer = 0;
+        }
+        else {
+            int shakeRange = 5;
+            int offsetX = rand() % (shakeRange * 2 + 1) - shakeRange;
+            int offsetY = rand() % (shakeRange * 2 + 1) - shakeRange;
+            m_x = m_originalX + offsetX;
+            m_y = m_originalY + offsetY;
         }
     }
 }
@@ -68,32 +76,41 @@ void Mahjong::Clear2Sound() {
     }
 }
 
-void Mahjong::shakeBlocks() {
+void Mahjong::shakeBlocks(int duration) {
     if (!m_isShaking) {
         m_isShaking = true;
+        m_shakeDuration = duration;
         m_shakeTimer = 0;
-    }
-
-    if (m_isShaking) {
-        int shakeRange = 5;
-        int offsetX = rand() % (shakeRange * 2 + 1) - shakeRange;
-        int offsetY = rand() % (shakeRange * 2 + 1) - shakeRange;
-        m_x = m_originalX + offsetX;
-        m_y = m_originalY + offsetY;
     }
 }
 
-void Mahjong::render(SDL_Renderer* renderer) const {
-    SDL_Rect dstRect = { m_x, m_y, static_cast<int>(m_blockSize / m_blockScale), static_cast<int>(m_blockSize / m_blockScale) };
+bool Mahjong::isHovered(int x, int y) const {
+    return x >= m_x && x < m_x + (m_blockSize / m_blockScale) && y >= m_y && y < m_y + (m_blockSize / m_blockScale);
+}
 
-    if (clickEnable) { //! 클릭 가능한 경우
+void Mahjong::render(SDL_Renderer* renderer) const {
+    //! 블록의 크기를 호버링 여부에 따라 삼항 연산자로 설정
+    //~ 만약 호버링 상태라면? 객체 크기는 m_hoverScale
+    //~ 아니라면? 객체 크기는 m_blockScale
+    float scale = hovered ? m_hoverScale : m_blockScale;
+
+    SDL_Rect dstRect = {
+        static_cast<int>(m_x - ((m_blockSize * scale) - m_blockSize) / 2),
+        static_cast<int>(m_y - ((m_blockSize * scale) - m_blockSize) / 2),
+        static_cast<int>(m_blockSize * scale),
+        static_cast<int>(m_blockSize * scale)
+    };
+
+    //! 클릭이 가능한 상태라면? 클릭 가능한 상태로 렌더링 (불투명)
+    //! 클릭이 불가능한 상태라면? 클릭 불가능한 상태로 렌더링 (반투명)
+    if (clickEnable) {
         SDL_RenderCopy(renderer, m_texture, &m_sourceRect, &dstRect);
     }
-    else { //! 클릭 불가능한 경우
-        Uint8 alpha = 128; // 반투명도 설정 (0-255)
-        SDL_SetTextureAlphaMod(m_texture, alpha); // 투명도 설정
+    else {
+        Uint8 alpha = 128;
+        SDL_SetTextureAlphaMod(m_texture, alpha);
         SDL_RenderCopy(renderer, m_texture, &m_sourceRect, &dstRect);
-        SDL_SetTextureAlphaMod(m_texture, 255); // 원래 투명도로 복구
+        SDL_SetTextureAlphaMod(m_texture, 255);
     }
 }
 

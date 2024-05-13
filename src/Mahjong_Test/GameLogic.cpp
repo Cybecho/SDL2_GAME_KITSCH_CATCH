@@ -38,6 +38,17 @@ void HandleEvents() {
             g_stack.clear();
         }
 
+        if (event.type == SDL_MOUSEMOTION) {
+            int mouse_x = event.motion.x;
+            int mouse_y = event.motion.y;
+
+            for (auto& block : g_vector) {
+                if (block->isClickable()) {
+                    block->setHovered(block->isHovered(mouse_x, mouse_y));
+                }
+            }
+        }
+
         //! 마우스 클릭 이벤트 처리
         if (event.type == SDL_MOUSEBUTTONDOWN) {
             int mouse_x = event.button.x;
@@ -196,6 +207,11 @@ void RemoveSameTypeBlocks() {
             }
 
             it = g_stack.erase(it, it + 3);
+
+            // g_stack에 있는 모든 Mahjong 객체의 shakeBlock() 호출 (입력 프레임에 따라 흔들림)
+            for (auto& block : g_stack) {
+                block->shakeBlocks(10);
+            }
         }
         else {
             ++it;
@@ -206,7 +222,7 @@ void RemoveSameTypeBlocks() {
 //! update 함수 :  g_stack에 남은 객체들 순서대로 위치 조정
 void AlignStackBlocks() {
     for (size_t i = 0; i < g_stack.size(); ++i) {
-        int x = i * (BLOCK_SIZE / 2) + PIVOT_X;
+        int x = i * (BLOCK_SIZE / 2 + 20) + PIVOT_X;
         int y = BLOCK_SIZE + PIVOT_Y - (BLOCK_SIZE * 2);
         g_stack[i]->setX(x);
         g_stack[i]->setY(y);
