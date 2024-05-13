@@ -27,57 +27,12 @@ void InitGame() {
     g_bg_source_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
     g_bg_destination_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 
-    // csv 파일 읽기
-    std::vector<std::vector<std::vector<std::unique_ptr<Mahjong>>>> mahjong_blocks(3);
-
-    for (int dim = 0; dim < 3; ++dim) {
-        std::string filename = "../Resources/level/0/0-" + std::to_string(dim) + ".csv";
-        std::ifstream file(filename);
-        if (!file.is_open()) {
-            std::cerr << "Failed to open file: " << filename << std::endl;
-            continue;
-        }
-        std::string line;
-        int row = 0;
-
-        while (std::getline(file, line)) {
-            std::istringstream iss(line);
-            std::string cell;
-            int col = 0;
-
-            mahjong_blocks[dim].emplace_back();
-
-            while (std::getline(iss, cell, ',')) {
-                int data = std::stoi(cell);
-
-                int x = col * BLOCK_SIZE + PIVOT_X + (dim * BLOCK_SIZE/2);
-                int y = row * BLOCK_SIZE + PIVOT_Y + (dim * BLOCK_SIZE/2);
-
-                if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT) {
-                    switch (data) {
-                    case 1:
-                        g_vector.emplace_back(std::make_unique<Mahjong_A>(x, y, g_renderer));
-                        break;
-                    case 2:
-                        g_vector.emplace_back(std::make_unique<Mahjong_B>(x, y, g_renderer));
-                        break;
-                    case 3:
-                        g_vector.emplace_back(std::make_unique<Mahjong_C>(x, y, g_renderer));
-                        break;
-                    case 4:
-                        g_vector.emplace_back(std::make_unique<Mahjong_D>(x, y, g_renderer));
-                        break;
-                    default:
-                        break;
-                    }
-                }
-
-                ++col;
-            }
-
-            ++row;
-        }
-    }
+    //! 최초 마작 블록 로드
+    //! 아래 변수는 함수의 매개변수 이해를 돕기 위한 변수입니다
+    int level = 0;
+    int seed = 0;
+    int numDims = 2;
+    LoadMahjongBlocksFromCSV(level, seed, numDims);
 }
 
 void HandleEvents() {
@@ -142,6 +97,16 @@ void Update() {
             ++it;
         }
     }
+
+    //! 벡터 영역이 비었을 때 csv 파일을 읽어와서 다시 로드
+    if (g_vector.empty()) {
+        if (g_vector.empty()) {
+            int level = 0;
+            int seed = 0;
+            int numDims = 3;
+            LoadMahjongBlocksFromCSV(level, seed, numDims);
+        }
+    }
 }
 
 void Render() {
@@ -162,6 +127,57 @@ void Render() {
     }
 
     SDL_RenderPresent(g_renderer);
+}
+
+void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
+    g_vector.clear();
+
+    for (int dim = 0; dim < numDims; ++dim) {
+        std::string filename = "../Resources/level/" + std::to_string(level) + "/" + std::to_string(seed) + "-" + std::to_string(dim) + ".csv";
+        std::ifstream file(filename);
+        if (!file.is_open()) {
+            std::cerr << "Failed to open file: " << filename << std::endl;
+            continue;
+        }
+        std::string line;
+        int row = 0;
+
+        while (std::getline(file, line)) {
+            std::istringstream iss(line);
+            std::string cell;
+            int col = 0;
+
+            while (std::getline(iss, cell, ',')) {
+                int data = std::stoi(cell);
+
+                int x = col * BLOCK_SIZE + PIVOT_X + (dim * BLOCK_SIZE / 2);
+                int y = row * BLOCK_SIZE + PIVOT_Y + (dim * BLOCK_SIZE / 2);
+
+                if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT) {
+                    switch (data) {
+                    case 1:
+                        g_vector.emplace_back(std::make_unique<Mahjong_A>(x, y, g_renderer));
+                        break;
+                    case 2:
+                        g_vector.emplace_back(std::make_unique<Mahjong_B>(x, y, g_renderer));
+                        break;
+                    case 3:
+                        g_vector.emplace_back(std::make_unique<Mahjong_C>(x, y, g_renderer));
+                        break;
+                    case 4:
+                        g_vector.emplace_back(std::make_unique<Mahjong_D>(x, y, g_renderer));
+                        break;
+                    default:
+                        break;
+                    }
+                }
+
+                ++col;
+            }
+
+            ++row;
+        }
+    }
 }
 
 void ClearGame() {
