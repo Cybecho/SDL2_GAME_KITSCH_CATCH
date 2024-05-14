@@ -5,7 +5,6 @@
 *.suo
 *.db
 *.pdb
-*.exe
 # Ignore all
 /FileContentIndex/**
 /SDL2_GAME_KITSCH_CATCH/**
