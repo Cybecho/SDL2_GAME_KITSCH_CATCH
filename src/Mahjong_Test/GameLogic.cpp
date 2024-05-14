@@ -101,7 +101,7 @@ void Render() {
 void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
     g_vector.clear();
 
-    for (int dim = 0; dim < numDims; ++dim) {
+    for (int dim = 0; dim <= numDims; ++dim) {
         std::string filename = "../Resources/level/" + std::to_string(level) + "/" + std::to_string(seed) + "-" + std::to_string(dim) + ".csv";
         std::ifstream file(filename);
         if (!file.is_open()) {
