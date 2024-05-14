@@ -228,6 +228,7 @@ void AlignStackBlocks() {
         int y = BLOCK_SIZE + PIVOT_Y - (BLOCK_SIZE * 2);
         g_stack[i]->setX(x);
         g_stack[i]->setY(y);
+        g_stack[i]->setHovered(false); //~ 호버링 효과 제거 (이렇게 해줘야 크기 g_stack에서 이상하게 안변함)
     }
 }
 
