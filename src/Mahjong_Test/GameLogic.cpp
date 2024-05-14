@@ -19,10 +19,17 @@ void InitGame() {
 
     g_bg_source_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
     g_bg_destination_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
-
-    countDir("../Resources/level");
-    countFiles("../Resources/level/0");
-
+    
+    //~ 파일 읽기 테스트
+    //~ *******************************************************
+    int j = countDir("../../res/level");
+    for (int i = 0; i < j; i++)
+    {
+        std::string dir_path = "../../res/level/" + std::to_string(i);
+        countFiles(dir_path);
+    }
+    //~ *******************************************************
+    
     //! 최초 마작 블록 로드
     //! 아래 변수는 함수의 매개변수 이해를 돕기 위한 변수입니다
     int level = 0;
@@ -149,6 +156,18 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
 
             ++row;
         }
+    }
+
+    //! 대각선 방향으로 블록 흔들림 효과 적용
+    int totalBlocks = g_vector.size();
+    for (int i = 0; i < totalBlocks; ++i) {
+        int delay = i * 2; // 0.01초(10ms) 지연 시간
+        SDL_AddTimer(delay, [](Uint32 interval, void* param) -> Uint32 {
+            int index = *(static_cast<int*>(param));
+            g_vector[index]->shakeBlocks(10);
+            delete static_cast<int*>(param);
+            return 0;
+            }, new int(i));
     }
 }
 
@@ -378,7 +397,7 @@ int countFiles(const std::string& path) {
         } while (FindNextFileW(hFind, &fd));
         FindClose(hFind);
     }
-    cout << path << " count: " << count << endl;
+    cout << path << " csv count: " << count << endl;
     return count;
 }
 
