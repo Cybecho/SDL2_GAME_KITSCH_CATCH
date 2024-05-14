@@ -53,7 +53,7 @@ bool Mahjong::isClicked(int x, int y) const {
 
 void Mahjong::Set2Sound() {
     if (!m_sound) {
-        m_sound = Mix_LoadWAV("../Resources/ClickBlock.mp3");
+        m_sound = Mix_LoadWAV("../../res/ClickBlock.mp3");
         if (!m_sound) {
             printf("Failed to load sound effect! SDL_mixer Error: %s\n", Mix_GetError());
         }
@@ -133,7 +133,7 @@ void Mahjong::destroyTexture() {
 }
 
 void Mahjong::loadTexture(SDL_Renderer* renderer) {
-    SDL_Surface* surface = IMG_Load("../Resources/Mahjong.png");
+    SDL_Surface* surface = IMG_Load("../../res/Mahjong.png");
     m_texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
 }

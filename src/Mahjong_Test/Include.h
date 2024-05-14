@@ -37,8 +37,6 @@ enum GamePhase {
 #include "SDL_mixer.h"
 #include "SDL_ttf.h"
 
-//#include <xlnt/xlnt.hpp> // 이거 안쓰고 그냥 sstream으로 대체함
-
 using int8 = std::int8_t;
 using int16 = std::int16_t;
 using int32 = std::int32_t;
