@@ -59,12 +59,13 @@ void HandleEvents() {
             int mouse_x = event.button.x;
             int mouse_y = event.button.y;
 
-            for (auto it = g_vector.begin(); it != g_vector.end(); ++it) {
+            // g_vector를 역순으로 순회하여 상위 레이어부터 클릭 이벤트 처리
+            for (auto it = g_vector.rbegin(); it != g_vector.rend(); ++it) {
                 //! clickEnable이 true인 경우에만 클릭 이벤트 처리
                 if ((*it)->isClickable() && (*it)->isClicked(mouse_x, mouse_y)) {
                     (*it)->Play2Sound();
 
-                    vector2stack(it); //! 클릭된 블록을 g_stack으로 이동
+                    vector2stack(it.base() - 1); //! 클릭된 블록을 g_stack으로 이동
                     createBonk(mouse_x, mouse_y); //! 클릭 위치에 bonk 객체 생성
                     break;
                 }
@@ -156,10 +157,10 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
     //! 대각선 방향으로 블록 흔들림 효과 적용
     int totalBlocks = g_vector.size();
     for (int i = 0; i < totalBlocks; ++i) {
-        int delay = i * 2; // 0.01초(10ms) 지연 시간
+        int delay = i * 3; // 0.03초(3ms) 지연 시간
         SDL_AddTimer(delay, [](Uint32 interval, void* param) -> Uint32 {
             int index = *(static_cast<int*>(param));
-            g_vector[index]->shakeBlocks(10);
+            g_vector[index]->shakeBlocks(5); // 애니메이션 지속시간
             delete static_cast<int*>(param);
             return 0;
             }, new int(i));
