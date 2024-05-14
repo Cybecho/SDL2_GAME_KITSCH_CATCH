@@ -207,32 +207,38 @@ void LoadMahjongBlocksIfEmpty() {
 
 //! update 함수 :  g_stack에서 같은 객체가 3개 이상 존재할 경우 pop 처리
 void RemoveSameTypeBlocks() {
-    map<string, int> typeCount;
-    for (const auto& block : g_stack) {
-        typeCount[block->getType()]++;
+    map<string, vector<int>> typeIndices;
+    for (int i = 0; i < g_stack.size(); ++i) {
+        typeIndices[g_stack[i]->getType()].push_back(i);
     }
 
-    for (auto it = g_stack.begin(); it != g_stack.end();) {
-        int localScore = 0;
-        if (typeCount[(*it)->getType()] >= 3) {
-            typeCount[(*it)->getType()] -= 3;
+    bool blocksRemoved = false;
 
-            // 제거되는 블록의 위치에서 createBonk() 호출
-            for (int i = 0; i < 3; ++i) {
-                int x = (it + i)->get()->getX() + BLOCK_SIZE / 2;
-                int y = (it + i)->get()->getY() + BLOCK_SIZE / 2;
-                createBonk(x, y);
-            }
-
-            it = g_stack.erase(it, it + 3);
-
-            // g_stack에 있는 모든 Mahjong 객체의 shakeBlock() 호출 (입력 프레임에 따라 흔들림)
-            for (auto& block : g_stack) {
-                block->shakeBlocks(10);
+    for (auto it = typeIndices.rbegin(); it != typeIndices.rend(); ++it) {
+        if (it->second.size() >= 3) {
+            int count = 0;
+            for (int i = it->second.size() - 1; i >= 0; --i) {
+                if (count < 3) {
+                    int index = it->second[i];
+                    // 제거되는 블록의 위치에서 createBonk() 호출
+                    int x = g_stack[index]->getX() + BLOCK_SIZE / 2;
+                    int y = g_stack[index]->getY() + BLOCK_SIZE / 2;
+                    createBonk(x, y);
+                    g_stack.erase(g_stack.begin() + index);
+                    ++count;
+                    blocksRemoved = true;
+                }
+                else {
+                    break;
+                }
             }
         }
-        else {
-            ++it;
+    }
+
+    // 블록이 제거된 경우에만 shakeBlocks() 호출
+    if (blocksRemoved) {
+        for (auto& block : g_stack) {
+            block->shakeBlocks(10);
         }
     }
 }
