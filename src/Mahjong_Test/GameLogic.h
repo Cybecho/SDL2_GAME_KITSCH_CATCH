@@ -33,9 +33,14 @@ bool compareBlocks(const std::unique_ptr<Mahjong>& a, const std::unique_ptr<Mahj
 void quickSort(std::vector<std::unique_ptr<Mahjong>>& blocks, int left, int right);
 void sortPairedBlocks();
 
+//! 파일 세기 함수
+int countDir(const std::string& path);
+int countFiles(const std::string& path);
 
 //! 전역 변수
 extern bool g_flag_running;
 extern SDL_Renderer* g_renderer;
 extern Uint32 g_frame_per_sec;
 extern int g_blockCount;
+
+

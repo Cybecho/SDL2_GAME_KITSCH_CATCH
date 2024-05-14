@@ -20,6 +20,9 @@ void InitGame() {
     g_bg_source_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
     g_bg_destination_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 
+    countDir("../Resources/level");
+    countFiles("../Resources/level/0");
+
     //! 최초 마작 블록 로드
     //! 아래 변수는 함수의 매개변수 이해를 돕기 위한 변수입니다
     int level = 0;
@@ -182,7 +185,7 @@ void LoadMahjongBlocksIfEmpty() {
     if (g_vector.empty()) {
         int level = 1;
         int seed = 0;
-        int numDims = 3;
+        int numDims = 2;
         LoadMahjongBlocksFromCSV(level, seed, numDims);
     }
 }
@@ -336,6 +339,47 @@ void sortPairedBlocks() {
     for (auto& block : singleBlocks) {
         g_stack.push_back(std::move(block));
     }
+}
+
+//! 디렉토리 내 폴더 개수 세기
+int countDir(const std::string& path) {
+    int count = 0;
+    std::wstring search_path = std::wstring(path.begin(), path.end()) + L"\\*";
+    WIN32_FIND_DATAW fd;
+    HANDLE hFind = FindFirstFileW(search_path.c_str(), &fd);
+
+    if (hFind != INVALID_HANDLE_VALUE) {
+        do {
+            if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) &&
+                (std::wcscmp(fd.cFileName, L".") != 0) &&
+                (std::wcscmp(fd.cFileName, L"..") != 0)) {
+                ++count;
+            }
+        } while (FindNextFileW(hFind, &fd));
+        FindClose(hFind);
+    }
+
+    std::cout << path << " dir count: " << count << std::endl;
+    return count;
+}
+
+//! 디렉토리 내 파일 개수 세기
+int countFiles(const std::string& path) {
+    int count = 0;
+    std::wstring search_path = std::wstring(path.begin(), path.end()) + L"\\*";
+    WIN32_FIND_DATAW fd;
+    HANDLE hFind = FindFirstFileW(search_path.c_str(), &fd);
+
+    if (hFind != INVALID_HANDLE_VALUE) {
+        do {
+            if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+                ++count;
+            }
+        } while (FindNextFileW(hFind, &fd));
+        FindClose(hFind);
+    }
+    cout << path << " count: " << count << endl;
+    return count;
 }
 
 //! 게임 종료 시 메모리 꼭! 해제
