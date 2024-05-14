@@ -16,7 +16,7 @@ SDL_Rect g_bg_destination_rect;
 
 void InitGame() {
     g_flag_running = true;
-    
+
     g_bg_source_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
     g_bg_destination_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 
@@ -146,18 +146,6 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
 
             ++row;
         }
-    }
-
-    // 대각선 방향으로 블록 흔들림 효과 적용
-    int totalBlocks = g_vector.size();
-    for (int i = 0; i < totalBlocks; ++i) {
-        int delay = i * 1; // 0.01초(10ms) 지연 시간
-        SDL_AddTimer(delay, [](Uint32 interval, void* param) -> Uint32 {
-            int index = *(static_cast<int*>(param));
-            g_vector[index]->shakeBlocks(10);
-            delete static_cast<int*>(param);
-            return 0;
-            }, new int(i));
     }
 }
 
