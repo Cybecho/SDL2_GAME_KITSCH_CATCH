@@ -20,22 +20,17 @@ void InitGame() {
     g_bg_source_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
     g_bg_destination_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
     
-    //~ 파일 읽기 테스트
-    //~ *******************************************************
-    int j = countDir("../../res/level");
-    for (int i = 0; i < j; i++)
+    //! 최초 마작 블록 로드
+    int max_level = countDir("../../res/level");    //~ 최대 레벨
+    int cur_level = 0;                              //~ 시작 레벨
+    int seed = 0;								    //~ 현재 레벨에서 발생 가능한 시드
+    int numDims = 2;
+    for (int i = 0; i < max_level; i++)
     {
         std::string dir_path = "../../res/level/" + std::to_string(i);
         countFiles(dir_path);
     }
-    //~ *******************************************************
-    
-    //! 최초 마작 블록 로드
-    //! 아래 변수는 함수의 매개변수 이해를 돕기 위한 변수입니다
-    int level = 0;
-    int seed = 0;
-    int numDims = 2;
-    LoadMahjongBlocksFromCSV(level, seed, numDims);
+    LoadMahjongBlocksFromCSV(cur_level, seed, numDims);
 }
 
 void HandleEvents() {
@@ -202,9 +197,10 @@ void createBonk(int x, int y) {
 //! update 함수 : 벡터 영역이 비었을 때 csv 파일을 읽어와서 다시 로드
 void LoadMahjongBlocksIfEmpty() {
     if (g_vector.empty()) {
-        int level = 1;
-        int seed = 0;
-        int numDims = 2;
+        srand(time(NULL));  // 시드 값을 현재 시간으로 설정
+        int level = rand() % 5; // 0 ~ 4 사이의 난수 생성
+        int seed = 0;           // 발생 가능 맵 0개 고정
+        int numDims = 2;		// 발생 가능 깊이 2 고정
         LoadMahjongBlocksFromCSV(level, seed, numDims);
     }
 }

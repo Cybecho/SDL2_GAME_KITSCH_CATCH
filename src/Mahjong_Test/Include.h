@@ -19,12 +19,13 @@ enum GamePhase {
 };
 
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 #include <string>
 #include <queue>
 #include <vector>
 #include <stack>
 #include <cmath>
-#include <ctime>
 #include <atlstr.h>
 #include <windows.h>
 #include <fstream>
