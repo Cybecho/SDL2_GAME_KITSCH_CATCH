@@ -130,27 +130,46 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
 
                 if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT) {
                     switch (data) {
-                    case 1:
-                        g_vector.emplace_back(std::make_unique<Mahjong_A>(x, y, g_renderer));
+                    case 1: {
+                        auto block = std::make_unique<Mahjong_A>(x, y, g_renderer);
+                        block->setN(dim);
+                        block->setM(row);
+                        block->setR(col);
+                        g_vector.emplace_back(std::move(block));
                         break;
-                    case 2:
-                        g_vector.emplace_back(std::make_unique<Mahjong_B>(x, y, g_renderer));
+                    }
+                    case 2: {
+                        auto block = std::make_unique<Mahjong_B>(x, y, g_renderer);
+                        block->setN(dim);
+                        block->setM(row);
+                        block->setR(col);
+                        g_vector.emplace_back(std::move(block));
                         break;
-                    case 3:
-                        g_vector.emplace_back(std::make_unique<Mahjong_C>(x, y, g_renderer));
+                    }
+                    case 3: {
+                        auto block = std::make_unique<Mahjong_C>(x, y, g_renderer);
+                        block->setN(dim);
+                        block->setM(row);
+                        block->setR(col);
+                        g_vector.emplace_back(std::move(block));
                         break;
-                    case 4:
-                        g_vector.emplace_back(std::make_unique<Mahjong_D>(x, y, g_renderer));
+                    }
+                    case 4: {
+                        auto block = std::make_unique<Mahjong_D>(x, y, g_renderer);
+                        block->setN(dim);
+                        block->setM(row);
+                        block->setR(col);
+                        g_vector.emplace_back(std::move(block));
                         break;
+                    }
                     default:
                         break;
                     }
                 }
-
                 ++col;
             }
-
             ++row;
+            cout << endl;
         }
     }
 

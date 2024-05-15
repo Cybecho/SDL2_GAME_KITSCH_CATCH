@@ -2,10 +2,7 @@
 
 Mix_Chunk* Mahjong::m_sound = nullptr;
 SDL_Texture* Mahjong::m_texture = nullptr;
-
-//! 전역 벡터 선언 (실제로는 gameLogic 에 쓰임)
-//! cehckClickEnable() 함수에서 사용하기 위해 extern 선언
-extern vector<unique_ptr<Mahjong>> g_vector;
+extern vector<unique_ptr<Mahjong>> g_vector; // 마작 블록 생성 벡터
 
 Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRect)
     : m_x(x), m_y(y), clicked(false), m_sourceRect(sourceRect), m_blockSize(BLOCK_SIZE), m_blockScale(BLOCK_SCALE), clickEnable(true),
@@ -106,20 +103,12 @@ bool Mahjong::isHovered(int x, int y) const {
 void Mahjong::checkClickEnable() {
     clickEnable = true;
 
-    int N = (m_y - PIVOT_Y) / BLOCK_SIZE;
-    int M = (m_x - PIVOT_X) / (BLOCK_SIZE / 2);
-    int R = (m_blockSize - BLOCK_SIZE) / (BLOCK_SIZE / 2);
-
     for (const auto& block : g_vector) {
-        int blockN = (block->getY() - PIVOT_Y) / BLOCK_SIZE;
-        int blockM = (block->getX() - PIVOT_X) / (BLOCK_SIZE / 2);
-        int blockR = (block->m_blockSize - BLOCK_SIZE) / (BLOCK_SIZE / 2);
-
-        if (blockR > R) {
-            if ((blockN == N + 1 && blockM == M && blockR == R + 1) ||
-                (blockN == N + 1 && blockM == M - 1 && blockR == R + 1) ||
-                (blockN == N + 1 && blockM == M && blockR == R) ||
-                (blockN == N + 1 && blockM == M - 1 && blockR == R)) {
+        if (block->m_R < m_R) {
+            if ((block->m_N == m_N && block->m_M == m_M) ||
+                (block->m_N == m_N && block->m_M == m_M + 1) ||
+                (block->m_N == m_N + 1 && block->m_M == m_M) ||
+                (block->m_N == m_N + 1 && block->m_M == m_M + 1)) {
                 clickEnable = false;
                 break;
             }
