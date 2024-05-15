@@ -47,6 +47,9 @@ void Mahjong::handleClick() {
 }
 
 bool Mahjong::isClicked(int x, int y) const {
+    if (dynamic_cast<const Mahjong_Empty*>(this) != nullptr) {
+        return false;
+    }
     return x >= m_x && x < m_x + (m_blockSize / m_blockScale) && y >= m_y && y < m_y + (m_blockSize / m_blockScale);
 }
 
@@ -108,7 +111,7 @@ void Mahjong::checkClickEnable() {
     int r = getR();
 
     for (const auto& block : g_vector) {
-        if (block->getN() > n) {
+        if (block->getN() > n && dynamic_cast<Mahjong_Empty*>(block.get()) == nullptr) {
             if ((block->getM() == m - 1 && block->getR() == r - 1) ||
                 (block->getM() == m - 1 && block->getR() == r) ||
                 (block->getM() == m && block->getR() == r - 1) ||
@@ -139,7 +142,7 @@ void Mahjong::render(SDL_Renderer* renderer) const {
         SDL_RenderCopy(renderer, m_texture, &m_sourceRect, &dstRect);
     }
     else {
-        Uint8 alpha = 128;
+        Uint8 alpha = 64;
         SDL_SetTextureAlphaMod(m_texture, alpha);
         SDL_RenderCopy(renderer, m_texture, &m_sourceRect, &dstRect);
         SDL_SetTextureAlphaMod(m_texture, 255);

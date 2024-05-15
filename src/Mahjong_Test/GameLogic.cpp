@@ -61,8 +61,8 @@ void HandleEvents() {
 
             // g_vector를 역순으로 순회하여 상위 레이어부터 클릭 이벤트 처리
             for (auto it = g_vector.rbegin(); it != g_vector.rend(); ++it) {
-                //! clickEnable이 true인 경우에만 클릭 이벤트 처리
-                if ((*it)->isClickable() && (*it)->isClicked(mouse_x, mouse_y)) {
+                //! clickEnable이 true이고 Mahjong_Empty 블록이 아닌 경우에만 클릭 이벤트 처리
+                if ((*it)->isClickable() && !dynamic_cast<Mahjong_Empty*>(it->get()) && (*it)->isClicked(mouse_x, mouse_y)) {
                     (*it)->Play2Sound();
 
                     vector2stack(it.base() - 1); //! 클릭된 블록을 g_stack으로 이동
@@ -205,7 +205,14 @@ void createBonk(int x, int y) {
 //! update 함수 : 벡터 영역이 비었을 때 csv 파일을 읽어와서 다시 로드
 void LoadMahjongBlocksIfEmpty() {
     if (checkEmptyBlocks()) {
-        g_vector.clear();
+        for (auto it = g_vector.begin(); it != g_vector.end();) {
+            if (dynamic_cast<Mahjong_Empty*>(it->get())) {
+                it = g_vector.erase(it);
+            }
+            else {
+                ++it;
+            }
+        }
 
         //~ 랜덤으로 레벨 선택 (나중에 순차 로드로 구현하세요)
         srand(time(NULL));
@@ -220,7 +227,9 @@ void LoadMahjongBlocksIfEmpty() {
 void RemoveSameTypeBlocks() {
     map<string, vector<int>> typeIndices;
     for (int i = 0; i < g_stack.size(); ++i) {
-        typeIndices[g_stack[i]->getType()].push_back(i);
+        if (dynamic_cast<Mahjong_Empty*>(g_stack[i].get()) == nullptr) {
+            typeIndices[g_stack[i]->getType()].push_back(i);
+        }
     }
 
     bool blocksRemoved = false;
