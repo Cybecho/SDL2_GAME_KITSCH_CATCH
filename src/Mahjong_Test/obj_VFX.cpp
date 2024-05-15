@@ -6,7 +6,7 @@ SDL_Texture* bonk::m_texture = nullptr;
 bonk::bonk(int x, int y, SDL_Renderer* renderer, int blockScale)
     : m_x(x), m_y(y), m_frame(0), m_frameCount(VFX_FRAME), m_frameDelay(VFX_FRAME_DELAY), m_frameTimer(0), m_blockSize(BLOCK_SIZE), m_blockScale(BLOCK_SCALE) { // Ãß°¡
     if (!m_texture) {
-        SDL_Surface* surface = IMG_Load("../../res/bonkEffect.png");
+        SDL_Surface* surface = IMG_Load("../Resources/bonkEffect.png");
         m_texture = SDL_CreateTextureFromSurface(renderer, surface);
         SDL_FreeSurface(surface);
     }

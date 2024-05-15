@@ -1,8 +1,8 @@
 #include "GameLogic.h"
 
-vector<vector<vector<unique_ptr<Mahjong>>>> g_vector; // 마작 블록 생성 벡터
-vector<unique_ptr<Mahjong>> g_stack; // 마작 블록 스택 벡터
-vector<bonk> g_bonks; // 효과 블록 생성 벡터
+std::vector<std::unique_ptr<Mahjong>> g_vector; // 마작 블록 생성 벡터
+std::vector<std::unique_ptr<Mahjong>> g_stack; // 마작 블록 스택 벡터
+std::vector<bonk> g_bonks; // 효과 블록 생성 벡터
 
 Mix_Chunk* wave1_;
 Mix_Music* music1_;
@@ -19,18 +19,13 @@ void InitGame() {
 
     g_bg_source_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
     g_bg_destination_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
-    
+
     //! 최초 마작 블록 로드
-    int max_level = countDir("../../res/level");    //~ 최대 레벨
-    int cur_level = 0;                              //~ 시작 레벨
-    int seed = 0;								    //~ 현재 레벨에서 발생 가능한 시드
-    int numDims = 3;
-    for (int i = 0; i < max_level; i++)
-    {
-        std::string dir_path = "../../res/level/" + std::to_string(i);
-        countFiles(dir_path);
-    }
-    LoadMahjongBlocksFromCSV(cur_level, seed, numDims);
+    //! 아래 변수는 함수의 매개변수 이해를 돕기 위한 변수입니다
+    int level = 0;
+    int seed = 0;
+    int numDims = 2;
+    LoadMahjongBlocksFromCSV(level, seed, numDims);
 }
 
 void HandleEvents() {
@@ -47,14 +42,9 @@ void HandleEvents() {
             int mouse_x = event.motion.x;
             int mouse_y = event.motion.y;
 
-            for (int dim = 0; dim < g_vector.size(); ++dim) {
-                for (int row = 0; row < g_vector[dim].size(); ++row) {
-                    for (int col = 0; col < g_vector[dim][row].size(); ++col) {
-                        Mahjong* block = g_vector[dim][row][col].get();
-                        if (block && block->isClickable()) {
-                            block->setHovered(block->isHovered(mouse_x, mouse_y));
-                        }
-                    }
+            for (auto& block : g_vector) {
+                if (block->isClickable()) {
+                    block->setHovered(block->isHovered(mouse_x, mouse_y));
                 }
             }
         }
@@ -64,17 +54,14 @@ void HandleEvents() {
             int mouse_x = event.button.x;
             int mouse_y = event.button.y;
 
-            for (int dim = g_vector.size() - 1; dim >= 0; --dim) {
-                for (int row = g_vector[dim].size() - 1; row >= 0; --row) {
-                    for (int col = g_vector[dim][row].size() - 1; col >= 0; --col) {
-                        Mahjong* block = g_vector[dim][row][col].get();
-                        if (block && block->isClickable() && block->isClicked(mouse_x, mouse_y)) {
-                            block->setClicked(true);
-                            block->handleClick();
-                            vector2stack(g_vector[dim][row][col].get()); // 반복자 대신 get()으로 포인터를 전달
-                            return;
-                        }
-                    }
+            for (auto it = g_vector.begin(); it != g_vector.end(); ++it) {
+                //! clickEnable이 true인 경우에만 클릭 이벤트 처리
+                if ((*it)->isClickable() && (*it)->isClicked(mouse_x, mouse_y)) {
+                    (*it)->Play2Sound();
+
+                    vector2stack(it); //! 클릭된 블록을 g_stack으로 이동
+                    createBonk(mouse_x, mouse_y); //! 클릭 위치에 bonk 객체 생성
+                    break;
                 }
             }
         }
@@ -95,18 +82,9 @@ void Render() {
     SDL_RenderClear(g_renderer);
 
     // 블록 객체 렌더링
-    for (int dim = 0; dim < g_vector.size(); ++dim) {
-        for (int row = 0; row < g_vector[dim].size(); ++row) {
-            for (int col = 0; col < g_vector[dim][row].size(); ++col) {
-                Mahjong* block = g_vector[dim][row][col].get();
-                if (block) {
-                    block->render(g_renderer);
-                }
-            }
-        }
+    for (const auto& block : g_vector) {
+        block->render(g_renderer);
     }
-
-    // 스택 객체 렌더링
     for (const auto& block : g_stack) {
         block->render(g_renderer);
     }
@@ -122,22 +100,20 @@ void Render() {
 //! CSV 파일에서 마작 블록을 읽어와서 g_vector에 생성
 void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
     g_vector.clear();
-    g_vector.resize(numDims);
 
-    for (int dim = 0; dim < numDims; ++dim) {
-        string filename = "../../res/level/" + to_string(level) + "/" + to_string(seed) + "-" + to_string(dim) + ".csv";
-        ifstream file(filename);
+    for (int dim = 0; dim <= numDims; ++dim) {
+        std::string filename = "../Resources/level/" + std::to_string(level) + "/" + std::to_string(seed) + "-" + std::to_string(dim) + ".csv";
+        std::ifstream file(filename);
         if (!file.is_open()) {
-            cerr << "Failed to open file: " << filename << endl;
+            std::cerr << "Failed to open file: " << filename << std::endl;
             continue;
         }
-        string line;
+        std::string line;
         int row = 0;
 
-        while (getline(file, line)) {
-            g_vector[dim].resize(row + 1); // 행의 크기 지정
-            istringstream iss(line);
-            string cell;
+        while (std::getline(file, line)) {
+            std::istringstream iss(line);
+            std::string cell;
             int col = 0;
 
             while (std::getline(iss, cell, ',')) {
@@ -148,38 +124,6 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
 
                 if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT) {
                     switch (data) {
-<<<<<<< HEAD
-                    case 1: {
-                        auto block = std::make_unique<Mahjong_A>(x, y, g_renderer);
-                        block->setN(dim);
-                        block->setM(row);
-                        block->setR(col);
-                        g_vector[dim][row].emplace_back(std::move(block));
-                        break;
-                    }
-                    case 2: {
-                        auto block = std::make_unique<Mahjong_B>(x, y, g_renderer);
-                        block->setN(dim);
-                        block->setM(row);
-                        block->setR(col);
-                        g_vector[dim][row].emplace_back(std::move(block));
-                        break;
-                    }
-                    case 3: {
-                        auto block = std::make_unique<Mahjong_C>(x, y, g_renderer);
-                        block->setN(dim);
-                        block->setM(row);
-                        block->setR(col);
-                        g_vector[dim][row].emplace_back(std::move(block));
-                        break;
-                    }
-                    case 4: {
-                        auto block = std::make_unique<Mahjong_D>(x, y, g_renderer);
-                        block->setN(dim);
-                        block->setM(row);
-                        block->setR(col);
-                        g_vector[dim][row].emplace_back(std::move(block));
-=======
                     case 1:
                         g_vector.emplace_back(std::make_unique<Mahjong_A>(x, y, g_renderer));
                         break;
@@ -191,7 +135,6 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
                         break;
                     case 4:
                         g_vector.emplace_back(std::make_unique<Mahjong_D>(x, y, g_renderer));
->>>>>>> parent of 7387946 (선택 제한 로직 구현 2 (미완))
                         break;
                     default:
                         break;
@@ -204,61 +147,24 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
             ++row;
         }
     }
-
-    //! 대각선 방향으로 블록 흔들림 효과 적용
-    int totalBlocks = 0;
-    for (const auto& dim : g_vector) {
-        for (const auto& row : dim) {
-            totalBlocks += row.size();
-        }
-    }
-
-    for (int i = 0; i < totalBlocks; ++i) {
-        int delay = i * 3; // 0.03초(3ms) 지연 시간
-        SDL_AddTimer(delay, [](Uint32 interval, void* param) -> Uint32 {
-            int index = *(static_cast<int*>(param));
-            int count = 0;
-            for (const auto& dim : g_vector) {
-                for (const auto& row : dim) {
-                    for (const auto& block : row) {
-                        if (count == index) {
-                            block->shakeBlocks(5); // 애니메이션 지속시간
-                            delete static_cast<int*>(param);
-                            return 0;
-                        }
-                        ++count;
-                    }
-                }
-            }
-            delete static_cast<int*>(param);
-            return 0;
-            }, new int(i));
-    }
 }
 
 //! 클릭된 블록을 g_vector에서 g_stack으로 이동
-void vector2stack(Mahjong* block) {
-    int dim, row, col;
-    tie(dim, row, col) = block->getClickedBlockInfo();
-
-    auto& blockPtr = g_vector[dim][row][col];
-    g_stack.emplace_back(std::move(blockPtr));
-    blockPtr.reset();
+void vector2stack(std::vector<std::unique_ptr<Mahjong>>::iterator it) {
+    auto block = std::move(*it);
+    g_vector.erase(it);
 
     // 객체의 위치를 g_stack의 크기에 따라 동적으로 계산합니다.
     int x = g_stack.size() * (BLOCK_SIZE / 2) + PIVOT_X;
     int y = BLOCK_SIZE + PIVOT_Y - (BLOCK_SIZE * 2);
-    g_stack.back()->setX(x);
-    g_stack.back()->setY(y);
 
-    // g_vector의 총 블록 수와 g_stack의 사이즈 출력
-    int totalBlocks = 0;
-    for (const auto& dim : g_vector) {
-        for (const auto& row : dim) {
-            totalBlocks += row.size();
-        }
-    }
-    std::cout << "g_vector size: " << totalBlocks << "| g_stack size: " << g_stack.size() << std::endl;
+    block->setX(x);
+    block->setY(y);
+
+    g_stack.emplace_back(std::move(block));
+
+    // g_blocks와 g_stack의 사이즈 출력
+    std::cout << "g_blocks size: " << g_vector.size() << "| g_stack size: " << g_stack.size() << std::endl;
 }
 
 //! 클릭된 위치에 bonk 객체 생성
@@ -273,17 +179,9 @@ void createBonk(int x, int y) {
 
 //! update 함수 : 벡터 영역이 비었을 때 csv 파일을 읽어와서 다시 로드
 void LoadMahjongBlocksIfEmpty() {
-    int totalBlocks = 0;
-    for (const auto& dim : g_vector) {
-        for (const auto& row : dim) {
-            totalBlocks += row.size();
-        }
-    }
-
-    if (totalBlocks == 0) {
-        srand(time(NULL));
-        int level = rand() % 5;
-        int seed = rand() % countFiles("../../res/level/" + to_string(level));
+    if (g_vector.empty()) {
+        int level = 1;
+        int seed = 0;
         int numDims = 3;
         LoadMahjongBlocksFromCSV(level, seed, numDims);
     }
@@ -291,38 +189,32 @@ void LoadMahjongBlocksIfEmpty() {
 
 //! update 함수 :  g_stack에서 같은 객체가 3개 이상 존재할 경우 pop 처리
 void RemoveSameTypeBlocks() {
-    map<string, vector<int>> typeIndices;
-    for (int i = 0; i < g_stack.size(); ++i) {
-        typeIndices[g_stack[i]->getType()].push_back(i);
+    map<string, int> typeCount;
+    for (const auto& block : g_stack) {
+        typeCount[block->getType()]++;
     }
 
-    bool blocksRemoved = false;
+    for (auto it = g_stack.begin(); it != g_stack.end();) {
+        int localScore = 0;
+        if (typeCount[(*it)->getType()] >= 3) {
+            typeCount[(*it)->getType()] -= 3;
 
-    for (auto it = typeIndices.rbegin(); it != typeIndices.rend(); ++it) {
-        if (it->second.size() >= 3) {
-            int count = 0;
-            for (int i = it->second.size() - 1; i >= 0; --i) {
-                if (count < 3) {
-                    int index = it->second[i];
-                    // 제거되는 블록의 위치에서 createBonk() 호출
-                    int x = g_stack[index]->getX() + BLOCK_SIZE / 2;
-                    int y = g_stack[index]->getY() + BLOCK_SIZE / 2;
-                    createBonk(x, y);
-                    g_stack.erase(g_stack.begin() + index);
-                    ++count;
-                    blocksRemoved = true;
-                }
-                else {
-                    break;
-                }
+            // 제거되는 블록의 위치에서 createBonk() 호출
+            for (int i = 0; i < 3; ++i) {
+                int x = (it + i)->get()->getX() + BLOCK_SIZE / 2;
+                int y = (it + i)->get()->getY() + BLOCK_SIZE / 2;
+                createBonk(x, y);
+            }
+
+            it = g_stack.erase(it, it + 3);
+
+            // g_stack에 있는 모든 Mahjong 객체의 shakeBlock() 호출 (입력 프레임에 따라 흔들림)
+            for (auto& block : g_stack) {
+                block->shakeBlocks(10);
             }
         }
-    }
-
-    // 블록이 제거된 경우에만 shakeBlocks() 호출
-    if (blocksRemoved) {
-        for (auto& block : g_stack) {
-            block->shakeBlocks(10);
+        else {
+            ++it;
         }
     }
 }
@@ -342,19 +234,12 @@ void AlignStackBlocks() {
 
 //! update 함수 :  g_stack의 객체들이 7개가 되면 g_vector의 객체들을 비활성화
 void UpdateVectorBlocks() {
-    for (int dim = 0; dim < g_vector.size(); ++dim) {
-        for (int row = 0; row < g_vector[dim].size(); ++row) {
-            for (int col = 0; col < g_vector[dim][row].size(); ++col) {
-                Mahjong* block = g_vector[dim][row][col].get();
-                if (block) {
-                    block->handleClick();
-                    block->update();
+    for (auto& block : g_vector) {
+        block->handleClick();
+        block->update();
 
-                    if (g_stack.size() == 7) {
-                        block->setClickable(false);
-                    }
-                }
-            }
+        if (g_stack.size() == 7) {
+            block->setClickable(false);
         }
     }
 }
@@ -453,59 +338,16 @@ void sortPairedBlocks() {
     }
 }
 
-//! 디렉토리 내 폴더 개수 세기
-int countDir(const std::string& path) {
-    int count = 0;
-    std::wstring search_path = std::wstring(path.begin(), path.end()) + L"\\*";
-    WIN32_FIND_DATAW fd;
-    HANDLE hFind = FindFirstFileW(search_path.c_str(), &fd);
-
-    if (hFind != INVALID_HANDLE_VALUE) {
-        do {
-            if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) &&
-                (std::wcscmp(fd.cFileName, L".") != 0) &&
-                (std::wcscmp(fd.cFileName, L"..") != 0)) {
-                ++count;
-            }
-        } while (FindNextFileW(hFind, &fd));
-        FindClose(hFind);
-    }
-
-    std::cout << path << " dir count: " << count << std::endl;
-    return count;
-}
-
-//! 디렉토리 내 파일 개수 세기
-int countFiles(const std::string& path) {
-    int count = 0;
-    std::wstring search_path = std::wstring(path.begin(), path.end()) + L"\\*";
-    WIN32_FIND_DATAW fd;
-    HANDLE hFind = FindFirstFileW(search_path.c_str(), &fd);
-
-    if (hFind != INVALID_HANDLE_VALUE) {
-        do {
-            if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-                ++count;
-            }
-        } while (FindNextFileW(hFind, &fd));
-        FindClose(hFind);
-    }
-    cout << path << " csv count: " << count << endl;
-    return count;
-}
-
 //! 게임 종료 시 메모리 꼭! 해제
 void ClearGame() {
-    for (int dim = 0; dim < g_vector.size(); ++dim) {
-        for (int row = 0; row < g_vector[dim].size(); ++row) {
-            for (int col = 0; col < g_vector[dim][row].size(); ++col) {
-                Mahjong* block = g_vector[dim][row][col].get();
-                if (block) {
-                    block->destroyTexture();
-                    block->Clear2Sound();
-                }
-            }
-        }
+    for (auto& block : g_vector) {
+        block->destroyTexture();
+        block->Clear2Sound();
+    }
+    g_vector.clear();
+    for (auto& block : g_stack) {
+        block->destroyTexture();
+        block->Clear2Sound();
     }
     g_vector.clear();
     g_stack.clear();
