@@ -33,3 +33,11 @@ public:
     ~Mahjong_D();
     string getType() const override { return "D"; }
 };
+
+//! Mahjong_Empty
+class Mahjong_Empty : public Mahjong {
+public:
+    Mahjong_Empty(int x, int y, SDL_Renderer* renderer);
+    ~Mahjong_Empty();
+    string getType() const override { return "E"; }
+};

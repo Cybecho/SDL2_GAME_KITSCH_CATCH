@@ -28,3 +28,11 @@ Mahjong_D::Mahjong_D(int x, int y, SDL_Renderer* renderer)
     cout << "D ";
 }
 Mahjong_D::~Mahjong_D() { /*cout << "delete D" << endl; */ }
+
+//! Mahjong_Empty
+Mahjong_Empty::Mahjong_Empty(int x, int y, SDL_Renderer* renderer)
+    : Mahjong(x, y, renderer, { 0, 0, 0, 0 }) {
+    setClickable(false);
+    cout << "- ";
+}
+Mahjong_Empty::~Mahjong_Empty() {}

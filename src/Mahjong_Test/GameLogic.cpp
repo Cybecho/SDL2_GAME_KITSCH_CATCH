@@ -143,6 +143,7 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
                         g_vector.emplace_back(std::make_unique<Mahjong_D>(x, y, g_renderer));
                         break;
                     default:
+                        g_vector.emplace_back(std::make_unique<Mahjong_Empty>(x, y, g_renderer));
                         break;
                     }
                 }
@@ -198,11 +199,17 @@ void createBonk(int x, int y) {
 
 //! update 함수 : 벡터 영역이 비었을 때 csv 파일을 읽어와서 다시 로드
 void LoadMahjongBlocksIfEmpty() {
-    if (g_vector.empty()) {
-        srand(time(NULL));  // 시드 값을 현재 시간으로 설정
-        int level = rand() % 5; // 0 ~ 4 사이의 난수 생성
-        int seed = 0;           // 발생 가능 맵 0개 고정
-        int numDims = 2;		// 발생 가능 깊이 2 고정
+    if (g_vector.empty() || (g_vector.size() == std::count_if(g_vector.begin(), g_vector.end(), [](const auto& block) {
+        return dynamic_cast<Mahjong_Empty*>(block.get()) != nullptr;
+        }))) {
+        g_vector.clear();
+        srand(time(NULL));
+
+        //~ 랜덤 레벨, 시드, 차원으로 마작 블록 로드
+        //~ 추후에 순차 로드로 변경해주세요
+        int level = rand() % 5;
+        int seed = 0;
+        int numDims = 2;
         LoadMahjongBlocksFromCSV(level, seed, numDims);
     }
 }
