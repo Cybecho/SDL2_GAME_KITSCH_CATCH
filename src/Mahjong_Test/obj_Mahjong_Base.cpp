@@ -3,6 +3,10 @@
 Mix_Chunk* Mahjong::m_sound = nullptr;
 SDL_Texture* Mahjong::m_texture = nullptr;
 
+//! 전역 벡터 선언 (실제로는 gameLogic 에 쓰임)
+//! cehckClickEnable() 함수에서 사용하기 위해 extern 선언
+extern vector<unique_ptr<Mahjong>> g_vector;
+
 Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRect)
     : m_x(x), m_y(y), clicked(false), m_sourceRect(sourceRect), m_blockSize(BLOCK_SIZE), m_blockScale(BLOCK_SCALE), clickEnable(true),
     m_originalX(x), m_originalY(y), m_shakeDuration(0), m_shakeTimer(0), m_isShaking(false), hovered(false), m_hoverScale(1.1f) {
@@ -18,9 +22,7 @@ Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRec
 }
 
 void Mahjong::update() {
-    if (clicked) {
-        // ...
-    }
+    checkClickEnable();
 
     if (m_isShaking) {
         m_shakeTimer++;
@@ -101,6 +103,30 @@ bool Mahjong::isHovered(int x, int y) const {
     return x >= hoverX && x < hoverX + hoverWidth && y >= hoverY && y < hoverY + hoverHeight;
 }
 
+void Mahjong::checkClickEnable() {
+    clickEnable = true;
+
+    int N = (m_y - PIVOT_Y) / BLOCK_SIZE;
+    int M = (m_x - PIVOT_X) / (BLOCK_SIZE / 2);
+    int R = (m_blockSize - BLOCK_SIZE) / (BLOCK_SIZE / 2);
+
+    for (const auto& block : g_vector) {
+        int blockN = (block->getY() - PIVOT_Y) / BLOCK_SIZE;
+        int blockM = (block->getX() - PIVOT_X) / (BLOCK_SIZE / 2);
+        int blockR = (block->m_blockSize - BLOCK_SIZE) / (BLOCK_SIZE / 2);
+
+        if (blockR > R) {
+            if ((blockN == N + 1 && blockM == M && blockR == R + 1) ||
+                (blockN == N + 1 && blockM == M - 1 && blockR == R + 1) ||
+                (blockN == N + 1 && blockM == M && blockR == R) ||
+                (blockN == N + 1 && blockM == M - 1 && blockR == R)) {
+                clickEnable = false;
+                break;
+            }
+        }
+    }
+}
+
 void Mahjong::render(SDL_Renderer* renderer) const {
     //! 블록의 크기를 호버링 여부에 따라 삼항 연산자로 설정
     //~ 만약 호버링 상태라면? 객체 크기는 m_hoverScale
@@ -121,9 +147,13 @@ void Mahjong::render(SDL_Renderer* renderer) const {
     }
     else {
         Uint8 alpha = 128;
+        Uint8 grayValue = 128;
+
         SDL_SetTextureAlphaMod(m_texture, alpha);
+        SDL_SetTextureColorMod(m_texture, grayValue, grayValue, grayValue);
         SDL_RenderCopy(renderer, m_texture, &m_sourceRect, &dstRect);
         SDL_SetTextureAlphaMod(m_texture, 255);
+        SDL_SetTextureColorMod(m_texture, 255, 255, 255);
     }
 }
 

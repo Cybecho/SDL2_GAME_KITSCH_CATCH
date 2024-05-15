@@ -20,7 +20,8 @@ public:
     //! 클릭 가능한지
     bool isClickable() const { return clickEnable; }
     void setClickable(bool value) { clickEnable = value; }
-    
+    void checkClickEnable();
+
     //! 클릭 되었을때
     bool isClicked(int x, int y) const;
     void setClicked(bool value) { clicked = value; }
