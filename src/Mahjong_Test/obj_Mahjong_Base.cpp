@@ -1,4 +1,4 @@
-#include "obj_Mahjong_Base.h"
+ï»¿#include "obj_Mahjong_Base.h"
 
 Mix_Chunk* Mahjong::m_sound = nullptr;
 SDL_Texture* Mahjong::m_texture = nullptr;
@@ -13,7 +13,7 @@ Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRec
     if (!m_sound) {
         Set2Sound();
     }
-    //! »ı¼ºÀÚ ¸àÆ®
+    //! ìƒì„±ì ë©˜íŠ¸
     // cout << "Mahjong Create" << " x : " << this->m_x << " y : " << this->m_y << endl;
 }
 
@@ -43,7 +43,7 @@ void Mahjong::update() {
 void Mahjong::handleClick() {
     if (clicked) 
     {
-        // ÃßÈÄ¿¡ ±¸Çö
+        // ì¶”í›„ì— êµ¬í˜„
     }
 }
 
@@ -53,7 +53,7 @@ bool Mahjong::isClicked(int x, int y) const {
 
 void Mahjong::Set2Sound() {
     if (!m_sound) {
-        m_sound = Mix_LoadWAV("../Resources/ClickBlock.mp3");
+        m_sound = Mix_LoadWAV("../../res/ClickBlock.mp3");
         if (!m_sound) {
             printf("Failed to load sound effect! SDL_mixer Error: %s\n", Mix_GetError());
         }
@@ -91,7 +91,7 @@ bool Mahjong::isHovered(int x, int y) const {
     int blockX = static_cast<int>(m_x - ((m_blockSize * scale) - m_blockSize) / 2);
     int blockY = static_cast<int>(m_y - ((m_blockSize * scale) - m_blockSize) / 2);
 
-    // È£¹ö¸µ ¿µ¿ªÀ» ºí·Ï Å©±âÀÇ 80%·Î Á¶Á¤
+    // í˜¸ë²„ë§ ì˜ì—­ì„ ë¸”ë¡ í¬ê¸°ì˜ 80%ë¡œ ì¡°ì •
     float hoverRatio = 0.8f;
     int hoverWidth = static_cast<int>(blockWidth * hoverRatio);
     int hoverHeight = static_cast<int>(blockHeight * hoverRatio);
@@ -102,9 +102,9 @@ bool Mahjong::isHovered(int x, int y) const {
 }
 
 void Mahjong::render(SDL_Renderer* renderer) const {
-    //! ºí·ÏÀÇ Å©±â¸¦ È£¹ö¸µ ¿©ºÎ¿¡ µû¶ó »ïÇ× ¿¬»êÀÚ·Î ¼³Á¤
-    //~ ¸¸¾à È£¹ö¸µ »óÅÂ¶ó¸é? °´Ã¼ Å©±â´Â m_hoverScale
-    //~ ¾Æ´Ï¶ó¸é? °´Ã¼ Å©±â´Â m_blockScale
+    //! ë¸”ë¡ì˜ í¬ê¸°ë¥¼ í˜¸ë²„ë§ ì—¬ë¶€ì— ë”°ë¼ ì‚¼í•­ ì—°ì‚°ìë¡œ ì„¤ì •
+    //~ ë§Œì•½ í˜¸ë²„ë§ ìƒíƒœë¼ë©´? ê°ì²´ í¬ê¸°ëŠ” m_hoverScale
+    //~ ì•„ë‹ˆë¼ë©´? ê°ì²´ í¬ê¸°ëŠ” m_blockScale
     float scale = hovered ? m_hoverScale : m_blockScale;
 
     SDL_Rect dstRect = {
@@ -114,8 +114,8 @@ void Mahjong::render(SDL_Renderer* renderer) const {
         static_cast<int>(m_blockSize * scale)
     };
 
-    //! Å¬¸¯ÀÌ °¡´ÉÇÑ »óÅÂ¶ó¸é? Å¬¸¯ °¡´ÉÇÑ »óÅÂ·Î ·»´õ¸µ (ºÒÅõ¸í)
-    //! Å¬¸¯ÀÌ ºÒ°¡´ÉÇÑ »óÅÂ¶ó¸é? Å¬¸¯ ºÒ°¡´ÉÇÑ »óÅÂ·Î ·»´õ¸µ (¹İÅõ¸í)
+    //! í´ë¦­ì´ ê°€ëŠ¥í•œ ìƒíƒœë¼ë©´? í´ë¦­ ê°€ëŠ¥í•œ ìƒíƒœë¡œ ë Œë”ë§ (ë¶ˆíˆ¬ëª…)
+    //! í´ë¦­ì´ ë¶ˆê°€ëŠ¥í•œ ìƒíƒœë¼ë©´? í´ë¦­ ë¶ˆê°€ëŠ¥í•œ ìƒíƒœë¡œ ë Œë”ë§ (ë°˜íˆ¬ëª…)
     if (clickEnable) {
         SDL_RenderCopy(renderer, m_texture, &m_sourceRect, &dstRect);
     }
@@ -133,7 +133,7 @@ void Mahjong::destroyTexture() {
 }
 
 void Mahjong::loadTexture(SDL_Renderer* renderer) {
-    SDL_Surface* surface = IMG_Load("../Resources/Mahjong.png");
+    SDL_Surface* surface = IMG_Load("../../res/Mahjong.png");
     m_texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
 }

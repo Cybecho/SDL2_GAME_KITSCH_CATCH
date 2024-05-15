@@ -19,12 +19,13 @@ enum GamePhase {
 };
 
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 #include <string>
 #include <queue>
 #include <vector>
 #include <stack>
 #include <cmath>
-#include <ctime>
 #include <atlstr.h>
 #include <windows.h>
 #include <fstream>
@@ -36,8 +37,6 @@ enum GamePhase {
 #include "SDL_image.h"
 #include "SDL_mixer.h"
 #include "SDL_ttf.h"
-
-//#include <xlnt/xlnt.hpp> // 이거 안쓰고 그냥 sstream으로 대체함
 
 using int8 = std::int8_t;
 using int16 = std::int16_t;

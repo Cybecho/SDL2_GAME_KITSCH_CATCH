@@ -21,11 +21,16 @@ void InitGame() {
     g_bg_destination_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 
     //! 최초 마작 블록 로드
-    //! 아래 변수는 함수의 매개변수 이해를 돕기 위한 변수입니다
-    int level = 0;
-    int seed = 0;
+    int max_level = countDir("../../res/level");    //~ 최대 레벨
+    int cur_level = 0;                              //~ 시작 레벨
+    int seed = 0;								    //~ 현재 레벨에서 발생 가능한 시드
     int numDims = 2;
-    LoadMahjongBlocksFromCSV(level, seed, numDims);
+    for (int i = 0; i < max_level; i++)
+    {
+        std::string dir_path = "../../res/level/" + std::to_string(i);
+        countFiles(dir_path);
+    }
+    LoadMahjongBlocksFromCSV(cur_level, seed, numDims);
 }
 
 void HandleEvents() {
@@ -54,12 +59,13 @@ void HandleEvents() {
             int mouse_x = event.button.x;
             int mouse_y = event.button.y;
 
-            for (auto it = g_vector.begin(); it != g_vector.end(); ++it) {
+            // g_vector를 역순으로 순회하여 상위 레이어부터 클릭 이벤트 처리
+            for (auto it = g_vector.rbegin(); it != g_vector.rend(); ++it) {
                 //! clickEnable이 true인 경우에만 클릭 이벤트 처리
                 if ((*it)->isClickable() && (*it)->isClicked(mouse_x, mouse_y)) {
                     (*it)->Play2Sound();
 
-                    vector2stack(it); //! 클릭된 블록을 g_stack으로 이동
+                    vector2stack(it.base() - 1); //! 클릭된 블록을 g_stack으로 이동
                     createBonk(mouse_x, mouse_y); //! 클릭 위치에 bonk 객체 생성
                     break;
                 }
@@ -102,7 +108,7 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
     g_vector.clear();
 
     for (int dim = 0; dim <= numDims; ++dim) {
-        std::string filename = "../Resources/level/" + std::to_string(level) + "/" + std::to_string(seed) + "-" + std::to_string(dim) + ".csv";
+        std::string filename = "../../res/level/" + std::to_string(level) + "/" + std::to_string(seed) + "-" + std::to_string(dim) + ".csv";
         std::ifstream file(filename);
         if (!file.is_open()) {
             std::cerr << "Failed to open file: " << filename << std::endl;
@@ -147,6 +153,18 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
             ++row;
         }
     }
+
+    //! 대각선 방향으로 블록 흔들림 효과 적용
+    int totalBlocks = g_vector.size();
+    for (int i = 0; i < totalBlocks; ++i) {
+        int delay = i * 3; // 0.03초(3ms) 지연 시간
+        SDL_AddTimer(delay, [](Uint32 interval, void* param) -> Uint32 {
+            int index = *(static_cast<int*>(param));
+            g_vector[index]->shakeBlocks(5); // 애니메이션 지속시간
+            delete static_cast<int*>(param);
+            return 0;
+            }, new int(i));
+    }
 }
 
 //! 클릭된 블록을 g_vector에서 g_stack으로 이동
@@ -180,41 +198,48 @@ void createBonk(int x, int y) {
 //! update 함수 : 벡터 영역이 비었을 때 csv 파일을 읽어와서 다시 로드
 void LoadMahjongBlocksIfEmpty() {
     if (g_vector.empty()) {
-        int level = 1;
-        int seed = 0;
-        int numDims = 3;
+        srand(time(NULL));  // 시드 값을 현재 시간으로 설정
+        int level = rand() % 5; // 0 ~ 4 사이의 난수 생성
+        int seed = 0;           // 발생 가능 맵 0개 고정
+        int numDims = 2;		// 발생 가능 깊이 2 고정
         LoadMahjongBlocksFromCSV(level, seed, numDims);
     }
 }
 
 //! update 함수 :  g_stack에서 같은 객체가 3개 이상 존재할 경우 pop 처리
 void RemoveSameTypeBlocks() {
-    map<string, int> typeCount;
-    for (const auto& block : g_stack) {
-        typeCount[block->getType()]++;
+    map<string, vector<int>> typeIndices;
+    for (int i = 0; i < g_stack.size(); ++i) {
+        typeIndices[g_stack[i]->getType()].push_back(i);
     }
 
-    for (auto it = g_stack.begin(); it != g_stack.end();) {
-        int localScore = 0;
-        if (typeCount[(*it)->getType()] >= 3) {
-            typeCount[(*it)->getType()] -= 3;
+    bool blocksRemoved = false;
 
-            // 제거되는 블록의 위치에서 createBonk() 호출
-            for (int i = 0; i < 3; ++i) {
-                int x = (it + i)->get()->getX() + BLOCK_SIZE / 2;
-                int y = (it + i)->get()->getY() + BLOCK_SIZE / 2;
-                createBonk(x, y);
-            }
-
-            it = g_stack.erase(it, it + 3);
-
-            // g_stack에 있는 모든 Mahjong 객체의 shakeBlock() 호출 (입력 프레임에 따라 흔들림)
-            for (auto& block : g_stack) {
-                block->shakeBlocks(10);
+    for (auto it = typeIndices.rbegin(); it != typeIndices.rend(); ++it) {
+        if (it->second.size() >= 3) {
+            int count = 0;
+            for (int i = it->second.size() - 1; i >= 0; --i) {
+                if (count < 3) {
+                    int index = it->second[i];
+                    // 제거되는 블록의 위치에서 createBonk() 호출
+                    int x = g_stack[index]->getX() + BLOCK_SIZE / 2;
+                    int y = g_stack[index]->getY() + BLOCK_SIZE / 2;
+                    createBonk(x, y);
+                    g_stack.erase(g_stack.begin() + index);
+                    ++count;
+                    blocksRemoved = true;
+                }
+                else {
+                    break;
+                }
             }
         }
-        else {
-            ++it;
+    }
+
+    // 블록이 제거된 경우에만 shakeBlocks() 호출
+    if (blocksRemoved) {
+        for (auto& block : g_stack) {
+            block->shakeBlocks(10);
         }
     }
 }
@@ -336,6 +361,47 @@ void sortPairedBlocks() {
     for (auto& block : singleBlocks) {
         g_stack.push_back(std::move(block));
     }
+}
+
+//! 디렉토리 내 폴더 개수 세기
+int countDir(const std::string& path) {
+    int count = 0;
+    std::wstring search_path = std::wstring(path.begin(), path.end()) + L"\\*";
+    WIN32_FIND_DATAW fd;
+    HANDLE hFind = FindFirstFileW(search_path.c_str(), &fd);
+
+    if (hFind != INVALID_HANDLE_VALUE) {
+        do {
+            if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) &&
+                (std::wcscmp(fd.cFileName, L".") != 0) &&
+                (std::wcscmp(fd.cFileName, L"..") != 0)) {
+                ++count;
+            }
+        } while (FindNextFileW(hFind, &fd));
+        FindClose(hFind);
+    }
+
+    std::cout << path << " dir count: " << count << std::endl;
+    return count;
+}
+
+//! 디렉토리 내 파일 개수 세기
+int countFiles(const std::string& path) {
+    int count = 0;
+    std::wstring search_path = std::wstring(path.begin(), path.end()) + L"\\*";
+    WIN32_FIND_DATAW fd;
+    HANDLE hFind = FindFirstFileW(search_path.c_str(), &fd);
+
+    if (hFind != INVALID_HANDLE_VALUE) {
+        do {
+            if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+                ++count;
+            }
+        } while (FindNextFileW(hFind, &fd));
+        FindClose(hFind);
+    }
+    cout << path << " csv count: " << count << endl;
+    return count;
 }
 
 //! 게임 종료 시 메모리 꼭! 해제
