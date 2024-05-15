@@ -151,6 +151,7 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
             }
 
             ++row;
+            cout << endl; // 줄바꿈
         }
     }
 
