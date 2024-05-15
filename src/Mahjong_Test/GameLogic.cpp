@@ -184,7 +184,7 @@ void vector2stack(std::vector<std::unique_ptr<Mahjong>>::iterator it) {
     g_stack.emplace_back(std::move(block));
 
     // g_blocks와 g_stack의 사이즈 출력
-    std::cout << "g_blocks size: " << g_vector.size() << "| g_stack size: " << g_stack.size() << std::endl;
+    std::cout << "g_blocks size: " << g_vector.size() - countEmptyBlocks() << "| g_stack size: " << g_stack.size() << std::endl;
 }
 
 //! 클릭된 위치에 bonk 객체 생성
@@ -199,14 +199,11 @@ void createBonk(int x, int y) {
 
 //! update 함수 : 벡터 영역이 비었을 때 csv 파일을 읽어와서 다시 로드
 void LoadMahjongBlocksIfEmpty() {
-    if (g_vector.empty() || (g_vector.size() == std::count_if(g_vector.begin(), g_vector.end(), [](const auto& block) {
-        return dynamic_cast<Mahjong_Empty*>(block.get()) != nullptr;
-        }))) {
+    if (checkEmptyBlocks()) {
         g_vector.clear();
-        srand(time(NULL));
 
-        //~ 랜덤 레벨, 시드, 차원으로 마작 블록 로드
-        //~ 추후에 순차 로드로 변경해주세요
+        //~ 랜덤으로 레벨 선택 (나중에 순차 로드로 구현하세요)
+        srand(time(NULL));
         int level = rand() % 5;
         int seed = 0;
         int numDims = 2;
@@ -301,6 +298,20 @@ void UpdateBonks() {
 //! update 함수 :  점수 업데이트
 //~ 미구현
 void UpdateScore(int score) {
+}
+
+//! Empty 마작 블록이 비었는지 체크
+bool checkEmptyBlocks() {
+    return g_vector.empty() || std::all_of(g_vector.begin(), g_vector.end(), [](const auto& block) {
+        return dynamic_cast<Mahjong_Empty*>(block.get()) != nullptr;
+        });
+}
+
+//! Empty 마작 블록 개수를 세는 함수
+int countEmptyBlocks() {
+    return std::count_if(g_vector.begin(), g_vector.end(), [](const auto& block) {
+        return dynamic_cast<Mahjong_Empty*>(block.get()) != nullptr;
+        });
 }
 
 //! Sort 함수 : 퀵 정렬을 위한 비교 함수

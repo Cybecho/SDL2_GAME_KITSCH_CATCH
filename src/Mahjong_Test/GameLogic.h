@@ -28,6 +28,10 @@ void UpdateStackBlocks();
 void UpdateBonks();
 void UpdateScore(int score);
 
+//! Empty Block 체크 함수
+bool checkEmptyBlocks();
+int countEmptyBlocks();
+
 //! 정렬 함수
 bool compareBlocks(const std::unique_ptr<Mahjong>& a, const std::unique_ptr<Mahjong>& b);
 void quickSort(std::vector<std::unique_ptr<Mahjong>>& blocks, int left, int right);
