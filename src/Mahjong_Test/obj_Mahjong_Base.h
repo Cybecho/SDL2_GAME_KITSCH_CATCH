@@ -34,9 +34,6 @@ public:
     int getY() const { return m_y; }
     void setX(int x) { m_x = x; m_originalX = x; }
     void setY(int y) { m_y = y; m_originalY = y; }
-    void setN(int N) { m_N = N; }
-    void setM(int M) { m_M = M; }
-    void setR(int R) { m_R = R; }
     
     //! 하위 객체들의 정보를 받아올 가상함수 
     virtual string getType() const = 0;
@@ -68,9 +65,6 @@ protected:
     //! 클릭 가능 여부
     bool clickEnable;
     bool clicked;
-    int m_N; // ROW
-    int m_M; // COL
-    int m_R; // DIMENTION
     //! 호버링
     bool hovered;
     float m_hoverScale;

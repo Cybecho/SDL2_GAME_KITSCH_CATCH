@@ -2,7 +2,14 @@
 
 Mix_Chunk* Mahjong::m_sound = nullptr;
 SDL_Texture* Mahjong::m_texture = nullptr;
+<<<<<<< HEAD
 extern vector<vector<vector<unique_ptr<Mahjong>>>> g_vector; // ¸¶ÀÛ ºí·Ï »ı¼º º¤ÅÍ
+=======
+
+//! Àü¿ª º¤ÅÍ ¼±¾ğ (½ÇÁ¦·Î´Â gameLogic ¿¡ ¾²ÀÓ)
+//! cehckClickEnable() ÇÔ¼ö¿¡¼­ »ç¿ëÇÏ±â À§ÇØ extern ¼±¾ğ
+extern vector<unique_ptr<Mahjong>> g_vector;
+>>>>>>> parent of 7387946 (ì„ íƒ ì œí•œ ë¡œì§ êµ¬í˜„ 2 (ë¯¸ì™„))
 
 Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRect)
     : m_x(x), m_y(y), clicked(false), m_sourceRect(sourceRect), m_blockSize(BLOCK_SIZE), m_blockScale(BLOCK_SCALE), clickEnable(true),
@@ -105,6 +112,7 @@ bool Mahjong::isHovered(int x, int y) const {
 void Mahjong::checkClickEnable() {
     clickEnable = true;
 
+<<<<<<< HEAD
     for (int dim = m_N + 1; dim < g_vector.size(); ++dim) {
         if (m_M >= g_vector[dim].size()) {
             continue;
@@ -115,6 +123,25 @@ void Mahjong::checkClickEnable() {
         if (g_vector[dim][m_M][m_R].get()) {
             clickEnable = false;
             return;
+=======
+    int N = (m_y - PIVOT_Y) / BLOCK_SIZE;
+    int M = (m_x - PIVOT_X) / (BLOCK_SIZE / 2);
+    int R = (m_blockSize - BLOCK_SIZE) / (BLOCK_SIZE / 2);
+
+    for (const auto& block : g_vector) {
+        int blockN = (block->getY() - PIVOT_Y) / BLOCK_SIZE;
+        int blockM = (block->getX() - PIVOT_X) / (BLOCK_SIZE / 2);
+        int blockR = (block->m_blockSize - BLOCK_SIZE) / (BLOCK_SIZE / 2);
+
+        if (blockR > R) {
+            if ((blockN == N + 1 && blockM == M && blockR == R + 1) ||
+                (blockN == N + 1 && blockM == M - 1 && blockR == R + 1) ||
+                (blockN == N + 1 && blockM == M && blockR == R) ||
+                (blockN == N + 1 && blockM == M - 1 && blockR == R)) {
+                clickEnable = false;
+                break;
+            }
+>>>>>>> parent of 7387946 (ì„ íƒ ì œí•œ ë¡œì§ êµ¬í˜„ 2 (ë¯¸ì™„))
         }
     }
 }
