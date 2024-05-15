@@ -80,6 +80,7 @@ void HandleEvents() {
         }
     }
 }
+
 void Update() {
     LoadMahjongBlocksIfEmpty();
     RemoveSameTypeBlocks();
@@ -233,12 +234,17 @@ void vector2stack(Mahjong* block) {
     // 객체의 위치를 g_stack의 크기에 따라 동적으로 계산합니다.
     int x = g_stack.size() * (BLOCK_SIZE / 2) + PIVOT_X;
     int y = BLOCK_SIZE + PIVOT_Y - (BLOCK_SIZE * 2);
-
     g_stack.back()->setX(x);
     g_stack.back()->setY(y);
 
-    // g_vector와 g_stack의 사이즈 출력
-    std::cout << "g_vector size: " << g_vector.size() << "| g_stack size: " << g_stack.size() << std::endl;
+    // g_vector의 총 블록 수와 g_stack의 사이즈 출력
+    int totalBlocks = 0;
+    for (const auto& dim : g_vector) {
+        for (const auto& row : dim) {
+            totalBlocks += row.size();
+        }
+    }
+    std::cout << "g_vector size: " << totalBlocks << "| g_stack size: " << g_stack.size() << std::endl;
 }
 
 //! 클릭된 위치에 bonk 객체 생성
@@ -253,11 +259,18 @@ void createBonk(int x, int y) {
 
 //! update 함수 : 벡터 영역이 비었을 때 csv 파일을 읽어와서 다시 로드
 void LoadMahjongBlocksIfEmpty() {
-    if (g_vector.empty()) {
-        srand(time(NULL));  // 시드 값을 현재 시간으로 설정
-        int level = rand() % 5; // 0 ~ 4 사이의 난수 생성
-        int seed = 0;           // 발생 가능 맵 0개 고정
-        int numDims = 3;		// 발생 가능 깊이 3 고정
+    int totalBlocks = 0;
+    for (const auto& dim : g_vector) {
+        for (const auto& row : dim) {
+            totalBlocks += row.size();
+        }
+    }
+
+    if (totalBlocks == 0) {
+        srand(time(NULL));
+        int level = rand() % 5;
+        int seed = rand() % countFiles("../../res/level/" + to_string(level));
+        int numDims = 3;
         LoadMahjongBlocksFromCSV(level, seed, numDims);
     }
 }

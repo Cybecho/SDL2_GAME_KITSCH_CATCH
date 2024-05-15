@@ -105,26 +105,16 @@ bool Mahjong::isHovered(int x, int y) const {
 void Mahjong::checkClickEnable() {
     clickEnable = true;
 
-    for (int dim = 0; dim < m_N; ++dim) {
+    for (int dim = m_N + 1; dim < g_vector.size(); ++dim) {
         if (m_M >= g_vector[dim].size()) {
             continue;
         }
         if (m_R >= g_vector[dim][m_M].size()) {
             continue;
         }
-        for (int col = m_R + 1; col < g_vector[dim][m_M].size(); ++col) {
-            if (g_vector[dim][m_M][col].get()) {
-                clickEnable = false;
-                return;
-            }
-        }
-        for (int row = m_M + 1; row < g_vector[dim].size(); ++row) {
-            for (int col = 0; col < g_vector[dim][row].size(); ++col) {
-                if (g_vector[dim][row][col].get()) {
-                    clickEnable = false;
-                    return;
-                }
-            }
+        if (g_vector[dim][m_M][m_R].get()) {
+            clickEnable = false;
+            return;
         }
     }
 }
