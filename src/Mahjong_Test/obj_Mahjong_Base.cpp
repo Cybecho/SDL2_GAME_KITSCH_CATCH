@@ -1,4 +1,5 @@
 ﻿#include "obj_Mahjong_Base.h"
+#include "GameLogic.h"
 
 Mix_Chunk* Mahjong::m_sound = nullptr;
 SDL_Texture* Mahjong::m_texture = nullptr;
@@ -18,9 +19,7 @@ Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRec
 }
 
 void Mahjong::update() {
-    if (clicked) {
-        // ...
-    }
+    checkClickEnable();
 
     if (m_isShaking) {
         m_shakeTimer++;
@@ -101,6 +100,26 @@ bool Mahjong::isHovered(int x, int y) const {
     return x >= hoverX && x < hoverX + hoverWidth && y >= hoverY && y < hoverY + hoverHeight;
 }
 
+void Mahjong::checkClickEnable() {
+    clickEnable = true;
+
+    int n = getN();
+    int m = getM();
+    int r = getR();
+
+    for (const auto& block : g_vector) {
+        if (block->getN() > n) {
+            if ((block->getM() == m - 1 && block->getR() == r - 1) ||
+                (block->getM() == m - 1 && block->getR() == r) ||
+                (block->getM() == m && block->getR() == r - 1) ||
+                (block->getM() == m && block->getR() == r)) {
+                clickEnable = false;
+                break;
+            }
+        }
+    }
+}
+
 void Mahjong::render(SDL_Renderer* renderer) const {
     //! 블록의 크기를 호버링 여부에 따라 삼항 연산자로 설정
     //~ 만약 호버링 상태라면? 객체 크기는 m_hoverScale
@@ -136,4 +155,4 @@ void Mahjong::loadTexture(SDL_Renderer* renderer) {
     SDL_Surface* surface = IMG_Load("../../res/Mahjong.png");
     m_texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
-}
+} 

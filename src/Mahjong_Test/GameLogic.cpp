@@ -132,18 +132,23 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
                     switch (data) {
                     case 1:
                         g_vector.emplace_back(std::make_unique<Mahjong_A>(x, y, g_renderer));
+                        g_vector.back()->setPosition(dim, row, col);
                         break;
                     case 2:
                         g_vector.emplace_back(std::make_unique<Mahjong_B>(x, y, g_renderer));
+                        g_vector.back()->setPosition(dim, row, col);
                         break;
                     case 3:
                         g_vector.emplace_back(std::make_unique<Mahjong_C>(x, y, g_renderer));
+                        g_vector.back()->setPosition(dim, row, col);
                         break;
                     case 4:
                         g_vector.emplace_back(std::make_unique<Mahjong_D>(x, y, g_renderer));
+                        g_vector.back()->setPosition(dim, row, col);
                         break;
                     default:
                         g_vector.emplace_back(std::make_unique<Mahjong_Empty>(x, y, g_renderer));
+                        g_vector.back()->setPosition(dim, row, col);
                         break;
                     }
                 }
