@@ -48,6 +48,9 @@ public:
     bool isHovered(int x, int y) const; 
     void setHovered(bool value) { hovered = value; }
 
+    //! 클릭된 블록의 정보
+    tuple<int, int, int> getClickedBlockInfo() const { return m_clickedBlockInfo; }
+
 protected:
     static void loadTexture(SDL_Renderer* renderer);
     //! 기본 멤버 변수
@@ -71,6 +74,8 @@ protected:
     //! 호버링
     bool hovered;
     float m_hoverScale;
+    //! 클릭된 블록의 정보
+    tuple<int, int, int> m_clickedBlockInfo;
     //! 리소스 정보
     SDL_Rect m_sourceRect;
     static Mix_Chunk* m_sound;

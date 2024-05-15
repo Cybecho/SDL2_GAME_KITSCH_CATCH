@@ -2,11 +2,12 @@
 
 Mix_Chunk* Mahjong::m_sound = nullptr;
 SDL_Texture* Mahjong::m_texture = nullptr;
-extern vector<unique_ptr<Mahjong>> g_vector; // 마작 블록 생성 벡터
+extern vector<vector<vector<unique_ptr<Mahjong>>>> g_vector; // 마작 블록 생성 벡터
 
 Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRect)
     : m_x(x), m_y(y), clicked(false), m_sourceRect(sourceRect), m_blockSize(BLOCK_SIZE), m_blockScale(BLOCK_SCALE), clickEnable(true),
-    m_originalX(x), m_originalY(y), m_shakeDuration(0), m_shakeTimer(0), m_isShaking(false), hovered(false), m_hoverScale(1.1f) {
+    m_originalX(x), m_originalY(y), m_shakeDuration(0), m_shakeTimer(0), m_isShaking(false), hovered(false), m_hoverScale(1.1f),
+    m_N(0), m_M(0), m_R(0) { // 초기값 설정
     if (!m_texture) {
         loadTexture(renderer);
     }
@@ -40,9 +41,10 @@ void Mahjong::update() {
 }
 
 void Mahjong::handleClick() {
-    if (clicked) 
-    {
-        // 추후에 구현
+    if (clicked) {
+        clicked = false;
+        //~ vector2stack를 구현하기 위해 클릭된 블록의 정보를 저장
+        m_clickedBlockInfo = make_tuple(m_N, m_M, m_R);
     }
 }
 
@@ -103,20 +105,25 @@ bool Mahjong::isHovered(int x, int y) const {
 void Mahjong::checkClickEnable() {
     clickEnable = true;
 
-    for (const auto& block : g_vector) 
-    {
-        if (block->m_R < m_R) {
-            if 
-            (
-                (block->m_N == m_N      && block->m_M == m_M)       ||
-                (block->m_N == m_N      && block->m_M == m_M + 1)   ||
-                (block->m_N == m_N + 1  && block->m_M == m_M)       ||
-                (block->m_N == m_N + 1  && block->m_M == m_M + 1)
-            ) 
-            
-            {
+    for (int dim = 0; dim < m_N; ++dim) {
+        if (m_M >= g_vector[dim].size()) {
+            continue;
+        }
+        if (m_R >= g_vector[dim][m_M].size()) {
+            continue;
+        }
+        for (int col = m_R + 1; col < g_vector[dim][m_M].size(); ++col) {
+            if (g_vector[dim][m_M][col].get()) {
                 clickEnable = false;
-                break;
+                return;
+            }
+        }
+        for (int row = m_M + 1; row < g_vector[dim].size(); ++row) {
+            for (int col = 0; col < g_vector[dim][row].size(); ++col) {
+                if (g_vector[dim][row][col].get()) {
+                    clickEnable = false;
+                    return;
+                }
             }
         }
     }

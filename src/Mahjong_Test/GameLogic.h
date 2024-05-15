@@ -16,7 +16,7 @@ void ClearGame();
 
 //! 사용자 정의 함수
 void LoadMahjongBlocksFromCSV(int level, int seed, int numDims);
-void vector2stack(std::vector<std::unique_ptr<Mahjong>>::iterator it);
+void vector2stack(Mahjong* block);
 void createBonk(int x, int y); // 추가된 함수 선언
 
 //! 업데이트 함수
@@ -42,5 +42,11 @@ extern bool g_flag_running;
 extern SDL_Renderer* g_renderer;
 extern Uint32 g_frame_per_sec;
 extern int g_blockCount;
+
+//! 객체 담는 벡터
+extern vector<vector<vector<unique_ptr<Mahjong>>>> g_vector;
+extern vector<unique_ptr<Mahjong>> g_stack;
+extern vector<bonk> g_bonks;
+
 
 
