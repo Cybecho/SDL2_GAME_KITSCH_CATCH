@@ -103,12 +103,18 @@ bool Mahjong::isHovered(int x, int y) const {
 void Mahjong::checkClickEnable() {
     clickEnable = true;
 
-    for (const auto& block : g_vector) {
+    for (const auto& block : g_vector) 
+    {
         if (block->m_R < m_R) {
-            if ((block->m_N == m_N && block->m_M == m_M) ||
-                (block->m_N == m_N && block->m_M == m_M + 1) ||
-                (block->m_N == m_N + 1 && block->m_M == m_M) ||
-                (block->m_N == m_N + 1 && block->m_M == m_M + 1)) {
+            if 
+            (
+                (block->m_N == m_N      && block->m_M == m_M)       ||
+                (block->m_N == m_N      && block->m_M == m_M + 1)   ||
+                (block->m_N == m_N + 1  && block->m_M == m_M)       ||
+                (block->m_N == m_N + 1  && block->m_M == m_M + 1)
+            ) 
+            
+            {
                 clickEnable = false;
                 break;
             }
