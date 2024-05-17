@@ -33,7 +33,11 @@ public:
 	SDL_Rect score_rect;
 
 	Mix_Chunk* SoundEffect;
+
+	
 	
 };
 extern Mix_Music* main_music;
 extern Mix_Music* play_music;
+extern SDL_Surface* sprite;
+extern bool cat_status; //false: image1, true : image2
