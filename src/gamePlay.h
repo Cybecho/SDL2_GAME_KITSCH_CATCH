@@ -15,20 +15,22 @@ public:
 	void Render();
 
 	string score;
+	int score_int;
 
 	SDL_Texture* play_bg;
 	SDL_Texture* playground_img;
 	SDL_Texture* stack_img;
 	SDL_Texture* timebar_bg;
 	SDL_Texture* cat;
+	SDL_Texture* cat2;
 	SDL_Texture* setting_bt;
 
 	SDL_Rect playground_rect;
 	SDL_Rect stack_rect;
-	SDL_Rect timebar_bg_rect;
-	SDL_Rect timebar_bg_dir_rect;
 	SDL_Rect timebar_rect;
+	//SDL_Rect timebar_bg_dir_rect;
 	SDL_Rect cat_rect;
+	SDL_Rect cat_rect2;
 	SDL_Rect settingBT_rect;
 
 	//score
@@ -38,3 +40,4 @@ public:
 
 extern Mix_Music* play_music;
 extern Mix_Music* clear_music;
+extern bool cat_status;
