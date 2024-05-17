@@ -5,18 +5,30 @@ SDL_Texture* score_text; //get score from txt file
 
 
 
+
 gameMain::gameMain() {
+	
+	
+	
+
 
 	// BG
-	SDL_Surface* bg_surface = IMG_Load("../../res/testRes/testMainBG.png");
+	SDL_Surface* bg_surface = IMG_Load("../../res/main page/main_background.png");
 	main_bg = SDL_CreateTextureFromSurface(g_renderer, bg_surface);
 	SDL_FreeSurface(bg_surface);
 
 
+	playBT_dir_rect.x = 140;
+	playBT_dir_rect.y = 850;
+	playBT_dir_rect.w = 260;
+	playBT_dir_rect.h = 90;
 
+
+
+	
 
 	//cat
-	SDL_Surface* cat_surface = IMG_Load("../../res/testRes/testMainCat.png");
+	SDL_Surface* cat_surface = IMG_Load("../../res/main page/main_sprite.png");
 	cat = SDL_CreateTextureFromSurface(g_renderer, cat_surface);
 
 	cat_rect.x = 0;
@@ -27,7 +39,7 @@ gameMain::gameMain() {
 	SDL_FreeSurface(cat_surface);
 
 
-
+	/*
 
 	//interaction button
 	SDL_Surface* inter_surface = IMG_Load("../../res/testRes/testMainInteractionBT.png");
@@ -87,15 +99,35 @@ gameMain::gameMain() {
 		TTF_CloseFont(font);
 
 	}
-
+	*/
 
 	{ //score text
 		ifstream file("../../res/testRes/scoreboard.txt"); //read scoreboard
 		getline(file, score);
+		int score_int = stoi(score);
+
+		string front_score;
+		string new_score;
+
+
+		//점수 네자리수로 고정(나중에 구현)
+		if (score_int == 0) {
+			front_score = "000";
+			new_score = front_score + score;
+		}
+		else if (score_int > 0 && score_int < 100) {
+			front_score = "00";
+			new_score = front_score + score;
+		}
+		else if (score_int >= 100 && score_int < 1000) {
+			front_score = "0";
+			new_score = front_score + score;
+		}
+		else { new_score = score; }
 
 		TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
 		SDL_Color white = { 255,255,255,0 };
-		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, score.c_str(), white);
+		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, new_score.c_str(), white);
 		//std::to_string(score).c_str()
 		score_rect.x = 0;
 		score_rect.y = 0;
@@ -126,13 +158,13 @@ gameMain::gameMain() {
 gameMain::~gameMain() {
 	Mix_FreeMusic(main_music);
 	Mix_FreeChunk(SoundEffect);
-	SDL_DestroyTexture(exp_text);
+	//SDL_DestroyTexture(exp_text);
 	SDL_DestroyTexture(score_text);
 	SDL_DestroyTexture(main_bg);
-	SDL_DestroyTexture(cat);
-	SDL_DestroyTexture(inter_bt);
-	SDL_DestroyTexture(play_bt);
-	SDL_DestroyTexture(setting_bt);
+	//SDL_DestroyTexture(cat);
+	//SDL_DestroyTexture(inter_bt);
+	//SDL_DestroyTexture(play_bt);
+	//SDL_DestroyTexture(setting_bt);
 	SDL_Quit();
 	TTF_Quit();
 }
@@ -174,11 +206,12 @@ void gameMain::HandleEvents() {
 }
 
 void gameMain::Update() {
+	
 }
 
 void gameMain::Render() {
 	SDL_RenderCopy(g_renderer, main_bg, NULL, NULL);
-
+	/*
 	{ //play button
 		playBT_dir_rect.x = g_window_margin;
 		playBT_dir_rect.y = 800;
@@ -186,7 +219,7 @@ void gameMain::Render() {
 		playBT_dir_rect.h = playBT_rect.h;
 		SDL_RenderCopy(g_renderer, play_bt, &playBT_rect, &playBT_dir_rect);
 	}
-
+	
 	{ //interaction button
 		SDL_Rect tmp_r;
 		tmp_r.x = g_window_margin;
@@ -204,16 +237,40 @@ void gameMain::Render() {
 		tmp_r.h = settingBT_rect.h;
 		SDL_RenderCopy(g_renderer, setting_bt, &settingBT_rect, &tmp_r);
 	}
+	*/
 
-	{ //cat image
+	
+
+
+
+
+	if (cat_status == false) {
+		//cat image 1
 		SDL_Rect tmp_r;
-		tmp_r.x = 70;
-		tmp_r.y = 400;
+		tmp_r.x = 0;
+		tmp_r.y = 0;
 		tmp_r.w = cat_rect.w;
 		tmp_r.h = cat_rect.h;
 		SDL_RenderCopy(g_renderer, cat, &cat_rect, &tmp_r);
-	}
 
+	}
+	else {
+		//cat image 2
+		SDL_Rect tmp_r1;
+		tmp_r1.x = -540;
+		tmp_r1.y = 0;
+		tmp_r1.w = cat_rect.w;
+		tmp_r1.h = cat_rect.h;
+		SDL_RenderCopy(g_renderer, cat, &cat_rect, &tmp_r1);
+	}
+	
+		
+	
+	
+	
+	
+
+	/*
 
 	{ //EXP text
 		SDL_Rect tmp_r;
@@ -223,13 +280,13 @@ void gameMain::Render() {
 		tmp_r.h = exp_rect.h;
 		SDL_RenderCopy(g_renderer, exp_text, &exp_rect, &tmp_r);
 	}
-
+	*/
 	{ //score text
 		SDL_Rect tmp_r;
-		tmp_r.x = g_window_margin + exp_rect.w;
-		tmp_r.y = g_window_margin * 2;
-		tmp_r.w = score_rect.w;
-		tmp_r.h = score_rect.h;
+		tmp_r.x = g_window_margin + 80;
+		tmp_r.y = 37;
+		tmp_r.w = score_rect.w * 0.8;
+		tmp_r.h = score_rect.h * 0.8;
 		SDL_RenderCopy(g_renderer, score_text, &score_rect, &tmp_r);
 	}
 
