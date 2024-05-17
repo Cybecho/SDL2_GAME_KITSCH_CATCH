@@ -5,6 +5,9 @@
 #include "gameMain.h"
 #include "gamePlay.h"
 
+SDL_Surface* sprite;
+int step = 0;
+
 SDL_Window* g_window;
 SDL_Renderer* g_renderer;
 bool g_flag_running;
@@ -20,6 +23,8 @@ Mix_Music* gameover_music;
 Mix_Music* main_music;
 Mix_Music* play_music;
 
+bool cat_status = false; //false: image1, true : image2
+
 int main(int argc, char* argv[]) {
 	// Initializing SDL library
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -34,6 +39,7 @@ int main(int argc, char* argv[]) {
 	g_renderer = SDL_CreateRenderer(g_window, -1, 0);
 
 	InitGame();
+
 	
 	//! 게임 페이즈 객체를 담는 벡터(순서대로 배치해야 ENUM과 매칭됨)
 	/*! ENUM 순서는 
@@ -41,18 +47,41 @@ int main(int argc, char* argv[]) {
 	PHASE_ENDING_CLEAR / PHASE_ENDING_GAMEOVER / PHASE_PAUSE
 	*/
 	std::vector<gameClass*> game_phases;
-    game_phases.push_back(new gameIntro()); // PHASE_INTRO
+   	game_phases.push_back(new gameIntro()); // PHASE_INTRO
 	game_phases.push_back(new gameMain()); // PHASE_MAIN
 	game_phases.push_back(new gamePlay()); // PHASE_PLAYING
-    game_phases.push_back(new gameEndingClear()); // PHASE_ENDING_CLEAR
-    game_phases.push_back(new gameEndingGameover()); // PHASE_ENDING_GAMEOVER
-    // game_phases.push_back(new gamePause());
+	game_phases.push_back(new gameEndingClear()); // PHASE_ENDING_CLEAR
+   	game_phases.push_back(new gameEndingGameover()); // PHASE_ENDING_GAMEOVER
+   	game_phases.push_back(new gamePause());
 
 	g_current_game_phase = PHASE_INTRO;
 
 	g_last_time_ms = SDL_GetTicks();
 
+
+
+	//cat animation timer
+	Timer main_t;
+	main_t.setInterval(1000);
+	main_t.start();
+
+
+	Timer play_t;
+	play_t.setInterval(3000);
+	play_t.start();
+	play_t.pause();
+	
+
+
+
 	while (g_flag_running) {
+
+		if (main_t.done()) {
+			cat_status = !cat_status;
+			printf("1s elapsed\n");
+		}
+
+		
 
 		Uint32 cur_time_ms = SDL_GetTicks();
 
@@ -60,7 +89,7 @@ int main(int argc, char* argv[]) {
 			continue;
 
 		game_phases[g_current_game_phase]->HandleEvents();
- 		game_phases[g_current_game_phase]->Update();
+		game_phases[g_current_game_phase]->Update();
 		game_phases[g_current_game_phase]->Render();
 
 		g_last_time_ms = cur_time_ms;
