@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
 	game_phases.push_back(new gamePlay()); // PHASE_PLAYING
 	game_phases.push_back(new gameEndingClear()); // PHASE_ENDING_CLEAR
    	game_phases.push_back(new gameEndingGameover()); // PHASE_ENDING_GAMEOVER
-   	game_phases.push_back(new gamePause());
+   	//game_phases.push_back(new gamePause());
 
 	g_current_game_phase = PHASE_INTRO;
 

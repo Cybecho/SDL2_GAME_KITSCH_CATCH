@@ -8,6 +8,7 @@
 # Ignore all
 /FileContentIndex/**
 /SDL2_GAME_KITSCH_CATCH/**
+/.vs
 
 # Except the following directories and their contents
 !/doc/**

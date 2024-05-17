@@ -21,24 +21,25 @@ enum GamePhase
 
 //! 기본 헤더
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 #include <string>
 #include <queue>
 #include <vector>
 #include <stack>
 #include <cmath>
-#include <ctime>
 #include <atlstr.h>
 #include <windows.h>
 #include <fstream>
 #include <sstream>
 #include <memory>
+#include <map>
 
 //! SDL 헤더
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDL_mixer.h"
 #include "SDL_ttf.h"
-// #include <xlnt/xlnt.hpp> // 이거 안쓰고 그냥 sstream으로 대체함
 
 //! 타입 정의
 // using 키워드를 사용하여 타입을 정의 aliasing 하는거임
