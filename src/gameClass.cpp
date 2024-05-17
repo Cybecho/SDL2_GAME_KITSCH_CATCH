@@ -22,3 +22,47 @@ void ClearGame() {
 	TTF_Quit();
 	SDL_Quit();
 }
+
+
+
+
+Timer::Timer() {
+	interval = 0;
+	startTicks = 0;
+	pauseTicks = 0;
+}
+
+Timer::~Timer() {
+
+}
+
+void Timer::setInterval(int interval) {
+	this->interval = interval;
+}
+
+void Timer::start() {
+	startTicks = SDL_GetTicks();
+}
+
+void Timer::pause() {
+	if (pauseTicks != 0) {
+		startTicks += SDL_GetTicks() - pauseTicks;
+		pauseTicks = 0;
+	}
+}
+
+void Timer::resume() {
+	if (pauseTicks != 0) {
+		startTicks += SDL_GetTicks() - pauseTicks;
+		pauseTicks = 0;
+	}
+}
+
+bool Timer::done() {
+	if (pauseTicks == 0 && SDL_GetTicks() - startTicks >= interval) {
+		start();
+		return true;
+	}
+	return false;
+}
+
