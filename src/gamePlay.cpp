@@ -131,7 +131,7 @@ void gamePlay::HandleEvents() {
 
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_SPACE) {
-				//changePhaseToEnding();
+				changePhaseToEnding();
 			}
 			else {
 				Mix_PlayMusic(play_music, -1);
@@ -257,9 +257,10 @@ void gamePlay::Render() {
 }
 
 void gamePlay::changePhaseToEnding() {
-	/*g_current_game_phase = PHASE_ENDING_CLEAR;
+	g_current_game_phase = PHASE_ENDING_CLEAR;
+	clear_reset = true;
 	Mix_HaltMusic();
-	Mix_PlayMusic(clear_music, -1);*/
+	Mix_PlayMusic(clear_music, -1);
 
 }
 

@@ -46,3 +46,4 @@ extern Mix_Music* main_music;
 extern Mix_Music* play_music;
 extern Mix_Music* clear_music;
 extern bool cat_status;
+extern bool clear_reset;
