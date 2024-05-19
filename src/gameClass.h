@@ -11,11 +11,28 @@ public:
 	virtual void HandleEvents() = 0;
 	virtual void Update() = 0;
 	virtual void Render() = 0;
+	
+	bool isSetting;
+	bool isVolumeOff;
+
+	int setting_bt_w = 310;
+	int setting_bt_h = 70;
 
 	SDL_Surface* surface;
 	SDL_Texture* texture;
+	SDL_Texture* setting;
+	SDL_Texture* volume_bt_off;
+	SDL_Texture* volume_bt_on;
 	SDL_Rect source_rect;
 	SDL_Rect destination_rect;
+	SDL_Rect setting_rect;
+	SDL_Rect setting_bt_rect;
+	SDL_Rect set_Xkey_rect;
+	SDL_Rect volume_bt_rect; //click area
+	SDL_Rect volume_rect; //image source rect
+	SDL_Rect resume_rect;
+	SDL_Rect home_rect;
+	
 };
 
 
@@ -24,11 +41,11 @@ public:
 	Timer();
 	~Timer();
 
-	void setInterval(int interval); //ì£¼ê¸° ì„¤ì •
+	void setInterval(int interval); //ÁÖ±â ¼³Á¤
 	void start();
 	void pause();
 	void resume();
-	bool done(); //ì‹œê°„ ë‹¤ ë˜ì—ˆëŠ”ì§€ ì¡°ì‚¬
+	bool done(); //½Ã°£ ´Ù µÇ¾ú´ÂÁö Á¶»ç
 
 private:
 	double interval;

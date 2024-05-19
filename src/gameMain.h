@@ -15,18 +15,26 @@ public:
 	void Update();
 	void Render();
 
+	bool isRule;
+
 	string score;
 	SDL_Texture* main_bg;
 	SDL_Texture* cat;
 	SDL_Texture* inter_bt;
 	SDL_Texture* play_bt;
 	SDL_Texture* setting_bt;
+	
+	SDL_Texture* rule;
 
 	SDL_Rect playBT_rect;
 	SDL_Rect playBT_dir_rect;
 	SDL_Rect cat_rect;
 	SDL_Rect interBT_rect;
 	SDL_Rect settingBT_rect;
+	SDL_Rect ques_rect;
+	SDL_Rect rule_rect;
+	SDL_Rect rule_Xkey_rect;
+	
 
 	//text
 	SDL_Rect exp_rect;
@@ -34,7 +42,7 @@ public:
 
 	Mix_Chunk* SoundEffect;
 
-	
+	Uint32 play_time_ms;
 	
 };
 extern Mix_Music* main_music;

@@ -10,12 +10,14 @@ public:
 	virtual ~gamePlay();
 
 	void changePhaseToEnding();
+	void changePhaseToMain();
 	void HandleEvents();
 	void Update();
 	void Render();
 
 	string score;
 	int score_int;
+	float timebarw;
 
 	SDL_Texture* play_bg;
 	SDL_Texture* playground_img;
@@ -36,8 +38,11 @@ public:
 	//score
 	SDL_Rect exp_rect;
 	SDL_Rect score_rect;
+
+	Mix_Chunk* setting_SoundEffect;
 };
 
+extern Mix_Music* main_music;
 extern Mix_Music* play_music;
 extern Mix_Music* clear_music;
 extern bool cat_status;
