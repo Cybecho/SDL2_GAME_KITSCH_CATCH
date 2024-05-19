@@ -1,7 +1,9 @@
 #pragma once
-
 #include "include.h"
 #include "gameClass.h"
+#include "obj_gameIntroCartoon.h"
+#define GAMEOVER_BG_IMG 2
+#define GAMEOVER_CAT_IMG 5
 
 class gameEndingGameover : public gameClass {
 public:
@@ -11,6 +13,15 @@ public:
 	void HandleEvents();
 	void Update();
 	void Render();
+
+	std::vector<Cartoon> bg; // 배경 이미지 (Fade를 위해 Cartoon 사용)
+	std::vector<Cartoon> cat; // 고양이 이미지 (Fade를 위해 Cartoon 사용)
+	SDL_Rect mainBT_rect;
+	SDL_Rect retryBT_rect;
+	int cat_cut; // 고양이 이미지 번호
+	bool bt_clickable;
+
+	Mix_Chunk* SoundEffect;
 };
 extern Mix_Music* gameover_music;
 extern bool intro_reset;
