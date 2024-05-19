@@ -1,10 +1,6 @@
 #include "gameClass.h"
 
 gameClass::gameClass() {
-	surface = 0;
-	texture = 0;
-	source_rect = { 0, };
-	destination_rect = { 0, };
 
 	{ //setting button area
 		setting_bt_rect.x = 460;

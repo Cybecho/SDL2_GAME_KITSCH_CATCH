@@ -18,13 +18,9 @@ public:
 	int setting_bt_w = 310;
 	int setting_bt_h = 70;
 
-	SDL_Surface* surface;
-	SDL_Texture* texture;
 	SDL_Texture* setting;
 	SDL_Texture* volume_bt_off;
 	SDL_Texture* volume_bt_on;
-	SDL_Rect source_rect;
-	SDL_Rect destination_rect;
 	SDL_Rect setting_rect;
 	SDL_Rect setting_bt_rect;
 	SDL_Rect set_Xkey_rect;
@@ -34,7 +30,6 @@ public:
 	SDL_Rect home_rect;
 	
 };
-
 
 class Timer {
 public:
@@ -53,6 +48,14 @@ private:
 	double pauseTicks;
 };
 
+// ImgRect: 이미지 생성에 필요한 변수들을 class로 묶음
+class ImgClass {
+public:
+	SDL_Surface* surface = 0;
+	SDL_Texture* texture = 0;
+	SDL_Rect srcrect = { 0, };
+	SDL_Rect dstrect = { 0, };
+};
 
 void InitGame();
 void ClearGame();
