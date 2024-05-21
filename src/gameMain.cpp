@@ -7,8 +7,6 @@ SDL_Texture* score_text; //get score from txt file
 
 
 gameMain::gameMain() {
-	
-	
 	isRule = false;
 	isSetting = false;
 	isVolumeOff = false;
@@ -113,7 +111,19 @@ gameMain::gameMain() {
 
 
 
+	{//setting img
+		//mainscreen setting
+			SDL_Surface* set_surface = IMG_Load("../../res/setting/main_setting_background.png");
+			setting = SDL_CreateTextureFromSurface(g_renderer, set_surface);
 
+			setting_rect.x = 0;
+			setting_rect.y = 0;
+			setting_rect.w = set_surface->w;
+			setting_rect.h = set_surface->h;
+
+			SDL_FreeSurface(set_surface);
+		
+	}
 
 
 
@@ -123,7 +133,7 @@ gameMain::gameMain() {
 		std::cout << "Mix_LoadMUS(\"testBGM2.mp3\"): " << Mix_GetError() << std::endl;
 	}
 	//Mix_VolumeMusic(128);
-	Mix_PlayMusic(main_music, -1);
+	
 
 
 	//sound effect(play button)
@@ -137,6 +147,7 @@ gameMain::~gameMain() {
 	SDL_DestroyTexture(score_text);
 	SDL_DestroyTexture(main_bg);
 	SDL_DestroyTexture(cat);
+	SDL_DestroyTexture(setting);
 	//SDL_DestroyTexture(inter_bt);
 	//SDL_DestroyTexture(play_bt);
 	//SDL_DestroyTexture(setting_bt);
@@ -233,12 +244,10 @@ void gameMain::HandleEvents() {
 							Mix_PlayChannel(-1, SoundEffect, 0);
 						}
 
-						//go to home
+						//exit game
 						if (mouseX > home_rect.x && mouseY > home_rect.y &&
 							mouseX < home_rect.x + home_rect.w && mouseY < home_rect.y + home_rect.h) {
-							g_current_game_phase = PHASE_MAIN;
-							isSetting = false;
-							Mix_PlayChannel(-1, SoundEffect, 0);
+							exit(1);
 						}
 					}
 				
@@ -253,7 +262,11 @@ void gameMain::HandleEvents() {
 }
 
 void gameMain::Update() {
-	
+	timebar_rect.w = 540;
+	count_ = 0;
+	sec = 0;
+	last_sec = 0;
+	isChanged  = false;
 }
 
 void gameMain::Render() {

@@ -24,4 +24,6 @@ public:
 	Mix_Chunk* SoundEffect;
 };
 extern Mix_Music* clear_music;
+extern Mix_Music* gameover_music;
+extern Mix_Music* play_music;
 extern bool gameover_reset;

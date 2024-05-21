@@ -65,6 +65,8 @@ void gameEndingClear::HandleEvents() {
 				std::cout << "Cheat key has been used!" << std::endl;
 				g_current_game_phase = PHASE_ENDING_GAMEOVER;
 				gameover_reset = true;
+				Mix_HaltMusic();
+				Mix_PlayMusic(gameover_music, -1);
 			}
 			break;
 
@@ -84,6 +86,8 @@ void gameEndingClear::HandleEvents() {
 					g_current_game_phase = PHASE_MAIN;
 					bt_clickable = false;
 					Mix_PlayChannel(-1, SoundEffect, 0);
+					Mix_HaltMusic();
+					Mix_PlayMusic(main_music, -1);
 				}
 
 				//click retry button
@@ -92,6 +96,8 @@ void gameEndingClear::HandleEvents() {
 					g_current_game_phase = PHASE_PLAYING;
 					bt_clickable = false;
 					Mix_PlayChannel(-1, SoundEffect, 0);
+					Mix_HaltMusic();
+					Mix_PlayMusic(play_music, -1);
 				}
 			}
 		}

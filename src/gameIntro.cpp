@@ -32,7 +32,7 @@ gameIntro::gameIntro() {
 	if (intro_music == 0) {
 		printf("Couldn't load the wav: %s\n", Mix_GetError());
 	}
-	Mix_VolumeMusic(128);
+	//Mix_VolumeMusic(128);
 	Mix_PlayMusic(intro_music, -1);
 }
 
@@ -60,19 +60,33 @@ void gameIntro::HandleEvents() {
 				std::cout << "Cheat key has been used!" << std::endl;
 				g_current_game_phase = PHASE_MAIN;
 				Mix_HaltMusic();
+				Mix_PlayMusic(main_music, -1);
 			}
 			// Any keys (except spacebar)
 			else {
 				if (is_cartoon_finished) {
 					g_current_game_phase = PHASE_MAIN;
 					Mix_HaltMusic();
+					Mix_PlayMusic(main_music, -1);
 				}
 			}
 			break;
 
+			
+
 		default:
 			break;
 		}
+
+		if (event.type == SDL_MOUSEBUTTONDOWN) {
+
+			if (event.button.button == SDL_BUTTON_LEFT) {
+				g_current_game_phase = PHASE_MAIN;
+				Mix_HaltMusic();
+				Mix_PlayMusic(main_music, -1);
+			}
+		}
+
 	}
 }
 

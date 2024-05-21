@@ -5,11 +5,22 @@ extern SDL_Texture* score_text; //get score from txt file
 
 gamePlay::gamePlay() {
 
+	isChanged = false;
+	sec = 0;
+	count_ = 0;
+	stage = 1;
+
+	switch (stage) {
+	case 1: limit_sec = 90; break;
+	case 2: limit_sec = 80; break;
+	case 3: limit_sec = 70; break;
+	case 4: limit_sec = 60; break;
+	case 5: limit_sec = 50; break;
+	default: limit_sec = 90; break;
+	}
 
 	
-
-	
-
+	//isChanged = false;
 	isSetting = false;
 	isVolumeOff = false;
 
@@ -48,7 +59,7 @@ gamePlay::gamePlay() {
 	{ //time bar
 		timebar_rect.x = 0;
 		timebar_rect.y = 290;
-		timebar_rect.w = 0;
+		timebar_rect.w = 540;
 		timebar_rect.h = g_window_margin;
 	}
 
@@ -91,7 +102,19 @@ gamePlay::gamePlay() {
 		file.close();
 	}
 
+	{//setting img
+		//mainscreen setting
+		SDL_Surface* set_surface = IMG_Load("../../res/setting/setting_background.png");
+		setting = SDL_CreateTextureFromSurface(g_renderer, set_surface);
 
+		setting_rect.x = 0;
+		setting_rect.y = 0;
+		setting_rect.w = set_surface->w;
+		setting_rect.h = set_surface->h;
+
+		SDL_FreeSurface(set_surface);
+
+	}
 
 	//music
 	play_music = Mix_LoadMUS("../../res/testRes/testBGM3.mp3");
@@ -102,6 +125,9 @@ gamePlay::gamePlay() {
 	//Mix_PlayMusic(play_music, -1);
 
 	setting_SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
+
+
+	
 }
 
 gamePlay::~gamePlay() {
@@ -112,6 +138,7 @@ gamePlay::~gamePlay() {
 	SDL_DestroyTexture(play_bg);
 	SDL_DestroyTexture(cat);
 	SDL_DestroyTexture(cat2);
+	SDL_DestroyTexture(setting);
 	//SDL_DestroyTexture(setting_bt);
 	//SDL_DestroyTexture(timebar_bg);
 	//SDL_DestroyTexture(stack_img);
@@ -131,7 +158,9 @@ void gamePlay::HandleEvents() {
 
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_SPACE) {
+				isChanged = true;
 				changePhaseToEnding();
+				
 			}
 			else {
 				Mix_PlayMusic(play_music, -1);
@@ -185,6 +214,7 @@ void gamePlay::HandleEvents() {
 						mouseX < home_rect.x + home_rect.w && mouseY < home_rect.y + home_rect.h) {
 						isSetting = false;
 						Mix_PlayChannel(-1, setting_SoundEffect, 0);
+						isChanged = true;
 						changePhaseToMain();
 					}
 				}
@@ -194,7 +224,26 @@ void gamePlay::HandleEvents() {
 }
 
 void gamePlay::Update() {
-	timebar_rect.w = timebarw;
+	if (isChanged == false) {
+		if (isSetting) {}
+		else {
+			timebar_rect.w = timebar_rect.w - 0.2;
+
+			count_ += 1;
+			if (count_ != 0 && count_ % 30 == 0) {
+				sec += 1; //play second
+			}
+		}
+	}
+	else if (isChanged) { timebar_rect.w = 540; }
+
+
+	
+
+
+	last_sec = limit_sec - sec;
+
+	std::cout << "경과 시간 : " << sec << " 남은 시간 : " << last_sec << std::endl;
 }
 
 void gamePlay::Render() {
@@ -269,3 +318,11 @@ void gamePlay::changePhaseToMain() {
 	Mix_HaltMusic();
 	Mix_PlayMusic(main_music, -1);
 }
+
+void gamePlay::play_timer(int interval) {
+	//90s = 90000
+	// 
+	//const Uint32* pointer = &g_last_time_ms;
+	
+}
+

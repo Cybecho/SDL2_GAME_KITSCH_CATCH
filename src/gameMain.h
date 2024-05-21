@@ -23,6 +23,7 @@ public:
 	SDL_Texture* inter_bt;
 	SDL_Texture* play_bt;
 	SDL_Texture* setting_bt;
+	SDL_Texture* setting;
 	
 	SDL_Texture* rule;
 
@@ -49,3 +50,11 @@ extern Mix_Music* main_music;
 extern Mix_Music* play_music;
 extern SDL_Surface* sprite;
 extern bool cat_status; //false: image1, true : image2
+extern bool isChanged;
+
+
+extern SDL_Rect timebar_rect;
+
+extern int count_;
+extern int sec; //play second
+extern int last_sec;

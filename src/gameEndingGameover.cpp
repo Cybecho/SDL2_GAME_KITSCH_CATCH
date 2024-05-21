@@ -32,8 +32,8 @@ gameEndingGameover::gameEndingGameover() {
 	}
 
 	// BGM and SoundEffect
-	clear_music = Mix_LoadMUS("../../res/testRes/testBGM2.mp3");
-	if (clear_music == 0) {
+	gameover_music = Mix_LoadMUS("../../res/testRes/testBGM2.mp3");
+	if (gameover_music == 0) {
 		printf("Couldn't load the wav: %s\n", Mix_GetError());
 	}
 	SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
@@ -46,7 +46,7 @@ gameEndingGameover::~gameEndingGameover() {
 	for (auto& i : cat) {
 		SDL_DestroyTexture(i.imgClass.texture);
 	}
-	Mix_FreeMusic(clear_music);
+	Mix_FreeMusic(gameover_music);
 	Mix_FreeChunk(SoundEffect);
 }
 
@@ -64,6 +64,8 @@ void gameEndingGameover::HandleEvents() {
 				std::cout << "Cheat key has been used!" << std::endl;
 				g_current_game_phase = PHASE_INTRO;
 				intro_reset = true;
+				Mix_HaltMusic();
+				Mix_PlayMusic(intro_music, -1);
 			}
 			break;
 
@@ -83,6 +85,8 @@ void gameEndingGameover::HandleEvents() {
 					g_current_game_phase = PHASE_MAIN;
 					bt_clickable = false;
 					Mix_PlayChannel(-1, SoundEffect, 0);
+					Mix_HaltMusic();
+					Mix_PlayMusic(main_music, -1);
 				}
 
 				//click retry button
@@ -91,6 +95,8 @@ void gameEndingGameover::HandleEvents() {
 					g_current_game_phase = PHASE_PLAYING;
 					bt_clickable = false;
 					Mix_PlayChannel(-1, SoundEffect, 0);
+					Mix_HaltMusic();
+					Mix_PlayMusic(play_music, -1);
 				}
 			}
 		}

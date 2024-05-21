@@ -37,18 +37,10 @@ gameClass::gameClass() {
 		home_rect.h = setting_bt_h;
 	}
 
+
 	
-	{
-		SDL_Surface* set_surface = IMG_Load("../../res/setting/setting_background.png");
-		setting = SDL_CreateTextureFromSurface(g_renderer, set_surface);
-
-		setting_rect.x = 0;
-		setting_rect.y = 0;
-		setting_rect.w = set_surface->w;
-		setting_rect.h = set_surface->h;
-
-		SDL_FreeSurface(set_surface);
-	}
+	
+	
 
 	{ //bt on
 		SDL_Surface* volume_on_surface = IMG_Load("../../res/setting/setting_btn_on.png");
@@ -76,7 +68,7 @@ gameClass::gameClass() {
 }
 
 gameClass::~gameClass() {
-	SDL_DestroyTexture(setting);
+	
 	SDL_DestroyTexture(volume_bt_off);
 	SDL_DestroyTexture(volume_bt_on);
 }
@@ -137,3 +129,4 @@ bool Timer::done() {
 	}
 	return false;
 }
+

@@ -23,12 +23,23 @@ Mix_Music* gameover_music;
 Mix_Music* main_music;
 Mix_Music* play_music;
 
+SDL_Rect timebar_rect;
+int stage;
+int count_;
+int sec; //play second
+int limit_sec;
+int last_sec;
+
+bool isChanged;
+
 bool cat_status = false; //false: image1, true : image2
 
 int main(int argc, char* argv[]) {
+	
 	// Initializing SDL library
 	SDL_Init(SDL_INIT_EVERYTHING);
 	TTF_Init();
+	isChanged = false;
 
 	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
 		std::cout << "Mix_OpenAudio " << Mix_GetError() << std::endl;
@@ -56,6 +67,8 @@ int main(int argc, char* argv[]) {
 
 	g_current_game_phase = PHASE_INTRO;
 
+	
+
 	g_last_time_ms = SDL_GetTicks();
 
 
@@ -66,22 +79,23 @@ int main(int argc, char* argv[]) {
 	main_t.start();
 
 
-	Timer play_t;
-	play_t.setInterval(3000);
-	play_t.start();
-	play_t.pause();
+	
 	
 
 
 
 	while (g_flag_running) {
 
-		if (main_t.done()) {
-			cat_status = !cat_status;
-			printf("1s elapsed\n");
+		if (g_current_game_phase == PHASE_PLAYING) {
+			
 		}
 
+		if (main_t.done()) {
+			cat_status = !cat_status;
+			//printf("1s elapsed\n");
+		}
 		
+		int count = 0;
 
 		Uint32 cur_time_ms = SDL_GetTicks();
 
@@ -93,6 +107,11 @@ int main(int argc, char* argv[]) {
 		game_phases[g_current_game_phase]->Render();
 
 		g_last_time_ms = cur_time_ms;
+
+		
+
+		SDL_Delay(1);
+		
 	}
 
 	// game_phases 배열의 동적 할당된 객체 삭제

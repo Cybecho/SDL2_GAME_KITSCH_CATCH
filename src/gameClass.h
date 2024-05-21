@@ -18,7 +18,7 @@ public:
 	int setting_bt_w = 310;
 	int setting_bt_h = 70;
 
-	SDL_Texture* setting;
+	
 	SDL_Texture* volume_bt_off;
 	SDL_Texture* volume_bt_on;
 	SDL_Rect setting_rect;

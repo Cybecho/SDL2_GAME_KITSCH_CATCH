@@ -20,4 +20,5 @@ public:
 	bool is_cartoon_finished = false;
 };
 extern Mix_Music* intro_music;
+extern Mix_Music* main_music;
 extern Mix_Music* clear_music;

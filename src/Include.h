@@ -34,6 +34,7 @@ enum GamePhase
 #include <sstream>
 #include <memory>
 #include <map>
+#include <time.h>
 
 //! SDL 헤더
 #include "SDL.h"
