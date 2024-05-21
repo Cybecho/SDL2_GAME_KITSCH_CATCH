@@ -11,12 +11,7 @@ gamePlay::gamePlay() {
 	stage = 1;
 
 	switch (stage) {
-	case 1: limit_sec = 90; break;
-	case 2: limit_sec = 80; break;
-	case 3: limit_sec = 70; break;
-	case 4: limit_sec = 60; break;
-	case 5: limit_sec = 50; break;
-	default: limit_sec = 90; break;
+	default: limit_sec = 10; break;
 	}
 
 	
@@ -63,42 +58,10 @@ gamePlay::gamePlay() {
 		timebar_rect.h = g_window_margin;
 	}
 
-	{ //score text
+	{ //read score text from txt file
 		ifstream file("../../res/testRes/scoreboard.txt"); //read scoreboard
 		getline(file, score);
 		score_int = stoi(score);
-
-		string front_score;
-		string new_score;
-
-
-		//점수 네자리수로 고정(나중에 구현)
-		if (score_int == 0) {
-			front_score = "000";
-			new_score = front_score + score;
-		}
-		else if (score_int > 0 && score_int < 100) {
-			front_score = "00";
-			new_score = front_score + score;
-		}
-		else if (score_int >= 100 && score_int < 1000) {
-			front_score = "0";
-			new_score = front_score + score;
-		}
-		else { new_score = score; }
-
-		TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
-		SDL_Color white = { 255,255,255,0 };
-		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, new_score.c_str(), white);
-		//std::to_string(score).c_str()
-		score_rect.x = 0;
-		score_rect.y = 0;
-		score_rect.w = tmp_surface->w;
-		score_rect.h = tmp_surface->h;
-
-		score_text = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
-		SDL_FreeSurface(tmp_surface);
-		TTF_CloseFont(font);
 		file.close();
 	}
 
@@ -224,18 +187,49 @@ void gamePlay::HandleEvents() {
 }
 
 void gamePlay::Update() {
+	
+	updateScore(score_int);
+
+	score = std::to_string(score_int);
+	//std::ofstream out("../../res/testRes/scoreboard.txt");
+	score = std::to_string(score_int);
+	ofstream ofs;
+	ofs.open("../../res/testRes/scoreboard.txt");
+	ofs << score;
+	ofs.close();
+	
+	
 	if (isChanged == false) {
+		
+
+		std::cout << score_int << std::endl;
 		if (isSetting) {}
 		else {
-			timebar_rect.w = timebar_rect.w - 0.2;
+			
 
 			count_ += 1;
-			if (count_ != 0 && count_ % 30 == 0) {
+			if (count_ != 0 && count_ % 33 == 0) {
 				sec += 1; //play second
+				timebar_rect.w = timebar_rect.w - 540 / limit_sec;
+
+				score_int += 10;
+				if (last_sec == 0) {
+					SDL_Delay(1000);
+					isChanged = true;
+					changePhaseToEnding();
+
+				}
+				
 			}
 		}
 	}
-	else if (isChanged) { timebar_rect.w = 540; }
+	else if (isChanged) { 
+		timebar_rect.w = 540; 
+
+		
+		
+
+	}
 
 
 	
@@ -326,3 +320,40 @@ void gamePlay::play_timer(int interval) {
 	
 }
 
+void gamePlay::updateScore(int s) {
+	string front_score;
+	string new_score;
+	new_score = std::to_string(s);
+
+	//점수 네자리수로 고정
+	if (s == 0) {
+		front_score = "000";
+		new_score = front_score + new_score;
+	}
+	else if (s > 0 && s < 10) {
+		front_score = "000";
+		new_score = front_score + new_score;
+	}
+	else if (s >= 10 && s < 100) {
+		front_score = "00";
+		new_score = front_score + new_score;
+	}
+	else if (s >= 100 && s < 1000) {
+		front_score = "0";
+		new_score = front_score + new_score;
+	}
+	else { new_score = std::to_string(s); }
+
+	TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
+	SDL_Color white = { 255,255,255,0 };
+	SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, new_score.c_str(), white);
+	//std::to_string(score).c_str()
+	score_rect.x = 0;
+	score_rect.y = 0;
+	score_rect.w = tmp_surface->w;
+	score_rect.h = tmp_surface->h;
+
+	score_text = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
+	SDL_FreeSurface(tmp_surface);
+	TTF_CloseFont(font);
+}

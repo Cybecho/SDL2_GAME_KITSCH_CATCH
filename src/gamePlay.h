@@ -22,10 +22,13 @@ public:
 	void HandleEvents();
 	void Update();
 	void Render();
+	void updateScore(int s);
 
 	string score;
-	int score_int;
-	float timebarw;
+	int score_int; //load from txt file
+	
+	//int update_score; //new score
+	//float timebarw;
 
 	
 	
@@ -41,7 +44,7 @@ public:
 
 	SDL_Rect playground_rect;
 	SDL_Rect stack_rect;
-	//SDL_Rect timebar_bg_dir_rect;
+	
 	SDL_Rect cat_rect;
 	SDL_Rect cat_rect2;
 	SDL_Rect settingBT_rect;
@@ -67,4 +70,4 @@ extern int stage;
 extern int count_;
 extern int sec; //play second
 extern int limit_sec;
-extern int last_sec;
+extern int last_sec; //last second (stage second)

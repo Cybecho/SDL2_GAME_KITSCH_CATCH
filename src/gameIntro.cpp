@@ -80,7 +80,7 @@ void gameIntro::HandleEvents() {
 
 		if (event.type == SDL_MOUSEBUTTONDOWN) {
 
-			if (event.button.button == SDL_BUTTON_LEFT) {
+			if (is_cartoon_finished && event.button.button == SDL_BUTTON_LEFT) {
 				g_current_game_phase = PHASE_MAIN;
 				Mix_HaltMusic();
 				Mix_PlayMusic(main_music, -1);
