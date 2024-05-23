@@ -1,13 +1,13 @@
 // Include.h
 #pragma once
 
-#define WINDOW_WIDTH 540    // À©µµ¿ì ³Êºñ
-#define WINDOW_HEIGHT 960   // À©µµ¿ì ³ôÀÌ
-#define PIVOT_X 20          // °íÁ¤ ÇÇ¹ş xÁÂÇ¥
-#define PIVOT_Y 440         // °íÁ¤ ÇÇ¹ş yÁÂÇ¥
-#define g_window_margin 20  // À©µµ¿ì ¸¶Áø
-#define BLOCK_SIZE 100      // ºí·Ï ±âº» Å©±â
-#define BLOCK_SCALE 1.0f    // ºí·Ï Å©±â ¹èÀ²
+#define WINDOW_WIDTH 540    // ìœˆë„ìš° ë„ˆë¹„
+#define WINDOW_HEIGHT 960   // ìœˆë„ìš° ë†’ì´
+#define PIVOT_X 20          // ê³ ì • í”¼ë²— xì¢Œí‘œ
+#define PIVOT_Y 440         // ê³ ì • í”¼ë²— yì¢Œí‘œ
+#define g_window_margin 20  // ìœˆë„ìš° ë§ˆì§„
+#define BLOCK_SIZE 100      // ë¸”ë¡ ê¸°ë³¸ í¬ê¸°
+#define BLOCK_SCALE 1.0f    // ë¸”ë¡ í¬ê¸° ë°°ìœ¨
 
 enum GamePhase {
     PHASE_INTRO,

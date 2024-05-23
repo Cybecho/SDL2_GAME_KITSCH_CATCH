@@ -27,7 +27,7 @@ void InitGame() {
     int numDims = 2;
     for (int i = 0; i < max_level; i++)
     {
-        std::string dir_path = "../../res/level/" + std::to_string(i);
+        string dir_path = "../../res/level/" + std::to_string(i);
         countFiles(dir_path);
     }
     LoadMahjongBlocksFromCSV(cur_level, seed, numDims);
@@ -111,7 +111,7 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
         std::string filename = "../../res/level/" + std::to_string(level) + "/" + std::to_string(seed) + "-" + std::to_string(dim) + ".csv";
         std::ifstream file(filename);
         if (!file.is_open()) {
-            std::cerr << "Failed to open file: " << filename << std::endl;
+            std::cout << "Failed to open file: " << filename << std::endl;
             continue;
         }
         std::string line;
@@ -216,7 +216,7 @@ void LoadMahjongBlocksIfEmpty() {
 
         //~ 랜덤으로 레벨 선택 (나중에 순차 로드로 구현하세요)
         srand(time(NULL));
-        int level = rand() % 5;
+        int level = rand() % 10;
         int seed = 0;
         int numDims = 2;
         LoadMahjongBlocksFromCSV(level, seed, numDims);
@@ -397,31 +397,31 @@ void sortPairedBlocks() {
 }
 
 //! 디렉토리 내 폴더 개수 세기
-int countDir(const std::string& path) {
+int countDir(const string& path) {
     int count = 0;
-    std::wstring search_path = std::wstring(path.begin(), path.end()) + L"\\*";
+    wstring search_path = wstring(path.begin(), path.end()) + L"\\*";
     WIN32_FIND_DATAW fd;
     HANDLE hFind = FindFirstFileW(search_path.c_str(), &fd);
 
     if (hFind != INVALID_HANDLE_VALUE) {
         do {
             if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) &&
-                (std::wcscmp(fd.cFileName, L".") != 0) &&
-                (std::wcscmp(fd.cFileName, L"..") != 0)) {
+                (wcscmp(fd.cFileName, L".") != 0) &&
+                (wcscmp(fd.cFileName, L"..") != 0)) {
                 ++count;
             }
         } while (FindNextFileW(hFind, &fd));
         FindClose(hFind);
     }
 
-    std::cout << path << " dir count: " << count << std::endl;
+    cout << path << " dir count: " << count << endl;
     return count;
 }
 
 //! 디렉토리 내 파일 개수 세기
-int countFiles(const std::string& path) {
+int countFiles(const string& path) {
     int count = 0;
-    std::wstring search_path = std::wstring(path.begin(), path.end()) + L"\\*";
+    wstring search_path = wstring(path.begin(), path.end()) + L"\\*";
     WIN32_FIND_DATAW fd;
     HANDLE hFind = FindFirstFileW(search_path.c_str(), &fd);
 
