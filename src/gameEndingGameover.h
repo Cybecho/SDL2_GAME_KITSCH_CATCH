@@ -28,3 +28,6 @@ extern Mix_Music* intro_music;
 extern Mix_Music* play_music;
 extern Mix_Music* main_music;
 extern bool intro_reset;
+extern bool isChanged;
+extern SDL_Rect timebar_rect;
+extern int sec;

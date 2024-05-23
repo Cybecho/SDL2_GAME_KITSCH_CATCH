@@ -31,8 +31,12 @@ int limit_sec;
 int last_sec;
 
 bool isChanged;
-
+bool isForcedQuit;
 bool cat_status = false; //false: image1, true : image2
+int org_score_int;
+int plus_score_int;
+
+string original_score;
 
 int main(int argc, char* argv[]) {
 	
@@ -85,10 +89,31 @@ int main(int argc, char* argv[]) {
 
 
 	while (g_flag_running) {
+		
 
-		if (g_current_game_phase == PHASE_PLAYING) {
-			
-		}
+		//write score to txt file
+			string score;
+
+			if (isForcedQuit == true) {
+				
+				plus_score_int = org_score_int;
+				score = original_score;
+
+				
+			}
+			else {
+				score = std::to_string(plus_score_int);
+				
+			}
+			//write to txt file
+
+			ofstream ofs;
+			ofs.open("../../res/testRes/scoreboard.txt");
+			ofs << score;
+			ofs.close();
+		
+
+
 
 		if (main_t.done()) {
 			cat_status = !cat_status;

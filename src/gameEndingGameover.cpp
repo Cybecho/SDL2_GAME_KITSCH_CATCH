@@ -119,6 +119,10 @@ void gameEndingGameover::Update() {
 		bt_clickable = false;
 		gameover_reset = false;
 	}
+
+	isChanged = false;
+	timebar_rect.w = 540;
+	sec = 0;
 }
 
 void gameEndingGameover::Render() {

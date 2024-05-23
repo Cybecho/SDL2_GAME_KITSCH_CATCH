@@ -10,14 +10,15 @@ public:
 	gameMain();
 	virtual ~gameMain();
 	void changePhaseToPlay();
-
 	void HandleEvents();
 	void Update();
 	void Render();
-
+	
 	bool isRule;
 
-	string score;
+	
+
+	
 	SDL_Texture* main_bg;
 	SDL_Texture* cat;
 	SDL_Texture* inter_bt;
@@ -51,10 +52,13 @@ extern Mix_Music* play_music;
 extern SDL_Surface* sprite;
 extern bool cat_status; //false: image1, true : image2
 extern bool isChanged;
+extern bool isForcedQuit;
 
-
-extern SDL_Rect timebar_rect;
 
 extern int count_;
 extern int sec; //play second
 extern int last_sec;
+extern int org_score_int;
+
+extern string original_score;
+extern SDL_Rect timebar_rect;

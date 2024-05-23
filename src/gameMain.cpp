@@ -70,46 +70,7 @@ gameMain::gameMain() {
 
 	
 
-	{ //score text
-		ifstream file("../../res/testRes/scoreboard.txt"); //read scoreboard
-		getline(file, score);
-		int score_int = stoi(score);
-
-		string front_score;
-		string new_score;
-
-
-		//점수 네자리수로 고정(나중에 구현)
-		if (score_int == 0) {
-			front_score = "000";
-			new_score = front_score + score;
-		}
-		else if (score_int > 0 && score_int < 100) {
-			front_score = "00";
-			new_score = front_score + score;
-		}
-		else if (score_int >= 100 && score_int < 1000) {
-			front_score = "0";
-			new_score = front_score + score;
-		}
-		else { new_score = score; }
-
-		TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
-		SDL_Color white = { 255,255,255,0 };
-		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, new_score.c_str(), white);
-		//std::to_string(score).c_str()
-		score_rect.x = 0;
-		score_rect.y = 0;
-		score_rect.w = tmp_surface->w;
-		score_rect.h = tmp_surface->h;
-
-		score_text = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
-		SDL_FreeSurface(tmp_surface);
-		TTF_CloseFont(font);
-		file.close();
-	}
-
-
+	
 
 	{//setting img
 		//mainscreen setting
@@ -262,18 +223,63 @@ void gameMain::HandleEvents() {
 }
 
 void gameMain::Update() {
-	timebar_rect.w = 540;
 	count_ = 0;
 	sec = 0;
 	last_sec = 0;
 	isChanged  = false;
+
+	timebar_rect.w = 540;
+	
 }
 
 void gameMain::Render() {
 	SDL_RenderCopy(g_renderer, main_bg, NULL, NULL);
 	
+	{ //score text
+		
+		ifstream file("../../res/testRes/scoreboard.txt"); //read scoreboard
+		getline(file, original_score);
+		org_score_int = stoi(original_score);
+		file.close();
+		string front_score;
+		string new_score;
 
+
+		//점수 네자리수로 고정
+		if (org_score_int == 0) {
+			front_score = "000";
+			new_score = front_score + original_score;
+		}
+		else if (org_score_int > 0 && org_score_int < 10) {
+			front_score = "000";
+			new_score = front_score + original_score;
+		}
+		else if (org_score_int >= 10 && org_score_int < 100) {
+			front_score = "00";
+			new_score = front_score + original_score;
+		}
+		else if (org_score_int >= 100 && org_score_int < 1000) {
+			front_score = "0";
+			new_score = front_score + original_score;
+		}
+		else { new_score = original_score; }
+
+		TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
+		SDL_Color white = { 255,255,255,0 };
+		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, new_score.c_str(), white);
+		//std::to_string(score).c_str()
+		score_rect.x = 0;
+		score_rect.y = 0;
+		score_rect.w = tmp_surface->w;
+		score_rect.h = tmp_surface->h;
+
+		score_text = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
+		SDL_FreeSurface(tmp_surface);
+		TTF_CloseFont(font);
+		
+	}
 	
+
 
 	if (cat_status == false) {
 		//cat image 1
@@ -346,3 +352,4 @@ void gameMain::changePhaseToPlay() {
 	Mix_PlayMusic(play_music, -1);
 
 }
+
