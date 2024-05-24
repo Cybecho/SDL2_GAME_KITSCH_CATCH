@@ -24,8 +24,9 @@ public:
 	void Render();
 	void updateScore(int s);
 
-	string score;
-	int score_int; //load from txt file
+	
+	
+	string update_score;
 	
 	//int update_score; //new score
 	//float timebarw;
@@ -41,6 +42,7 @@ public:
 	SDL_Texture* cat2;
 	SDL_Texture* setting_bt;
 	SDL_Texture* setting;
+	SDL_Texture* score_text2; //get score from txt file
 
 	SDL_Rect playground_rect;
 	SDL_Rect stack_rect;
@@ -64,6 +66,7 @@ extern bool clear_reset;
 
 extern Uint32 g_last_time_ms;
 extern bool isChanged;
+extern bool isForcedQuit;
 
 extern SDL_Rect timebar_rect;
 extern int stage;
@@ -71,3 +74,7 @@ extern int count_;
 extern int sec; //play second
 extern int limit_sec;
 extern int last_sec; //last second (stage second)
+
+extern string original_score;
+extern int org_score_int;
+extern int plus_score_int; //load from txt file

@@ -27,3 +27,7 @@ extern Mix_Music* clear_music;
 extern Mix_Music* gameover_music;
 extern Mix_Music* play_music;
 extern bool gameover_reset;
+
+extern bool isChanged;
+extern SDL_Rect timebar_rect;
+extern int sec;

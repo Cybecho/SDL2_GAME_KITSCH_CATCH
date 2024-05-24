@@ -1,18 +1,17 @@
 #include "gamePlay.h"
 
 extern SDL_Texture* exp_text; //"EXP" text
-extern SDL_Texture* score_text; //get score from txt file
+
 
 gamePlay::gamePlay() {
 
+	isForcedQuit = false;
 	isChanged = false;
 	sec = 0;
 	count_ = 0;
 	stage = 1;
 
-	switch (stage) {
-	default: limit_sec = 10; break;
-	}
+	
 
 	
 	//isChanged = false;
@@ -58,12 +57,7 @@ gamePlay::gamePlay() {
 		timebar_rect.h = g_window_margin;
 	}
 
-	{ //read score text from txt file
-		ifstream file("../../res/testRes/scoreboard.txt"); //read scoreboard
-		getline(file, score);
-		score_int = stoi(score);
-		file.close();
-	}
+	plus_score_int = org_score_int;
 
 	{//setting img
 		//mainscreen setting
@@ -97,7 +91,7 @@ gamePlay::~gamePlay() {
 	Mix_FreeMusic(play_music);
 	Mix_FreeChunk(setting_SoundEffect);
 	//SDL_DestroyTexture(exp_text);
-	SDL_DestroyTexture(score_text);
+	SDL_DestroyTexture(score_text2);
 	SDL_DestroyTexture(play_bg);
 	SDL_DestroyTexture(cat);
 	SDL_DestroyTexture(cat2);
@@ -122,6 +116,9 @@ void gamePlay::HandleEvents() {
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_SPACE) {
 				isChanged = true;
+				isForcedQuit = true;
+				SDL_Delay(33);
+
 				changePhaseToEnding();
 				
 			}
@@ -175,34 +172,46 @@ void gamePlay::HandleEvents() {
 					//go to home
 					if (mouseX > home_rect.x && mouseY > home_rect.y &&
 						mouseX < home_rect.x + home_rect.w && mouseY < home_rect.y + home_rect.h) {
-						isSetting = false;
 						Mix_PlayChannel(-1, setting_SoundEffect, 0);
+						isSetting = false;
+						isForcedQuit = true;
+						string score;
+						plus_score_int = org_score_int;
+						score = original_score;
+						ofstream ofs;
+						ofs.open("../../res/testRes/scoreboard.txt");
+						ofs << score;
+						ofs.close();
 						isChanged = true;
+						SDL_Delay(33);
+
 						changePhaseToMain();
 					}
 				}
+			}
+			else if (isSetting == false && event.button.button == SDL_BUTTON_RIGHT) {
+				plus_score_int += 10;
 			}
 		}
 	}
 }
 
 void gamePlay::Update() {
-	
-	updateScore(score_int);
+	switch (stage) {
+	default: limit_sec = 10; break;
+	}
+	string score;
+	updateScore(plus_score_int);
 
-	score = std::to_string(score_int);
-	//std::ofstream out("../../res/testRes/scoreboard.txt");
-	score = std::to_string(score_int);
-	ofstream ofs;
-	ofs.open("../../res/testRes/scoreboard.txt");
-	ofs << score;
-	ofs.close();
+	if (isForcedQuit) {
+		isForcedQuit = false;
+	}
+	 
+	
 	
 	
 	if (isChanged == false) {
 		
-
-		std::cout << score_int << std::endl;
 		if (isSetting) {}
 		else {
 			
@@ -212,10 +221,10 @@ void gamePlay::Update() {
 				sec += 1; //play second
 				timebar_rect.w = timebar_rect.w - 540 / limit_sec;
 
-				score_int += 10;
 				if (last_sec == 0) {
 					SDL_Delay(1000);
 					isChanged = true;
+					//isForcedQuit = true;
 					changePhaseToEnding();
 
 				}
@@ -277,7 +286,7 @@ void gamePlay::Render() {
 		tmp_r.y = 37;
 		tmp_r.w = score_rect.w * 0.8;
 		tmp_r.h = score_rect.h * 0.8;
-		SDL_RenderCopy(g_renderer, score_text, &score_rect, &tmp_r);
+		SDL_RenderCopy(g_renderer, score_text2, &score_rect, &tmp_r);
 	}
 
 	if (isSetting == true) {
@@ -322,38 +331,38 @@ void gamePlay::play_timer(int interval) {
 
 void gamePlay::updateScore(int s) {
 	string front_score;
-	string new_score;
-	new_score = std::to_string(s);
+	update_score = std::to_string(s);
 
 	//점수 네자리수로 고정
 	if (s == 0) {
 		front_score = "000";
-		new_score = front_score + new_score;
+		update_score = front_score +  update_score;
 	}
 	else if (s > 0 && s < 10) {
 		front_score = "000";
-		new_score = front_score + new_score;
+		update_score = front_score +  update_score;
 	}
 	else if (s >= 10 && s < 100) {
 		front_score = "00";
-		new_score = front_score + new_score;
+		update_score = front_score +  update_score;
 	}
 	else if (s >= 100 && s < 1000) {
 		front_score = "0";
-		new_score = front_score + new_score;
+		update_score = front_score +  update_score;
 	}
-	else { new_score = std::to_string(s); }
+	else { update_score = std::to_string(s); }
+
 
 	TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
 	SDL_Color white = { 255,255,255,0 };
-	SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, new_score.c_str(), white);
+	SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, update_score.c_str(), white);
 	//std::to_string(score).c_str()
 	score_rect.x = 0;
 	score_rect.y = 0;
 	score_rect.w = tmp_surface->w;
 	score_rect.h = tmp_surface->h;
 
-	score_text = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
+	score_text2 = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
 	SDL_FreeSurface(tmp_surface);
 	TTF_CloseFont(font);
 }

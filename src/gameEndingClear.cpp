@@ -105,6 +105,7 @@ void gameEndingClear::HandleEvents() {
 }
 
 void gameEndingClear::Update() {
+	
 	if (clear_reset) {
 		for (int i = 0; i < CLEAR_BG_IMG - 1; i++) {
 			bg[i].InitFade();
@@ -120,6 +121,10 @@ void gameEndingClear::Update() {
 		bt_clickable = false;
 		clear_reset = false;
 	}
+
+	isChanged = false;
+	timebar_rect.w = 540;
+	sec = 0;
 }
 
 void gameEndingClear::Render() {
