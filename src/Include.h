@@ -19,6 +19,14 @@ enum GamePhase
     PHASE_PAUSE
 };
 
+//! Game Status Enum
+enum GameStatus
+{
+    STATUS_GAMEPLAYING,
+    STATUS_GAMECLEAR,
+    STATUS_GAMEOVER
+};
+
 //! 기본 헤더
 #include <iostream>
 #include <cstdlib>

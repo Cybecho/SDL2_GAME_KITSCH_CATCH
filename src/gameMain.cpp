@@ -91,7 +91,7 @@ gameMain::gameMain() {
 	//music
 	main_music = Mix_LoadMUS("../../res/testRes/testBGM2.mp3");
 	if (main_music == 0) {
-		std::cout << "Mix_LoadMUS(\"testBGM2.mp3\"): " << Mix_GetError() << std::endl;
+		cout << "Mix_LoadMUS(\"testBGM2.mp3\"): " << Mix_GetError() << endl;
 	}
 	//Mix_VolumeMusic(128);
 	
@@ -267,7 +267,7 @@ void gameMain::Render() {
 		TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
 		SDL_Color white = { 255,255,255,0 };
 		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, new_score.c_str(), white);
-		//std::to_string(score).c_str()
+		//to_string(score).c_str()
 		score_rect.x = 0;
 		score_rect.y = 0;
 		score_rect.w = tmp_surface->w;

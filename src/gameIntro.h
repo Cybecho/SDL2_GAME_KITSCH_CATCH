@@ -16,7 +16,7 @@ public:
 	void Update();
 	void Render();
 
-	std::vector<Cartoon> cartoon;
+	vector<Cartoon> cartoon;
 	bool is_cartoon_finished = false;
 };
 extern Mix_Music* intro_music;

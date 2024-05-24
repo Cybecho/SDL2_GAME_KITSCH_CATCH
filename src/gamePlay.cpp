@@ -76,7 +76,7 @@ gamePlay::gamePlay() {
 	//music
 	play_music = Mix_LoadMUS("../../res/testRes/testBGM3.mp3");
 	if (play_music == 0) {
-		std::cout << "Mix_LoadMUS(\"testBGM2.mp3\"): " << Mix_GetError() << std::endl;
+		cout << "Mix_LoadMUS(\"testBGM2.mp3\"): " << Mix_GetError() << endl;
 	}
 	//Mix_VolumeMusic(128);
 	//Mix_PlayMusic(play_music, -1);
@@ -246,7 +246,7 @@ void gamePlay::Update() {
 
 	last_sec = limit_sec - sec;
 
-	std::cout << "°æ°ú ½Ã°£ : " << sec << " ³²Àº ½Ã°£ : " << last_sec << std::endl;
+	cout << "ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ : " << sec << " ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ : " << last_sec << endl;
 }
 
 void gamePlay::Render() {
@@ -331,9 +331,9 @@ void gamePlay::play_timer(int interval) {
 
 void gamePlay::updateScore(int s) {
 	string front_score;
-	update_score = std::to_string(s);
+	update_score = to_string(s);
 
-	//Á¡¼ö ³×ÀÚ¸®¼ö·Î °íÁ¤
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if (s == 0) {
 		front_score = "000";
 		update_score = front_score +  update_score;
@@ -350,13 +350,13 @@ void gamePlay::updateScore(int s) {
 		front_score = "0";
 		update_score = front_score +  update_score;
 	}
-	else { update_score = std::to_string(s); }
+	else { update_score = to_string(s); }
 
 
 	TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
 	SDL_Color white = { 255,255,255,0 };
 	SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, update_score.c_str(), white);
-	//std::to_string(score).c_str()
+	//to_string(score).c_str()
 	score_rect.x = 0;
 	score_rect.y = 0;
 	score_rect.w = tmp_surface->w;

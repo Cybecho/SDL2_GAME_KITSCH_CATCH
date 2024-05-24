@@ -45,7 +45,7 @@ gameIntro::~gameIntro() {
 
 void gameIntro::HandleEvents() {
 	// Debug Print
-	//std::cout << g_current_game_phase << std::endl;
+	//cout << g_current_game_phase << endl;
 
 	SDL_Event event;
 	if (SDL_PollEvent(&event)) {
@@ -57,7 +57,7 @@ void gameIntro::HandleEvents() {
 		case SDL_KEYDOWN:
 			// Spacebar (cheat key)
 			if (event.key.keysym.sym == SDLK_SPACE) {
-				std::cout << "Cheat key has been used!" << std::endl;
+				cout << "Cheat key has been used!" << endl;
 				g_current_game_phase = PHASE_MAIN;
 				Mix_HaltMusic();
 				Mix_PlayMusic(main_music, -1);

@@ -10,7 +10,7 @@ gameEndingGameover::gameEndingGameover() {
 	cat_cut = 0;
 	bt_clickable = false;
 
-	// °ÔÀÓ¿À¹ö ¿£µù ÀÌ¹ÌÁö ·Îµå
+	// ï¿½ï¿½ï¿½Ó¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½Îµï¿½
 	bg[0].imgClass.surface = IMG_Load("../../res/ending/ending_over/ending_over_cut1.png");
 	bg[1].imgClass.surface = IMG_Load("../../res/ending/ending_over/ending_over_cut2.png");
 	cat[0].imgClass.surface = IMG_Load("../../res/ending/ending_over/ending_over_cat_1.png");
@@ -19,7 +19,7 @@ gameEndingGameover::gameEndingGameover() {
 	cat[3].imgClass.surface = IMG_Load("../../res/ending/ending_over/ending_over_cat_4.png");
 	cat[4].imgClass.surface = IMG_Load("../../res/ending/ending_over/ending_over_cat_5.png");
 
-	// ÅØ½ºÃ³ »ý¼º
+	// ï¿½Ø½ï¿½Ã³ ï¿½ï¿½ï¿½ï¿½
 	for (auto& i : bg) {
 		i.imgClass.texture = SDL_CreateTextureFromSurface(g_renderer, i.imgClass.surface);
 		i.imgClass.srcrect = i.imgClass.dstrect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
@@ -61,7 +61,7 @@ void gameEndingGameover::HandleEvents() {
 		case SDL_KEYDOWN:
 			// Spacebar (cheat key)
 			if (event.key.keysym.sym == SDLK_SPACE) {
-				std::cout << "Cheat key has been used!" << std::endl;
+				cout << "Cheat key has been used!" << endl;
 				g_current_game_phase = PHASE_INTRO;
 				intro_reset = true;
 				Mix_HaltMusic();
@@ -73,7 +73,7 @@ void gameEndingGameover::HandleEvents() {
 			break;
 		}
 
-		// ¹öÆ° ÀÛµ¿ ºÎºÐ: °¡À»´Ô ÄÚµå È°¿ë
+		// ï¿½ï¿½Æ° ï¿½Ûµï¿½ ï¿½Îºï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ È°ï¿½ï¿½
 		if (event.type == SDL_MOUSEBUTTONDOWN && bt_clickable) {
 			if (event.button.button == SDL_BUTTON_LEFT) {
 				int mouseX = event.button.x;
@@ -129,33 +129,33 @@ void gameEndingGameover::Render() {
 	SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 255);
 	SDL_RenderClear(g_renderer); // clear the renderer to the draw color
 
-	// ¿£µù ¸¸È­ Ãâ·Â
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­ ï¿½ï¿½ï¿½
 	bg[0].FadeIn(1);
 	if (bg[0].is_fade_finished)
 		bg[0].Delay(1.5);
 
-	// ¿£µù È­¸é Ãâ·Â
+	// ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ ï¿½ï¿½ï¿½
 	if (bg[0].is_delay_finished)
-		bg[0].CrossFade(bg[1].imgClass, 0.5); // 0.5ÃÊ°£ ´ÙÀ½ ¿£µù ±×¸²°ú CrossFade
+		bg[0].CrossFade(bg[1].imgClass, 0.5); // 0.5ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ CrossFade
 
 	if (bg[0].is_crossfade_finished) {
 		bt_clickable = true;
-		// CrossFade()·Î Åõ¸í °í¾çÀÌ ¹«ÇÑ ¹Ýº¹ Ãâ·Â
-		if (cat_cut == GAMEOVER_CAT_IMG - 1) // Åõ¸í °í¾çÀÌ ±×¸²ÀÌ ¸¶Áö¸· ±×¸²ÀÌ¶ó¸é
-			cat[cat_cut].CrossFade(cat[0].imgClass, 0.2); // 0.2ÃÊµ¿¾È Ã¹¹øÂ° ±×¸²°ú CrossFade
+		// CrossFade()ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ýºï¿½ ï¿½ï¿½ï¿½
+		if (cat_cut == GAMEOVER_CAT_IMG - 1) // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½Ì¶ï¿½ï¿½
+			cat[cat_cut].CrossFade(cat[0].imgClass, 0.2); // 0.2ï¿½Êµï¿½ï¿½ï¿½ Ã¹ï¿½ï¿½Â° ï¿½×¸ï¿½ï¿½ï¿½ CrossFade
 		else
-			cat[cat_cut].CrossFade(cat[cat_cut + 1].imgClass, 0.2); // 0.2ÃÊµ¿¾È ´ÙÀ½ ±×¸²°ú CrossFade
+			cat[cat_cut].CrossFade(cat[cat_cut + 1].imgClass, 0.2); // 0.2ï¿½Êµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ CrossFade
 
 		if (cat[cat_cut].is_crossfade_finished)
 			cat[cat_cut].Delay(0.7);
 
-		// ±×¸²ÀÌ ³¡³¯¶§¸¶´Ù ´ÙÀ½ CrossFade¸¦ À§ÇØ °ü·Ã ÇÔ¼ö ÃÊ±âÈ­
+		// ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ CrossFadeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ ï¿½Ê±ï¿½È­
 		if (cat[cat_cut].is_delay_finished) {
 			cat[cat_cut].InitCrossFade();
 			cat[cat_cut].InitDelay();
 
 			cat_cut++;
-			if (cat_cut == GAMEOVER_CAT_IMG) // ¸¶Áö¸· ±×¸²¿¡ µµ´ÞÇÏ¸é Ã¹¹øÂ° ±×¸²À¸·Î ÃÊ±âÈ­
+			if (cat_cut == GAMEOVER_CAT_IMG) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ Ã¹ï¿½ï¿½Â° ï¿½×¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
 				cat_cut = 0;
 		}
 	}

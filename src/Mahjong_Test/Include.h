@@ -1,15 +1,16 @@
 // Include.h
 #pragma once
 
-#define WINDOW_WIDTH 540    // 윈도우 너비
-#define WINDOW_HEIGHT 960   // 윈도우 높이
-#define PIVOT_X 20          // 고정 피벗 x좌표
-#define PIVOT_Y 440         // 고정 피벗 y좌표
-#define g_window_margin 20  // 윈도우 마진
-#define BLOCK_SIZE 100      // 블록 기본 크기
-#define BLOCK_SCALE 1.0f    // 블록 크기 배율
+#define WINDOW_WIDTH 540   // 윈도우 너비
+#define WINDOW_HEIGHT 960  // 윈도우 높이
+#define PIVOT_X 20         // 고정 피벗 x좌표
+#define PIVOT_Y 440        // 고정 피벗 y좌표
+#define g_window_margin 20 // 윈도우 마진
+#define BLOCK_SIZE 100     // 블록 기본 크기
+#define BLOCK_SCALE 1.0f   // 블록 크기 배율
 
-enum GamePhase {
+enum GamePhase
+{
     PHASE_INTRO,
     PHASE_MAIN,
     PHASE_PLAYING,
@@ -18,10 +19,11 @@ enum GamePhase {
     PHASE_PAUSE
 };
 
-enum GameStatus {
-	STATUS_GAMEPLAYING,
-	STATUS_GAMECLEAR,
-	STATUS_GAMEOVER
+enum GameStatus
+{
+    STATUS_GAMEPLAYING,
+    STATUS_GAMECLEAR,
+    STATUS_GAMEOVER
 };
 
 #include <iostream>
@@ -54,7 +56,7 @@ using uint32 = std::uint32_t;
 using uint64 = std::uint64_t;
 
 extern bool g_flag_running;
-extern SDL_Renderer* g_renderer;
+extern SDL_Renderer *g_renderer;
 extern Uint32 g_frame_per_sec;
 extern int g_input;
 
