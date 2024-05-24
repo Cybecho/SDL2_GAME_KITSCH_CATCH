@@ -1,35 +1,42 @@
 #include "obj_Mahjong_Base.h"
-#include "GameLogic.h"
+#include "gameLogic.h"
 
-Mix_Chunk* Mahjong::m_sound = nullptr;
-SDL_Texture* Mahjong::m_texture = nullptr;
+Mix_Chunk *Mahjong::m_sound = nullptr;
+SDL_Texture *Mahjong::m_texture = nullptr;
 
-Mahjong::Mahjong(int x, int y, SDL_Renderer* renderer, const SDL_Rect& sourceRect)
+Mahjong::Mahjong(int x, int y, SDL_Renderer *renderer, const SDL_Rect &sourceRect)
     : m_x(x), m_y(y), clicked(false), m_sourceRect(sourceRect), m_blockSize(BLOCK_SIZE), m_blockScale(BLOCK_SCALE), clickEnable(true),
-    m_originalX(x), m_originalY(y), m_shakeDuration(0), m_shakeTimer(0), m_isShaking(false), hovered(false), m_hoverScale(1.1f) {
-    if (!m_texture) {
+      m_originalX(x), m_originalY(y), m_shakeDuration(0), m_shakeTimer(0), m_isShaking(false), hovered(false), m_hoverScale(1.1f)
+{
+    if (!m_texture)
+    {
         loadTexture(renderer);
     }
 
-    if (!m_sound) {
+    if (!m_sound)
+    {
         Set2Sound();
     }
     //! 생성자 멘트
     // cout << "Mahjong Create" << " x : " << this->m_x << " y : " << this->m_y << endl;
 }
 
-void Mahjong::update() {
+void Mahjong::update()
+{
     checkClickEnable();
 
-    if (m_isShaking) {
+    if (m_isShaking)
+    {
         m_shakeTimer++;
-        if (m_shakeTimer >= m_shakeDuration) {
+        if (m_shakeTimer >= m_shakeDuration)
+        {
             m_x = m_originalX;
             m_y = m_originalY;
             m_isShaking = false;
             m_shakeTimer = 0;
         }
-        else {
+        else
+        {
             int shakeRange = 5;
             int offsetX = rand() % (shakeRange * 2 + 1) - shakeRange;
             int offsetY = rand() % (shakeRange * 2 + 1) - shakeRange;
@@ -39,54 +46,68 @@ void Mahjong::update() {
     }
 }
 
-void Mahjong::handleClick() {
-    if (clicked) 
+void Mahjong::handleClick()
+{
+    if (clicked)
     {
         // 추후에 구현
     }
 }
 
-bool Mahjong::isClicked(int x, int y) const {
-    if (dynamic_cast<const Mahjong_Empty*>(this) != nullptr) {
+bool Mahjong::isClicked(int x, int y) const
+{
+    if (dynamic_cast<const Mahjong_Empty *>(this) != nullptr)
+    {
         return false;
     }
     return x >= m_x && x < m_x + (m_blockSize / m_blockScale) && y >= m_y && y < m_y + (m_blockSize / m_blockScale);
 }
 
-void Mahjong::Set2Sound() {
-    if (!m_sound) {
+void Mahjong::Set2Sound()
+{
+    if (!m_sound)
+    {
         m_sound = Mix_LoadWAV("../../res/ClickBlock.mp3");
-        if (!m_sound) {
+        if (!m_sound)
+        {
             printf("Failed to load sound effect! SDL_mixer Error: %s\n", Mix_GetError());
         }
-        else {
+        else
+        {
             Mix_VolumeChunk(m_sound, 32);
         }
     }
 }
 
-void Mahjong::Play2Sound() {
-    if (m_sound) {
+void Mahjong::Play2Sound()
+{
+    if (m_sound)
+    {
         Mix_PlayChannel(-1, m_sound, 0);
     }
 }
 
-void Mahjong::Clear2Sound() {
-    if (m_sound) {
+void Mahjong::Clear2Sound()
+{
+    if (m_sound)
+    {
         Mix_FreeChunk(m_sound);
         m_sound = nullptr;
     }
 }
 
-void Mahjong::shakeBlocks(int duration) {
-    if (!m_isShaking) {
+void Mahjong::shakeBlocks(int duration)
+{
+    if (!m_isShaking)
+    {
         m_isShaking = true;
         m_shakeDuration = duration;
         m_shakeTimer = 0;
     }
 }
 
-bool Mahjong::isHovered(int x, int y) const {
+bool Mahjong::isHovered(int x, int y) const
+{
     float scale = m_blockScale;
     int blockWidth = static_cast<int>(m_blockSize * scale);
     int blockHeight = static_cast<int>(m_blockSize * scale);
@@ -103,19 +124,23 @@ bool Mahjong::isHovered(int x, int y) const {
     return x >= hoverX && x < hoverX + hoverWidth && y >= hoverY && y < hoverY + hoverHeight;
 }
 
-void Mahjong::checkClickEnable() {
+void Mahjong::checkClickEnable()
+{
     clickEnable = true;
 
     int n = getN();
     int m = getM();
     int r = getR();
 
-    for (const auto& block : g_vector) {
-        if (block->getN() > n && dynamic_cast<Mahjong_Empty*>(block.get()) == nullptr) {
+    for (const auto &block : g_vector)
+    {
+        if (block->getN() > n && dynamic_cast<Mahjong_Empty *>(block.get()) == nullptr)
+        {
             if ((block->getM() == m - 1 && block->getR() == r - 1) ||
                 (block->getM() == m - 1 && block->getR() == r) ||
                 (block->getM() == m && block->getR() == r - 1) ||
-                (block->getM() == m && block->getR() == r)) {
+                (block->getM() == m && block->getR() == r))
+            {
                 clickEnable = false;
                 break;
             }
@@ -123,7 +148,8 @@ void Mahjong::checkClickEnable() {
     }
 }
 
-void Mahjong::render(SDL_Renderer* renderer) const {
+void Mahjong::render(SDL_Renderer *renderer) const
+{
     //! 블록의 크기를 호버링 여부에 따라 삼항 연산자로 설정
     //~ 만약 호버링 상태라면? 객체 크기는 m_hoverScale
     //~ 아니라면? 객체 크기는 m_blockScale
@@ -133,15 +159,16 @@ void Mahjong::render(SDL_Renderer* renderer) const {
         static_cast<int>(m_x - ((m_blockSize * scale) - m_blockSize) / 2),
         static_cast<int>(m_y - ((m_blockSize * scale) - m_blockSize) / 2),
         static_cast<int>(m_blockSize * scale),
-        static_cast<int>(m_blockSize * scale)
-    };
+        static_cast<int>(m_blockSize * scale)};
 
     //! 클릭이 가능한 상태라면? 클릭 가능한 상태로 렌더링 (불투명)
     //! 클릭이 불가능한 상태라면? 클릭 불가능한 상태로 렌더링 (반투명)
-    if (clickEnable) {
+    if (clickEnable)
+    {
         SDL_RenderCopy(renderer, m_texture, &m_sourceRect, &dstRect);
     }
-    else {
+    else
+    {
         Uint8 alpha = 64;
         SDL_SetTextureAlphaMod(m_texture, alpha);
         SDL_RenderCopy(renderer, m_texture, &m_sourceRect, &dstRect);
@@ -149,13 +176,15 @@ void Mahjong::render(SDL_Renderer* renderer) const {
     }
 }
 
-void Mahjong::destroyTexture() {
+void Mahjong::destroyTexture()
+{
     SDL_DestroyTexture(m_texture);
     m_texture = nullptr;
 }
 
-void Mahjong::loadTexture(SDL_Renderer* renderer) {
-    SDL_Surface* surface = IMG_Load("../../res/Mahjong.png");
+void Mahjong::loadTexture(SDL_Renderer *renderer)
+{
+    SDL_Surface *surface = IMG_Load("../../res/Mahjong.png");
     m_texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
-} 
+}

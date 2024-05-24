@@ -1,4 +1,4 @@
-#include "GameLogic.h"
+#include "gameLogic.h"
 
 vector<unique_ptr<Mahjong>> g_vector; // 마작 블록 생성 벡터
 vector<unique_ptr<Mahjong>> g_stack; // 마작 블록 스택 벡터
