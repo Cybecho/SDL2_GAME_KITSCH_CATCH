@@ -1,4 +1,6 @@
 // Include.h
+//~ 해당 Inlcude 파일은 이제 사용되지 않습니다.
+//~ ../Include.h 를 사용합니다.
 #pragma once
 
 #define WINDOW_WIDTH 540   // 윈도우 너비

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Include.h"
 #include "obj_VFX.h"
 
