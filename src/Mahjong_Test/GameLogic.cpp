@@ -1,8 +1,8 @@
 #include "GameLogic.h"
 
-std::vector<std::unique_ptr<Mahjong>> g_vector; // 마작 블록 생성 벡터
-std::vector<std::unique_ptr<Mahjong>> g_stack; // 마작 블록 스택 벡터
-std::vector<bonk> g_bonks; // 효과 블록 생성 벡터
+vector<unique_ptr<Mahjong>> g_vector; // 마작 블록 생성 벡터
+vector<unique_ptr<Mahjong>> g_stack; // 마작 블록 스택 벡터
+vector<bonk> g_bonks; // 효과 블록 생성 벡터
 
 Mix_Chunk* wave1_;
 Mix_Music* music1_;
@@ -15,7 +15,7 @@ SDL_Rect g_bg_source_rect;
 SDL_Rect g_bg_destination_rect;
 
 int g_level;
-int MAX_LEVEL = countDir("../../res/level");
+int MAX_LEVEL = countDir("../../res/level") - 1; // 최대 레벨 수는 디렉토리 개수 - 1 (for문 때문에 -1 처리를 해줌)
 int g_status = STATUS_GAMEPLAYING;
 
 void InitGame() {
@@ -25,18 +25,6 @@ void InitGame() {
 
     g_bg_source_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
     g_bg_destination_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
-
-    //! 최초 마작 블록 로드
-    srand(time(NULL)); // 난수 생성 초기화)
-    int level = 0;                                          //~ 시작 레벨
-    int seed = rand() % (countFiles("../../res/level/0") / 3);  //~ 현재 레벨에서 발생 가능한 시드 (전체파일수 / 3)
-    int numDims = 2;    							            //~ 차원 수
-    for (int i = 0; i < MAX_LEVEL; i++)
-    {
-        string dir_path = "../../res/level/" + to_string(i);
-        countFiles(dir_path);
-    }
-    LoadMahjongBlocksFromCSV(level, seed, numDims);
 }
 
 void HandleEvents() {
@@ -44,7 +32,7 @@ void HandleEvents() {
 
     while (SDL_PollEvent(&event)) {
         //! 스페이스바 누르면 벡터&스택 초기화
-        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
+        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == 'r') {
             g_vector.clear();
             g_stack.clear();
         }
@@ -114,22 +102,22 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
     g_vector.clear();
 
     for (int dim = 0; dim <= numDims; ++dim) {
-        std::string filename = "../../res/level/" + std::to_string(level) + "/" + std::to_string(seed) + "-" + std::to_string(dim) + ".csv";
-        std::ifstream file(filename);
+        string filename = "../../res/level/" + to_string(level) + "/" + to_string(seed) + "-" + to_string(dim) + ".csv";
+        ifstream file(filename);
         if (!file.is_open()) {
-            std::cout << "Failed to open file: " << filename << std::endl;
+            cout << "Failed to open file: " << filename << endl;
             continue;
         }
-        std::string line;
+        string line;
         int row = 0;
 
-        while (std::getline(file, line)) {
-            std::istringstream iss(line);
-            std::string cell;
+        while (getline(file, line)) {
+            istringstream iss(line);
+            string cell;
             int col = 0;
 
-            while (std::getline(iss, cell, ',')) {
-                int data = std::stoi(cell);
+            while (getline(iss, cell, ',')) {
+                int data = stoi(cell);
 
                 int x = col * BLOCK_SIZE + PIVOT_X + (dim * BLOCK_SIZE / 2);
                 int y = row * BLOCK_SIZE + PIVOT_Y + (dim * BLOCK_SIZE / 2);
@@ -137,23 +125,23 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
                 if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT) {
                     switch (data) {
                     case 1:
-                        g_vector.emplace_back(std::make_unique<Mahjong_A>(x, y, g_renderer));
+                        g_vector.emplace_back(make_unique<Mahjong_A>(x, y, g_renderer));
                         g_vector.back()->setPosition(dim, row, col);
                         break;
                     case 2:
-                        g_vector.emplace_back(std::make_unique<Mahjong_B>(x, y, g_renderer));
+                        g_vector.emplace_back(make_unique<Mahjong_B>(x, y, g_renderer));
                         g_vector.back()->setPosition(dim, row, col);
                         break;
                     case 3:
-                        g_vector.emplace_back(std::make_unique<Mahjong_C>(x, y, g_renderer));
+                        g_vector.emplace_back(make_unique<Mahjong_C>(x, y, g_renderer));
                         g_vector.back()->setPosition(dim, row, col);
                         break;
                     case 4:
-                        g_vector.emplace_back(std::make_unique<Mahjong_D>(x, y, g_renderer));
+                        g_vector.emplace_back(make_unique<Mahjong_D>(x, y, g_renderer));
                         g_vector.back()->setPosition(dim, row, col);
                         break;
                     default:
-                        g_vector.emplace_back(std::make_unique<Mahjong_Empty>(x, y, g_renderer));
+                        g_vector.emplace_back(make_unique<Mahjong_Empty>(x, y, g_renderer));
                         g_vector.back()->setPosition(dim, row, col);
                         break;
                     }
@@ -182,7 +170,7 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
 
 //! 클릭된 블록을 g_vector에서 g_stack으로 이동
 void vector2stack(vector<unique_ptr<Mahjong>>::iterator it) {
-    auto block = std::move(*it);
+    auto block = move(*it);
     g_vector.erase(it);
 
     // 객체의 위치를 g_stack의 크기에 따라 동적으로 계산합니다.
@@ -192,10 +180,10 @@ void vector2stack(vector<unique_ptr<Mahjong>>::iterator it) {
     block->setX(x);
     block->setY(y);
 
-    g_stack.emplace_back(std::move(block));
+    g_stack.emplace_back(move(block));
 
     // g_blocks와 g_stack의 사이즈 출력
-    std::cout << "g_blocks size: " << g_vector.size() - countEmptyBlocks() << "| g_stack size: " << g_stack.size() << std::endl;
+    cout << "g_blocks size: " << g_vector.size() - countEmptyBlocks() << "| g_stack size: " << g_stack.size() << endl;
 }
 
 //! 클릭된 위치에 bonk 객체 생성
@@ -221,7 +209,7 @@ void LoadMahjongBlocksIfEmpty(int level) {
         }
 
         //~ 레벨 증가 로직
-        if (!(level == MAX_LEVEL)) { ++g_level; }   //~ g_level이 최대 레벨이 아닐 경우 레벨 증가
+        if (level < MAX_LEVEL) { g_level++; }   //~ g_level이 최대 레벨이 아닐 경우 레벨 증가
         else { g_status = STATUS_GAMECLEAR; }       //~ g_level이 최대 레벨일 경우 게임오버
         srand(time(NULL));
         string dir_path = "../../res/level/" + to_string(level);
@@ -333,13 +321,13 @@ bool checkEmptyBlocks() {
 
 //! Empty 마작 블록 개수를 세는 함수
 int countEmptyBlocks() {
-    return std::count_if(g_vector.begin(), g_vector.end(), [](const auto& block) {
+    return count_if(g_vector.begin(), g_vector.end(), [](const auto& block) {
         return dynamic_cast<Mahjong_Empty*>(block.get()) != nullptr;
         });
 }
 
 //! Sort 함수 : 퀵 정렬을 위한 비교 함수
-bool compareBlocks(const std::unique_ptr<Mahjong>& a, const std::unique_ptr<Mahjong>& b) {
+bool compareBlocks(const unique_ptr<Mahjong>& a, const unique_ptr<Mahjong>& b) {
     if (a->getType() == b->getType()) {
         return a->getX() < b->getX();
     }
@@ -347,7 +335,7 @@ bool compareBlocks(const std::unique_ptr<Mahjong>& a, const std::unique_ptr<Mahj
 }
 
 //! Sort 함수 : 퀵 정렬 함수
-void quickSort(std::vector<std::unique_ptr<Mahjong>>& blocks, int left, int right) {
+void quickSort(vector<unique_ptr<Mahjong>>& blocks, int left, int right) {
     if (left >= right) {
         return;
     }
@@ -378,20 +366,20 @@ void quickSort(std::vector<std::unique_ptr<Mahjong>>& blocks, int left, int righ
 
 //! Sort 함수 : 쌍이 2개 이상인 객체들만 정렬하는 함수
 void sortPairedBlocks() {
-    std::map<std::string, int> typeCount;
+    map<string, int> typeCount;
     for (const auto& block : g_stack) {
         typeCount[block->getType()]++;
     }
 
-    std::vector<std::unique_ptr<Mahjong>> pairedBlocks;
-    std::vector<std::unique_ptr<Mahjong>> singleBlocks;
+    vector<unique_ptr<Mahjong>> pairedBlocks;
+    vector<unique_ptr<Mahjong>> singleBlocks;
 
     for (auto& block : g_stack) {
         if (typeCount[block->getType()] >= 2) {
-            pairedBlocks.push_back(std::move(block));
+            pairedBlocks.push_back(move(block));
         }
         else {
-            singleBlocks.push_back(std::move(block));
+            singleBlocks.push_back(move(block));
         }
     }
 
@@ -399,10 +387,10 @@ void sortPairedBlocks() {
 
     g_stack.clear();
     for (auto& block : pairedBlocks) {
-        g_stack.push_back(std::move(block));
+        g_stack.push_back(move(block));
     }
     for (auto& block : singleBlocks) {
-        g_stack.push_back(std::move(block));
+        g_stack.push_back(move(block));
     }
 }
 

@@ -1,4 +1,4 @@
-﻿#include "obj_Mahjong_Base.h"
+#include "obj_Mahjong_Base.h"
 #include "GameLogic.h"
 
 Mix_Chunk* Mahjong::m_sound = nullptr;
