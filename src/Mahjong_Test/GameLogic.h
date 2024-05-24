@@ -5,23 +5,23 @@
 #include "obj_Mahjong_Derived.h"
 #include "obj_VFX.h"
 
-class Mahjong; // ÄÄÆÄÀÏ ½Ã°£ ´ÜÃàÀ» À§ÇØ Àü¹æ ¼±¾ğÀ» Ãß°¡ÇÕ´Ï´Ù.
-extern std::vector<std::unique_ptr<Mahjong>> g_vector;
+class Mahjong; // ì»´íŒŒì¼ ì‹œê°„ ë‹¨ì¶•ì„ ìœ„í•´ ì „ë°© ì„ ì–¸ì„ ì¶”ê°€í•©ë‹ˆë‹¤.
+extern vector<unique_ptr<Mahjong>> g_vector;
 
-//! ÇÊ¼ö ÇÔ¼ö
+//! í•„ìˆ˜ í•¨ìˆ˜
 void InitGame();
 void HandleEvents();
 void Update();
 void Render();
 void ClearGame();
 
-//! »ç¿ëÀÚ Á¤ÀÇ ÇÔ¼ö
+//! ì‚¬ìš©ì ì •ì˜ í•¨ìˆ˜
 void LoadMahjongBlocksFromCSV(int level, int seed, int numDims);
-void vector2stack(std::vector<std::unique_ptr<Mahjong>>::iterator it);
-void createBonk(int x, int y); // Ãß°¡µÈ ÇÔ¼ö ¼±¾ğ
+void vector2stack(vector<unique_ptr<Mahjong>>::iterator it);
+void createBonk(int x, int y); // ì¶”ê°€ëœ í•¨ìˆ˜ ì„ ì–¸
 
-//! ¾÷µ¥ÀÌÆ® ÇÔ¼ö
-void LoadMahjongBlocksIfEmpty();
+//! ì—…ë°ì´íŠ¸ í•¨ìˆ˜
+void LoadMahjongBlocksIfEmpty(int level);
 void RemoveSameTypeBlocks();
 void AlignStackBlocks();
 void UpdateVectorBlocks();
@@ -29,22 +29,25 @@ void UpdateStackBlocks();
 void UpdateBonks();
 void UpdateScore(int score);
 
-//! Empty Block Ã¼Å© ÇÔ¼ö
+//! Empty Block ì²´í¬ í•¨ìˆ˜
 bool checkEmptyBlocks();
 int countEmptyBlocks();
 
-//! Á¤·Ä ÇÔ¼ö
-bool compareBlocks(const std::unique_ptr<Mahjong>& a, const std::unique_ptr<Mahjong>& b);
-void quickSort(std::vector<std::unique_ptr<Mahjong>>& blocks, int left, int right);
+//! ì •ë ¬ í•¨ìˆ˜
+bool compareBlocks(const unique_ptr<Mahjong>& a, const unique_ptr<Mahjong>& b);
+void quickSort(vector<unique_ptr<Mahjong>>& blocks, int left, int right);
 void sortPairedBlocks();
 
-//! ÆÄÀÏ ¼¼±â ÇÔ¼ö
-int countDir(const std::string& path);
-int countFiles(const std::string& path);
+//! íŒŒì¼ ì„¸ê¸° í•¨ìˆ˜
+int countDir(const string& path);
+int countFiles(const string& path);
 
-//! Àü¿ª º¯¼ö
+//! ì „ì—­ ë³€ìˆ˜
 extern bool g_flag_running;
 extern SDL_Renderer* g_renderer;
 extern Uint32 g_frame_per_sec;
 extern int g_blockCount;
+extern int g_level;
+extern int g_status; // 0 : playing , 1 : gameclear, 2 : gameover
+extern int MAX_LEVEL;
 

@@ -18,6 +18,12 @@ enum GamePhase {
     PHASE_PAUSE
 };
 
+enum GameStatus {
+	STATUS_GAMEPLAYING,
+	STATUS_GAMECLEAR,
+	STATUS_GAMEOVER
+};
+
 #include <iostream>
 #include <cstdlib>
 #include <ctime>

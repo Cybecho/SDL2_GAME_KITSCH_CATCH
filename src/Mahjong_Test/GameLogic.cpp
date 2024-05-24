@@ -14,25 +14,29 @@ TTF_Font* game_font_;
 SDL_Rect g_bg_source_rect;
 SDL_Rect g_bg_destination_rect;
 
-void InitGame() {
-    srand(time(NULL)); // 난수 생성 초기화)
+int g_level;
+int MAX_LEVEL = countDir("../../res/level");
+int g_status = STATUS_GAMEPLAYING;
 
+void InitGame() {
     g_flag_running = true;
+    g_status = STATUS_GAMEPLAYING;
+    g_level = 0;
 
     g_bg_source_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
     g_bg_destination_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 
     //! 최초 마작 블록 로드
-    int max_level = countDir("../../res/level");                //~ 최대 레벨
-    int cur_level = 0;                                          //~ 시작 레벨
+    srand(time(NULL)); // 난수 생성 초기화)
+    int level = 0;                                          //~ 시작 레벨
     int seed = rand() % (countFiles("../../res/level/0") / 3);  //~ 현재 레벨에서 발생 가능한 시드 (전체파일수 / 3)
     int numDims = 2;    							            //~ 차원 수
-    for (int i = 0; i < max_level; i++)
+    for (int i = 0; i < MAX_LEVEL; i++)
     {
         string dir_path = "../../res/level/" + to_string(i);
         countFiles(dir_path);
     }
-    LoadMahjongBlocksFromCSV(cur_level, seed, numDims);
+    LoadMahjongBlocksFromCSV(level, seed, numDims);
 }
 
 void HandleEvents() {
@@ -77,7 +81,7 @@ void HandleEvents() {
 }
 
 void Update() {
-    LoadMahjongBlocksIfEmpty();
+    LoadMahjongBlocksIfEmpty(g_level);
     RemoveSameTypeBlocks();
     AlignStackBlocks();
     UpdateVectorBlocks();
@@ -177,7 +181,7 @@ void LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
 }
 
 //! 클릭된 블록을 g_vector에서 g_stack으로 이동
-void vector2stack(std::vector<std::unique_ptr<Mahjong>>::iterator it) {
+void vector2stack(vector<unique_ptr<Mahjong>>::iterator it) {
     auto block = std::move(*it);
     g_vector.erase(it);
 
@@ -205,7 +209,7 @@ void createBonk(int x, int y) {
 }
 
 //! update 함수 : 벡터 영역이 비었을 때 csv 파일을 읽어와서 다시 로드
-void LoadMahjongBlocksIfEmpty() {
+void LoadMahjongBlocksIfEmpty(int level) {
     if (checkEmptyBlocks()) {
         for (auto it = g_vector.begin(); it != g_vector.end();) {
             if (dynamic_cast<Mahjong_Empty*>(it->get())) {
@@ -216,12 +220,14 @@ void LoadMahjongBlocksIfEmpty() {
             }
         }
 
-        //~ 랜덤으로 레벨 선택 (나중에 순차 로드로 구현하세요)
+        //~ 레벨 증가 로직
+        if (!(level == MAX_LEVEL)) { ++g_level; }   //~ g_level이 최대 레벨이 아닐 경우 레벨 증가
+        else { g_status = STATUS_GAMECLEAR; }       //~ g_level이 최대 레벨일 경우 게임오버
         srand(time(NULL));
-        int level = rand() % 10;
-        int seed = 0;
+        string dir_path = "../../res/level/" + to_string(level);
+        int seed = rand() % (countFiles(dir_path) / 3);  //~ 현재 레벨에서 발생 가능한 시드 (전체파일수 / 3)
         int numDims = 2;
-        LoadMahjongBlocksFromCSV(level, seed, numDims);
+        LoadMahjongBlocksFromCSV(level, seed, numDims); 
     }
 }
 
@@ -286,11 +292,12 @@ void UpdateVectorBlocks() {
 
         if (g_stack.size() == 7) {
             block->setClickable(false);
+            g_status = STATUS_GAMEOVER; //~ g_stack의 객체들이 7개가 되면 게임오버
         }
     }
 }
 
-//! update 함수 :  g_stack의 객체들이 7개가 되면 g_vector의 객체들을 비활성화
+//! update 함수 :  g_stack의 객체들이 7개가 되면 g_stack의 객체들을 비활성화
 void UpdateStackBlocks() {
     for (auto& block : g_stack) {
         block->handleClick();
@@ -318,8 +325,9 @@ void UpdateScore(int score) {
 
 //! Empty 마작 블록이 비었는지 체크
 bool checkEmptyBlocks() {
-    return g_vector.empty() || std::all_of(g_vector.begin(), g_vector.end(), [](const auto& block) {
-        return dynamic_cast<Mahjong_Empty*>(block.get()) != nullptr;
+    //~ g_vector가 비어있거나 모든 블록이 Empty 블록인 경우 true 반환
+    return g_vector.empty() || all_of(g_vector.begin(), g_vector.end(), [](const auto& block) {
+        return dynamic_cast<Mahjong_Empty*>(block.get()) != nullptr; //~ Empty 블록인지 체크
         });
 }
 
