@@ -15,19 +15,21 @@ SDL_Rect g_bg_source_rect;
 SDL_Rect g_bg_destination_rect;
 
 void InitGame() {
+    srand(time(NULL)); // 난수 생성 초기화)
+
     g_flag_running = true;
 
     g_bg_source_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
     g_bg_destination_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 
     //! 최초 마작 블록 로드
-    int max_level = countDir("../../res/level");    //~ 최대 레벨
-    int cur_level = 0;                              //~ 시작 레벨
-    int seed = 0;								    //~ 현재 레벨에서 발생 가능한 시드
-    int numDims = 2;
+    int max_level = countDir("../../res/level");                //~ 최대 레벨
+    int cur_level = 0;                                          //~ 시작 레벨
+    int seed = rand() % (countFiles("../../res/level/0") / 3);  //~ 현재 레벨에서 발생 가능한 시드 (전체파일수 / 3)
+    int numDims = 2;    							            //~ 차원 수
     for (int i = 0; i < max_level; i++)
     {
-        string dir_path = "../../res/level/" + std::to_string(i);
+        string dir_path = "../../res/level/" + to_string(i);
         countFiles(dir_path);
     }
     LoadMahjongBlocksFromCSV(cur_level, seed, numDims);
