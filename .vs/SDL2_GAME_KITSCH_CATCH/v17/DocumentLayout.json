@@ -3,12 +3,8 @@
   "WorkspaceRootPath": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B478C75B-F7DE-4DFC-9A5C-B45C9DDA1940}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\obj_VFX.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{B478C75B-F7DE-4DFC-9A5C-B45C9DDA1940}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|solutionrelative:src\\obj_VFX.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B478C75B-F7DE-4DFC-9A5C-B45C9DDA1940}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameEndingClear.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{B478C75B-F7DE-4DFC-9A5C-B45C9DDA1940}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|solutionrelative:src\\gameEndingClear.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{B478C75B-F7DE-4DFC-9A5C-B45C9DDA1940}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameEndingGameover.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{B478C75B-F7DE-4DFC-9A5C-B45C9DDA1940}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|solutionrelative:src\\gameEndingGameover.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -23,27 +19,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "obj_VFX.cpp",
-              "DocumentMoniker": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\obj_VFX.cpp",
-              "RelativeDocumentMoniker": "src\\obj_VFX.cpp",
-              "ToolTip": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\obj_VFX.cpp",
-              "RelativeToolTip": "src\\obj_VFX.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAADwvyQAAAAAAAAA",
+              "Title": "gameEndingGameover.cpp",
+              "DocumentMoniker": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameEndingGameover.cpp",
+              "RelativeDocumentMoniker": "src\\gameEndingGameover.cpp",
+              "ToolTip": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameEndingGameover.cpp",
+              "RelativeToolTip": "src\\gameEndingGameover.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAADwvx4AAAAmAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-05-25T05:30:47.22Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "gameEndingClear.cpp",
-              "DocumentMoniker": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameEndingClear.cpp",
-              "RelativeDocumentMoniker": "src\\gameEndingClear.cpp",
-              "ToolTip": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameEndingClear.cpp",
-              "RelativeToolTip": "src\\gameEndingClear.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAADwvwAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-05-25T05:30:11.798Z",
+              "WhenOpened": "2024-05-25T06:19:16.499Z",
               "EditorCaption": ""
             }
           ]
