@@ -1,5 +1,6 @@
 #include "obj_Mahjong_Base.h"
-#include "gameLogic.h"
+#include "obj_Mahjong_Derived.h"
+// #include "gameLogic.h"
 
 Mix_Chunk *Mahjong::m_sound = nullptr;
 SDL_Texture *Mahjong::m_texture = nullptr;
@@ -23,7 +24,7 @@ Mahjong::Mahjong(int x, int y, SDL_Renderer *renderer, const SDL_Rect &sourceRec
 
 void Mahjong::update()
 {
-    checkClickEnable();
+    // checkClickEnable(); // 이 줄을 주석 처리하거나 삭제합니다.
 
     if (m_isShaking)
     {
@@ -124,7 +125,7 @@ bool Mahjong::isHovered(int x, int y) const
     return x >= hoverX && x < hoverX + hoverWidth && y >= hoverY && y < hoverY + hoverHeight;
 }
 
-void Mahjong::checkClickEnable()
+void Mahjong::checkClickEnable(const vector<unique_ptr<Mahjong>>& mahjongBlocks)
 {
     clickEnable = true;
 
@@ -132,9 +133,9 @@ void Mahjong::checkClickEnable()
     int m = getM();
     int r = getR();
 
-    for (const auto &block : g_vector)
+    for (const auto& block : mahjongBlocks)
     {
-        if (block->getN() > n && dynamic_cast<Mahjong_Empty *>(block.get()) == nullptr)
+        if (block->getN() > n && dynamic_cast<Mahjong_Empty*>(block.get()) == nullptr)
         {
             if ((block->getM() == m - 1 && block->getR() == r - 1) ||
                 (block->getM() == m - 1 && block->getR() == r) ||

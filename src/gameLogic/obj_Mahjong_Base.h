@@ -25,7 +25,7 @@ public:
     int getN() const { return m_n; }
     int getM() const { return m_m; }
     int getR() const { return m_r; }
-    void checkClickEnable();
+    void checkClickEnable(const vector<unique_ptr<Mahjong>>& mahjongBlocks);
 
     //! 클릭 되었을때
     bool isClicked(int x, int y) const;
