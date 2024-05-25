@@ -2,6 +2,8 @@
 #include "Include.h"
 #include "obj_VFX.h"
 
+class Mahjong_Empty; // Mahjong_Empty 클래스의 전방 선언
+
 class Mahjong {
 public:
     //! 생성자 소멸자
