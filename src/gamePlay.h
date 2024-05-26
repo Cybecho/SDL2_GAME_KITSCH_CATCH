@@ -1,5 +1,6 @@
 #pragma once
 #include "gameClass.h"
+#include "gameLogic.h"
 //play scene
 
 
@@ -12,9 +13,7 @@ public:
 	virtual ~gamePlay();
 	
 
-	//const Uint32 p_start_time_ms;
-	Uint32 p_last_time_ms;
-	string string_time;
+	
 	void play_timer(int interval);
 	void changePhaseToEnding();
 	void changePhaseToMain();
@@ -23,15 +22,16 @@ public:
 	void Render();
 	void updateScore(int s);
 
-	
-	
+protected:
+
+	gameLogic m_gameLogic; //~ 게임 로직 클래스 생성
+
+	//const Uint32 p_start_time_ms;
+	Uint32 p_last_time_ms;
+	string string_time;
 	string update_score;
-	
 	//int update_score; //new score
 	//float timebarw;
-
-	
-	
 
 	SDL_Texture* play_bg;
 	SDL_Texture* playground_img;

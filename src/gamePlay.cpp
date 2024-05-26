@@ -83,7 +83,8 @@ gamePlay::gamePlay() {
 
 	setting_SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
 
-
+	//! ************************** gameLogic **************************
+	m_gameLogic.InitGame(); //~ 생성자 호출시 게임로직 게임 초기화 함수 실행
 	
 }
 
@@ -102,6 +103,9 @@ gamePlay::~gamePlay() {
 	//SDL_DestroyTexture(playground_img);
 	SDL_Quit();
 	TTF_Quit();
+
+	//! ************************** gameLogic **************************
+	m_gameLogic.ClearGame(); //~ 소멸자 호출시 게임로직 게임 클리어 함수 실행
 }
 
 void gamePlay::HandleEvents() {
@@ -194,6 +198,8 @@ void gamePlay::HandleEvents() {
 			}
 		}
 	}
+	//! ************************** gameLogic **************************
+	m_gameLogic.HandleEvents(); //~ 게임로직 이벤트 처리 함수 실행
 }
 
 void gamePlay::Update() {
@@ -240,13 +246,12 @@ void gamePlay::Update() {
 
 	}
 
-
-	
-
-
 	last_sec = limit_sec - sec;
 
-	cout << "��� �ð� : " << sec << " ���� �ð� : " << last_sec << endl;
+	cout << "sec : " << sec << " last sec : " << last_sec << endl;
+
+	//! ************************** gameLogic **************************
+	m_gameLogic.Update(); //~ 게임로직 업데이트 함수 실행
 }
 
 void gamePlay::Render() {
@@ -304,6 +309,8 @@ void gamePlay::Render() {
 			SDL_RenderCopy(g_renderer, volume_bt_on, &volume_rect, &volume_rect);
 		}
 	}
+	//! ************************** gameLogic **************************
+	m_gameLogic.Render(); //~ 게임로직 렌더 함수 실행
 
 	SDL_RenderPresent(g_renderer);
 }
