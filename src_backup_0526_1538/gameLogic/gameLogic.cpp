@@ -273,14 +273,18 @@ void AlignStackBlocks() {
 }
 
 //! update 함수 :  g_stack의 객체들이 7개가 되면 g_vector의 객체들을 비활성화
-void UpdateVectorBlocks() {
-    for (auto& block : g_vector) {
+void UpdateVectorBlocks()
+{
+    for (auto& block : g_vector)
+    {
         block->handleClick();
         block->update();
+        block->checkClickEnable(g_vector); // g_vector를 매개변수로 전달합니다.
 
-        if (g_stack.size() == 7) {
+        if (g_stack.size() == 7)
+        {
             block->setClickable(false);
-            g_status = STATUS_GAMEOVER; //~ g_stack의 객체들이 7개가 되면 게임오버
+            g_status = STATUS_GAMEOVER;
         }
     }
 }

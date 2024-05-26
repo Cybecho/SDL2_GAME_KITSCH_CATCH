@@ -5,8 +5,9 @@
 #include "obj_Mahjong_Derived.h"
 #include "obj_VFX.h"
 
-class Mahjong; // 컴파일 시간 단축을 위해 전방 선언을 추가합니다.
-class VFX; // 컴파일 시간 단축을 위해 전방 선언을 추가합니다.
+// class Mahjong; // 컴파일 시간 단축을 위해 전방 선언을 추가합니다.
+// class VFX; // 컴파일 시간 단축을 위해 전방 선언을 추가합니다.
+
 extern vector<unique_ptr<Mahjong>> g_vector;
 
 //! 필수 함수

@@ -3,7 +3,8 @@
 #define WINDOW_WIDTH 540   // 윈도우 너비
 #define WINDOW_HEIGHT 960  // 윈도우 높이
 #define PIVOT_X 20         // 고정 피벗 x좌표
-#define PIVOT_Y 300        // 고정 피벗 y좌표
+#define PIVOT_Y 440        // 고정 피벗 y좌표
+#define PIVOT_Y2 10 	    // 고정 피벗 y좌표 (vector2stack , Align Stack Block 에서 사용함)
 #define g_window_margin 20 // 윈도우 마진
 #define BLOCK_SIZE 100     // 블록 기본 크기
 #define BLOCK_SCALE 1.0f   // 블록 크기 배율

@@ -2,6 +2,8 @@
 #include "Include.h"
 #include "obj_VFX.h"
 
+class Mahjong_Empty; // Mahjong_Empty 클래스의 전방 선언
+
 class Mahjong {
 public:
     //! 생성자 소멸자
@@ -23,7 +25,7 @@ public:
     int getN() const { return m_n; }
     int getM() const { return m_m; }
     int getR() const { return m_r; }
-    void checkClickEnable();
+    void checkClickEnable(const vector<unique_ptr<Mahjong>>& mahjongBlocks);
 
     //! 클릭 되었을때
     bool isClicked(int x, int y) const;
