@@ -9,6 +9,8 @@ gameLogic::gameLogic() {
     g_level = 0;
     MAX_LEVEL = countDir("../../res/level") - 1;
     g_status = STATUS_GAMEPLAYING;
+
+    LoadMahjongBlocksFromCSV(0, 0, 2); // 초기 레벨 로딩)
 }
 
 gameLogic::~gameLogic() {
@@ -71,7 +73,7 @@ void gameLogic::HandleEvents() {
 }
 
 void gameLogic::Update() {
-    LoadMahjongBlocksIfEmpty(g_level);
+    LoadMahjongBlocksIfEmpty(g_level); //~ 문제의 코드
     RemoveSameTypeBlocks();
     AlignStackBlocks();
     UpdateVectorBlocks();
@@ -165,7 +167,7 @@ void gameLogic::vector2stack(vector<unique_ptr<Mahjong>>::iterator it) {
 
     // 객체의 위치를 g_stack의 크기에 따라 동적으로 계산합니다.
     int x = g_stack.size() * (BLOCK_SIZE / 2) + PIVOT_X;
-    int y = BLOCK_SIZE + PIVOT_Y - (BLOCK_SIZE * 2);
+    int y = BLOCK_SIZE + PIVOT_Y - (BLOCK_SIZE * 2) - PIVOT_Y2;
 
     block->setX(x);
     block->setY(y);
@@ -197,7 +199,7 @@ void gameLogic::LoadMahjongBlocksIfEmpty(int level) {
         }
         cout << "g_vector is empty. Loading New Mahjong blocks..." << endl;
         //! 여기부분에서 에러남..
-        LoadMahjongBlocksFromCSV(0, 0, 2);
+        //~ LoadMahjongBlocksFromCSV(0, 0, 2); // 여기서 이 함수만 불러오면 에러가...
         /*
         //~ 레벨 증가 로직
         if (level < MAX_LEVEL) {
@@ -259,7 +261,7 @@ void gameLogic::AlignStackBlocks() {
 
     for (size_t i = 0; i < g_stack.size(); ++i) {
         int x = i * (BLOCK_SIZE / 2 + 15) + PIVOT_X;
-        int y = BLOCK_SIZE + PIVOT_Y - (BLOCK_SIZE * 2);
+        int y = BLOCK_SIZE + PIVOT_Y - (BLOCK_SIZE * 2) - PIVOT_Y2;
         g_stack[i]->setX(x);
         g_stack[i]->setY(y);
         g_stack[i]->setHovered(false); //~ 호버링 효과 제거 (이렇게 해줘야 크기 g_stack에서 이상하게 안변함)
@@ -438,7 +440,6 @@ void gameLogic::ClearGame() {
 
     TTF_CloseFont(game_font_);
 }
-
 
 Uint32 shakeBlocksCallback(Uint32 interval, void* param) {
     int index = *(static_cast<int*>(param));

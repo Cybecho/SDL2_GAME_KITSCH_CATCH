@@ -73,7 +73,7 @@ void gameLogic::HandleEvents() {
 }
 
 void gameLogic::Update() {
-    LoadMahjongBlocksIfEmpty(g_level);
+    LoadMahjongBlocksIfEmpty(g_level); //~ 문제의 코드
     RemoveSameTypeBlocks();
     AlignStackBlocks();
     UpdateVectorBlocks();
