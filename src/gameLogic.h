@@ -32,7 +32,15 @@ public:
     void sortPairedBlocks();
     int countDir(const string& path);
     int countFiles(const string& path);
+
+    //! Getters and Setters
     vector<unique_ptr<Mahjong>>& getVector() { return g_vector; }
+    int getMaxLevel() const { return MAX_LEVEL; }
+    int getLevel() const { return g_level; }
+    int getStatus() const { return g_status; }
+    void setMaxLevel(int maxLevel) { MAX_LEVEL = maxLevel; }
+    void setLevel(int level) { g_level = level; }
+    void setStatus(int status) { g_status = status; }
 
 private:
     vector<unique_ptr<Mahjong>> g_vector; // 마작 블록 생성 벡터

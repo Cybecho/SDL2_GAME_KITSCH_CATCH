@@ -9,19 +9,6 @@ gameLogic::gameLogic() {
     g_level = 0;
     MAX_LEVEL = countDir("../../res/level") - 1;
     g_status = STATUS_GAMEPLAYING;
-
-
-    //! 최초 마작 블록 로드
-    int max_level = countDir("../../res/level");    //~ 최대 레벨
-    int cur_level = 0;                              //~ 시작 레벨
-    int seed = 0;								    //~ 현재 레벨에서 발생 가능한 시드
-    int numDims = 2;
-    for (int i = 0; i < max_level; i++)
-    {
-        string dir_path = "../../res/level/" + to_string(i);
-        countFiles(dir_path);
-    }
-    LoadMahjongBlocksFromCSV(cur_level, seed, numDims);
 }
 
 gameLogic::~gameLogic() {
@@ -84,7 +71,7 @@ void gameLogic::HandleEvents() {
 }
 
 void gameLogic::Update() {
-    //LoadMahjongBlocksIfEmpty(g_level);
+    LoadMahjongBlocksIfEmpty(g_level);
     RemoveSameTypeBlocks();
     AlignStackBlocks();
     UpdateVectorBlocks();
@@ -208,15 +195,23 @@ void gameLogic::LoadMahjongBlocksIfEmpty(int level) {
                 ++it;
             }
         }
-
+        cout << "g_vector is empty. Loading New Mahjong blocks..." << endl;
+        //! 여기부분에서 에러남..
+        LoadMahjongBlocksFromCSV(0, 0, 2);
+        /*
         //~ 레벨 증가 로직
-        if (level < MAX_LEVEL) { g_level++; }   //~ g_level이 최대 레벨이 아닐 경우 레벨 증가
-        else { g_status = STATUS_GAMECLEAR; }       //~ g_level이 최대 레벨일 경우 게임오버
-        srand(time(NULL));
-        string dir_path = "../../res/level/" + to_string(level);
-        int seed = rand() % (countFiles(dir_path) / 3);  //~ 현재 레벨에서 발생 가능한 시드 (전체파일수 / 3)
-        int numDims = 2;
-        LoadMahjongBlocksFromCSV(level, seed, numDims);
+        if (level < MAX_LEVEL) {
+            srand(time(NULL));
+            string dir_path = "../../res/level/" + to_string(g_level);
+            int seed = rand() % (countFiles(dir_path) / 3);  //~ 현재 레벨에서 발생 가능한 시드 (전체파일수 / 3)
+            int numDims = 2;
+            LoadMahjongBlocksFromCSV(g_level, seed, numDims);
+            g_level++;
+        }
+        else {
+            g_status = STATUS_GAMECLEAR;
+        }
+        */    
     }
 }
 

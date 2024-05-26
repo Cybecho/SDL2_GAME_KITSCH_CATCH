@@ -200,8 +200,13 @@ void gamePlay::HandleEvents() {
 }
 
 void gamePlay::Update() {
+
+	//! ************************** gameLogic **************************
+	m_gameLogic.Update(); //~ 게임로직 업데이트 함수 실행
+	//! ************************** ********* **************************
+
 	switch (stage) {
-	default: limit_sec = 10; break;
+	default: limit_sec = 100; break;
 	}
 	string score;
 	updateScore(plus_score_int);
@@ -244,11 +249,6 @@ void gamePlay::Update() {
 	}
 
 	last_sec = limit_sec - sec;
-
-	cout << "sec : " << sec << " last sec : " << last_sec << endl;
-
-	//! ************************** gameLogic **************************
-	m_gameLogic.Update(); //~ 게임로직 업데이트 함수 실행
 }
 
 void gamePlay::Render() {
