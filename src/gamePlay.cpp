@@ -103,9 +103,6 @@ gamePlay::~gamePlay() {
 	//SDL_DestroyTexture(playground_img);
 	SDL_Quit();
 	TTF_Quit();
-
-	//! ************************** gameLogic **************************
-	m_gameLogic.ClearGame(); //~ 소멸자 호출시 게임로직 게임 클리어 함수 실행
 }
 
 void gamePlay::HandleEvents() {

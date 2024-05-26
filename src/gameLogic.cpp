@@ -28,6 +28,11 @@ void gameLogic::HandleEvents() {
     SDL_Event event;
 
     while (SDL_PollEvent(&event)) {
+        // SDL_QUIT 이벤트 제거
+        if (event.type == SDL_QUIT) {
+            continue;
+        }
+
         //! 스페이스바 누르면 벡터&스택 초기화
         if (event.type == SDL_KEYDOWN && event.key.keysym.sym == 'r') {
             g_vector.clear();
@@ -75,9 +80,6 @@ void gameLogic::Update() {
 }
 
 void gameLogic::Render() {
-    SDL_SetRenderDrawColor(g_renderer, 255, 255, 255, 255); // 배경색 설정
-    SDL_RenderClear(g_renderer);
-
     // 블록 객체 렌더링
     for (const auto& block : g_vector) {
         block->render(g_renderer);
@@ -90,8 +92,6 @@ void gameLogic::Render() {
     for (const auto& bonk : g_bonks) {
         bonk.render(g_renderer);
     }
-
-    SDL_RenderPresent(g_renderer);
 }
 
 void gameLogic::LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
