@@ -9,6 +9,19 @@ gameLogic::gameLogic() {
     g_level = 0;
     MAX_LEVEL = countDir("../../res/level") - 1;
     g_status = STATUS_GAMEPLAYING;
+
+
+    //! 최초 마작 블록 로드
+    int max_level = countDir("../../res/level");    //~ 최대 레벨
+    int cur_level = 0;                              //~ 시작 레벨
+    int seed = 0;								    //~ 현재 레벨에서 발생 가능한 시드
+    int numDims = 2;
+    for (int i = 0; i < max_level; i++)
+    {
+        string dir_path = "../../res/level/" + to_string(i);
+        countFiles(dir_path);
+    }
+    LoadMahjongBlocksFromCSV(cur_level, seed, numDims);
 }
 
 gameLogic::~gameLogic() {
@@ -71,7 +84,7 @@ void gameLogic::HandleEvents() {
 }
 
 void gameLogic::Update() {
-    LoadMahjongBlocksIfEmpty(g_level);
+    //LoadMahjongBlocksIfEmpty(g_level);
     RemoveSameTypeBlocks();
     AlignStackBlocks();
     UpdateVectorBlocks();
