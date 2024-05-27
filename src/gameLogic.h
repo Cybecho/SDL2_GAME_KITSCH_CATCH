@@ -7,40 +7,59 @@
 
 class gameLogic {
 public:
+    //! 생성자 소멸자
     gameLogic();
     ~gameLogic();
 
-    void InitGame();
+    //! 기본 함수
     void HandleEvents();
     void Update();
     void Render();
+
+    //! 최초 초기화 및 클리어 함수
+    void InitGame();
     void ClearGame();
+    void resetGame(); // 게임 재시작 함수 (gamePlay 에서 페이즈 변경될때 사용함)
+
+    //! 마작 블록 생성 및 관리 함수
     void LoadMahjongBlocksFromCSV(int level, int seed, int numDims);
-    void vector2stack(vector<unique_ptr<Mahjong>>::iterator it);
-    void createBonk(int x, int y);
     void LoadMahjongBlocksIfEmpty(int level);
+    
+    //! 마작 블록 이동 및 정렬 함수
+    void vector2stack(vector<unique_ptr<Mahjong>>::iterator it);
     void RemoveSameTypeBlocks();
     void AlignStackBlocks();
-    void UpdateVectorBlocks();
-    void UpdateStackBlocks();
-    void UpdateBonks();
-    void UpdateScore(int score);
     bool checkEmptyBlocks();
     int countEmptyBlocks();
     bool compareBlocks(const unique_ptr<Mahjong>& a, const unique_ptr<Mahjong>& b);
     void quickSort(vector<unique_ptr<Mahjong>>& blocks, int left, int right);
     void sortPairedBlocks();
+
+    //! 마작 플레이 영역 업데이트 함수
+    void UpdateVectorBlocks();
+    void UpdateStackBlocks();
+    
+    //! VFX 객체 생성 및 관리 함수
+    void createBonk(int x, int y);
+    void UpdateBonks();
+
+    //! CSV 파일 관리 함수
     int countDir(const string& path);
     int countFiles(const string& path);
 
+    //! 점수 관련 함수
+    void UpdateScore(int score);
+
     //! Getters and Setters
-    vector<unique_ptr<Mahjong>>& getVector() { return g_vector; }
-    int getMaxLevel() const { return MAX_LEVEL; }
-    int getLevel() const { return g_level; }
-    int getStatus() const { return g_status; }
-    void setMaxLevel(int maxLevel) { MAX_LEVEL = maxLevel; }
-    void setLevel(int level) { g_level = level; }
-    void setStatus(int status) { g_status = status; }
+    vector<unique_ptr<Mahjong>>& getVector() { return g_vector; }	/// g_vector 벡터 getter
+    int getMaxLevel() const { return MAX_LEVEL; } 				    /// MAX_LEVEL getter
+    int getLevel() const { return g_level; } 					    /// g_level getter
+    int getMaxLevel() { return MAX_LEVEL; }						    /// MAX_LEVEL getter
+    int getStatus() const { return g_status; }					    /// g_status 게임 상태 getter
+    vector<unique_ptr<Mahjong>>& getStack() { return g_stack; }     /// g_stack 벡터 getter
+    void setMaxLevel(int maxLevel) { MAX_LEVEL = maxLevel; }		/// MAX_LEVEL setter
+    void setLevel(int level) { g_level = level; }				    /// g_level setter
+    void setStatus(int status) { g_status = status; }               /// g_status 게임 상태 설정 setter
 
 private:
     vector<unique_ptr<Mahjong>> g_vector; // 마작 블록 생성 벡터
@@ -62,5 +81,6 @@ private:
     int g_status;
 };
 
+//! ******************** 비멤버 함수 ********************
 gameLogic* GameLogicInstance();
 Uint32 shakeBlocksCallback(Uint32 interval, void* param);

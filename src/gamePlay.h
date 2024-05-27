@@ -22,6 +22,12 @@ public:
 	void Render();
 	void updateScore(int s);
 
+	//! ************************** gameLogic **************************
+	void increaseLevelLogic();			//~ 레벨 증가 로직
+	void loadMahjongBlocks();			//~ 맞춰야 할 블록 로드
+	void checkAndLoadMahjongBlocks();	//~ 맞춰야 할 블록 체크 및 로드
+	void checkGameStatus();				//~ 게임 상태 체크 (g_status 상태 확인)
+
 protected:
 
 	gameLogic m_gameLogic; //~ 게임 로직 클래스 생성

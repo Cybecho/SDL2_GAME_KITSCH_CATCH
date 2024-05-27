@@ -84,8 +84,7 @@ gamePlay::gamePlay() {
 	setting_SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
 
 	//! ************************** gameLogic **************************
-	//m_gameLogic.LoadMahjongBlocksFromCSV(0, 0, 2);
-	
+	cout << "Level : " << m_gameLogic.getLevel() << endl;
 }
 
 gamePlay::~gamePlay() {
@@ -123,12 +122,17 @@ void gamePlay::HandleEvents() {
 
 				changePhaseToEnding();
 			}
-			//~ r 눌렀을때 gameLogic 초기화 (LoadMahjongFromCSV() 불러오는 역할임)
+			//~ n 눌렀을때 gameLogic 초기화 (LoadMahjongFromCSV() 불러오는 역할임)
 			else if (event.key.keysym.sym == SDLK_n) {
-				srand(time(NULL));
-				int seed = rand() % (m_gameLogic.countFiles("../../res/level/0") / 3);
-				cout << "seed: " << seed << endl;
-				m_gameLogic.LoadMahjongBlocksFromCSV(1, seed,2);
+				if (m_gameLogic.getMaxLevel() > m_gameLogic.getLevel()) 
+				{
+					increaseLevelLogic();
+					loadMahjongBlocks();
+				}
+				else
+				{
+					cout << "MAX LEVEL!" << endl;
+				}
 			}
 			else {
 				Mix_PlayMusic(play_music, -1);
@@ -210,6 +214,7 @@ void gamePlay::Update() {
 
 	//! ************************** gameLogic **************************
 	m_gameLogic.Update(); //~ 게임로직 업데이트 함수 실행
+	checkAndLoadMahjongBlocks(); //~ 맞춰야 할 블록 체크 및 로드
 	//! ************************** ********* **************************
 
 	switch (stage) {
@@ -376,4 +381,48 @@ void gamePlay::updateScore(int s) {
 	score_text2 = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
 	SDL_FreeSurface(tmp_surface);
 	TTF_CloseFont(font);
+}
+
+//! ************************** gamePlay + gameLogic **************************
+
+//~ 레벨 증가 로직
+void gamePlay::increaseLevelLogic() {
+	int prevLevel = m_gameLogic.getLevel();
+	m_gameLogic.setLevel(++prevLevel);
+}
+
+//~ 맞춰야 할 블록 로드
+void gamePlay::loadMahjongBlocks() {
+	/// 기존 블록 제거 (stack영역 제거때문에 쓰는거임)
+	m_gameLogic.ClearGame();
+
+	/// 레벨에 따라 블록 로드
+	string curLevel = "../../res/level/" + to_string(m_gameLogic.getLevel());
+	srand(time(NULL));
+	int seed = rand() % (m_gameLogic.countFiles(curLevel) / 3);					// 시드값 랜덤 생성 (랜덤 / (현재 레벨에 존재하는 파일 수  / 3))
+	cout << "seed: " << seed << endl;
+	m_gameLogic.LoadMahjongBlocksFromCSV(m_gameLogic.getLevel(), seed, 2);
+}
+
+//~ 맞춰야 할 블록 체크 및 로드
+void gamePlay::checkAndLoadMahjongBlocks() {
+	if (m_gameLogic.checkEmptyBlocks()) {
+		increaseLevelLogic();
+		loadMahjongBlocks();
+	}
+}
+
+//~ 게임 상태 체크
+void gamePlay::checkGameStatus() {
+	// g_stack이 더 이상 추가할 수 없는 경우 (예: 최대 스택 크기에 도달한 경우)
+	if (m_gameLogic.getStack().size() >= MAX_STACK) {
+		m_gameLogic.setStatus(STATUS_GAMEOVER);
+		cout << "***************** Game Over *****************" << endl;
+	}
+
+	// MAX_LEVEL에 도달한 경우
+	if (m_gameLogic.getLevel() >= m_gameLogic.getMaxLevel()) {
+		m_gameLogic.setStatus(STATUS_GAMECLEAR);
+		cout << "***************** Game Clear *****************" << endl;
+	}
 }
