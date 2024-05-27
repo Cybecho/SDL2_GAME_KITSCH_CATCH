@@ -1,5 +1,6 @@
 #pragma once
 #include "gameClass.h"
+#include "gameLogic.h"
 //play scene
 
 
@@ -12,26 +13,30 @@ public:
 	virtual ~gamePlay();
 	
 
-	//const Uint32 p_start_time_ms;
-	Uint32 p_last_time_ms;
-	string string_time;
+	
 	void play_timer(int interval);
-	void changePhaseToEnding();
-	void changePhaseToMain();
+	void changePhase(GamePhase status);
 	void HandleEvents();
 	void Update();
 	void Render();
 	void updateScore(int s);
 
-	
-	
+	//! ************************** gameLogic **************************
+	void increaseLevelLogic();			//~ 레벨 증가 로직
+	void loadMahjongBlocks();			//~ 맞춰야 할 블록 로드
+	void checkAndLoadMahjongBlocks();	//~ 맞춰야 할 블록 체크 및 로드
+	void checkGameStatus();				//~ 게임 상태 체크 (g_status 상태 확인)
+
+protected:
+
+	gameLogic m_gameLogic; //~ 게임 로직 클래스 생성
+
+	//const Uint32 p_start_time_ms;
+	Uint32 p_last_time_ms;
+	string string_time;
 	string update_score;
-	
 	//int update_score; //new score
 	//float timebarw;
-
-	
-	
 
 	SDL_Texture* play_bg;
 	SDL_Texture* playground_img;
