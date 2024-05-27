@@ -207,8 +207,7 @@ void gamePlay::Update() {
 
 	//! ************************** gameLogic **************************
 	checkGameStatus();				//~ 게임 상태 체크
-	//m_gameLogic.Update();			//~ 게임로직 업데이트 함수 실행
-	m_gameLogic.LoadMahjongBlocksIfEmpty(m_gameLogic.getLevel()); //~ 문제의 코드
+	m_gameLogic.LoadMahjongBlocksIfEmpty(m_gameLogic.getLevel());
 	m_gameLogic.RemoveSameTypeBlocks();
 	m_gameLogic.AlignStackBlocks();
 	m_gameLogic.UpdateVectorBlocks();
