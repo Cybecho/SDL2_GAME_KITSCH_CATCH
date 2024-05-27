@@ -69,6 +69,7 @@ void gameLogic::HandleEvents() {
 }
 
 void gameLogic::Update() {
+    //~ gamePlay의 Update에서 따로 호출해줌
     /*
     LoadMahjongBlocksIfEmpty(g_level); //~ 문제의 코드
     RemoveSameTypeBlocks();
