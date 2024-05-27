@@ -84,7 +84,7 @@ gamePlay::gamePlay() {
 	setting_SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
 
 	//! ************************** gameLogic **************************
-	m_gameLogic.InitGame(); //~ 생성자 호출시 게임로직 게임 초기화 함수 실행
+	//m_gameLogic.LoadMahjongBlocksFromCSV(0, 0, 2);
 	
 }
 
@@ -115,17 +115,24 @@ void gamePlay::HandleEvents() {
 			break;
 
 		case SDL_KEYDOWN:
+			//~ space 눌렀을때 ending으로 넘어가기
 			if (event.key.keysym.sym == SDLK_SPACE) {
 				isChanged = true;
 				isForcedQuit = true;
 				SDL_Delay(33);
 
 				changePhaseToEnding();
-				
+			}
+			//~ r 눌렀을때 gameLogic 초기화 (LoadMahjongFromCSV() 불러오는 역할임)
+			else if (event.key.keysym.sym == SDLK_n) {
+				srand(time(NULL));
+				int seed = rand() % (m_gameLogic.countFiles("../../res/level/0") / 3);
+				cout << "seed: " << seed << endl;
+				m_gameLogic.LoadMahjongBlocksFromCSV(1, seed,2);
 			}
 			else {
 				Mix_PlayMusic(play_music, -1);
-			}break;
+			}
 
 		default: break;
 		}
