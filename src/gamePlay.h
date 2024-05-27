@@ -15,8 +15,7 @@ public:
 
 	
 	void play_timer(int interval);
-	void changePhaseToEnding();
-	void changePhaseToMain();
+	void changePhase(GamePhase status);
 	void HandleEvents();
 	void Update();
 	void Render();
@@ -66,8 +65,10 @@ protected:
 extern Mix_Music* main_music;
 extern Mix_Music* play_music;
 extern Mix_Music* clear_music;
+extern Mix_Music* gameover_music;
 extern bool cat_status;
 extern bool clear_reset;
+extern bool gameover_reset;
 
 extern Uint32 g_last_time_ms;
 extern bool isChanged;

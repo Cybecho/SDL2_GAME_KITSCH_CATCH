@@ -6,7 +6,6 @@ class gameClass {
 public:
 	gameClass();
 	virtual ~gameClass();
-	//virtual ~gameClass() {}; // {} is implemented in gameClass.cpp
 
 	virtual void HandleEvents() = 0;
 	virtual void Update() = 0;
@@ -36,11 +35,11 @@ public:
 	Timer();
 	~Timer();
 
-	void setInterval(int interval); //ÁÖ±â ¼³Á¤
+	void setInterval(int interval); //ì£¼ê¸° ì„¤ì •
 	void start();
 	void pause();
 	void resume();
-	bool done(); //½Ã°£ ´Ù µÇ¾ú´ÂÁö Á¶»ç
+	bool done(); //ì‹œê°„ ë‹¤ ë˜ì—ˆëŠ”ì§€ ì¡°ì‚¬
 
 private:
 	double interval;
@@ -48,7 +47,7 @@ private:
 	double pauseTicks;
 };
 
-// ImgRect: ÀÌ¹ÌÁö »ı¼º¿¡ ÇÊ¿äÇÑ º¯¼öµéÀ» class·Î ¹­À½
+// ImgRect: ì´ë¯¸ì§€ ìƒì„±ì— í•„ìš”í•œ ë³€ìˆ˜ë“¤ì„ classë¡œ ë¬¶ìŒ
 class ImgClass {
 public:
 	SDL_Surface* surface = 0;
