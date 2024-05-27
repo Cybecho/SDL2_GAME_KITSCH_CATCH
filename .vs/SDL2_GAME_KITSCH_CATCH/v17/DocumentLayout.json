@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B478C75B-F7DE-4DFC-9A5C-B45C9DDA1940}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameEndingGameover.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{B478C75B-F7DE-4DFC-9A5C-B45C9DDA1940}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|solutionrelative:src\\gameEndingGameover.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{DE52ACA6-4D72-4673-8CD3-68E3261912CD}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameEndingGameover.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DE52ACA6-4D72-4673-8CD3-68E3261912CD}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|solutionrelative:src\\gameEndingGameover.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -24,7 +24,7 @@
               "RelativeDocumentMoniker": "src\\gameEndingGameover.cpp",
               "ToolTip": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameEndingGameover.cpp",
               "RelativeToolTip": "src\\gameEndingGameover.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAADwvx4AAAAmAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAADwvyAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-05-25T06:19:16.499Z",
               "EditorCaption": ""
