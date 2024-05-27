@@ -87,5 +87,5 @@ private:
 };
 
 //! ******************** 비멤버 함수 ********************
-gameLogic* GameLogicInstance();
-Uint32 shakeBlocksCallback(Uint32 interval, void* param);
+gameLogic* GameLogicInstance();                             //~ 게임 로직 인스턴스 생성 함수
+Uint32 shakeBlocksCallback(Uint32 interval, void* param);   //~ 블록 흔들기 콜백 함수

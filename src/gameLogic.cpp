@@ -140,6 +140,7 @@ void gameLogic::resetGame() {
 
 //! ******************** 마작 블록 생성 및 관리 함수 ********************
 
+/// shake 로직 있음 (보완 필요)
 void gameLogic::LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
     g_vector.clear();
 
@@ -197,12 +198,14 @@ void gameLogic::LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
         }
     }
 
+    /*
     ///! 대각선 방향으로 블록 흔들림 효과 적용
     int totalBlocks = g_vector.size();
     for (int i = 0; i < totalBlocks; ++i) {
         int delay = i * 3; // 0.03초(3ms) 지연 시간
         SDL_AddTimer(delay, shakeBlocksCallback, new int(i));
     }
+    */
 }
 
 void gameLogic::LoadMahjongBlocksIfEmpty(int level) {
@@ -253,6 +256,7 @@ void gameLogic::vector2stack(vector<unique_ptr<Mahjong>>::iterator it) {
     cout << "g_blocks size: " << g_vector.size() - countEmptyBlocks() << "| g_stack size: " << g_stack.size() << endl;
 }
 
+/// shake 로직 있음 (보완 필요)
 void gameLogic::RemoveSameTypeBlocks() {
     map<string, vector<int>> typeIndices;
     for (int i = 0; i < g_stack.size(); ++i) {
@@ -285,11 +289,13 @@ void gameLogic::RemoveSameTypeBlocks() {
     }
 
     // 블록이 제거된 경우에만 shakeBlocks() 호출
+    /*
     if (blocksRemoved) {
         for (auto& block : g_stack) {
             block->shakeBlocks(10);
         }
     }
+    */
 }
 
 void gameLogic::AlignStackBlocks() {
