@@ -9,16 +9,26 @@ class gameMain : public gameClass {
 public:
 	gameMain();
 	virtual ~gameMain();
-	void changePhaseToPlay();
 	void HandleEvents();
 	void Update();
 	void Render();
 	
+	void changePhaseToPlay();
+	void loadImgs(); //load and init images
+	void loadSounds();
+	void renderScore();
+	void renderButtons();
+
+	void MouseButtonEvents(); //all mouse button events
+	
+
+
+	SDL_Event event;
+
 	bool isRule;
 
-	
 
-	
+protected:
 	SDL_Texture* main_bg;
 	SDL_Texture* cat;
 	SDL_Texture* inter_bt;

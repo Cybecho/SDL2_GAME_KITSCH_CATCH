@@ -14,12 +14,23 @@ public:
 	
 
 	
-	void play_timer(int interval);
 	void changePhase(GamePhase status);
 	void HandleEvents();
 	void Update();
 	void Render();
 	void updateScore(int s);
+
+
+	void loadIMGs();
+	void loadSounds();
+	void gotoHome();
+	void updateTimer();
+	void MouseButtonEvents();
+
+	void renderCat();
+	void renderSetting();
+
+	SDL_Event event;
 
 	//! ************************** gameLogic **************************
 	void increaseLevelLogic();			//~ 레벨 증가 로직

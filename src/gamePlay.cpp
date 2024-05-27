@@ -16,6 +16,205 @@ gamePlay::gamePlay() {
 	isSetting = false;
 	isVolumeOff = false;
 
+	loadIMGs();
+
+	loadSounds();
+
+	//! ************************** gameLogic **************************
+	cout << "Level : " << m_gameLogic.getLevel() << endl;
+}
+
+gamePlay::~gamePlay() {
+	Mix_FreeMusic(play_music);
+	Mix_FreeChunk(setting_SoundEffect);
+	SDL_DestroyTexture(score_text2);
+	SDL_DestroyTexture(play_bg);
+	SDL_DestroyTexture(cat);
+	SDL_DestroyTexture(cat2);
+	SDL_DestroyTexture(setting);
+	SDL_Quit();
+	TTF_Quit();
+}
+
+void gamePlay::HandleEvents() {
+	//SDL_Event event;
+	if (SDL_PollEvent(&event)) {
+		switch (event.type) {
+
+		case SDL_QUIT:
+			g_flag_running = false;
+			break;
+
+		case SDL_KEYDOWN:
+			//~ space 눌렀을때 ending으로 넘어가기
+			if (event.key.keysym.sym == SDLK_SPACE) {
+				isChanged = true;
+				isForcedQuit = true;
+				SDL_Delay(33);
+				changePhase(PHASE_ENDING_CLEAR);
+			}
+			//~ n 눌렀을때 gameLogic 초기화 (LoadMahjongFromCSV() 불러오는 역할임)
+			else if (event.key.keysym.sym == SDLK_n) {
+				if (m_gameLogic.getMaxLevel() > m_gameLogic.getLevel())
+				{
+					increaseLevelLogic();
+					loadMahjongBlocks();
+				}
+				else
+				{
+					cout << "MAX LEVEL!" << endl;
+				}
+			}
+			else {
+				Mix_PlayMusic(play_music, -1);
+			}
+
+		default: break;
+		}
+
+
+		MouseButtonEvents();
+	}
+	//! ************************** gameLogic **************************
+	m_gameLogic.HandleEvents(); //~ 게임로직 이벤트 처리 함수 실행
+}
+
+void gamePlay::Update() {
+
+	//! ************************** gameLogic **************************
+	checkGameStatus();				//~ 게임 상태 체크
+	m_gameLogic.LoadMahjongBlocksIfEmpty(m_gameLogic.getLevel());
+	m_gameLogic.RemoveSameTypeBlocks();
+	m_gameLogic.AlignStackBlocks();
+	m_gameLogic.UpdateVectorBlocks();
+	m_gameLogic.UpdateStackBlocks();
+	m_gameLogic.UpdateBonks();
+	m_gameLogic.printStatusChange();//~ 게임 상태 출력
+	checkAndLoadMahjongBlocks();	//~ 맞춰야 할 블록 체크 및 로드
+	//! ************************** ********* **************************
+
+	switch (stage) {
+	default: limit_sec = LIMIT_TIME; break; //~ 제한시간 설정 (include.h 에 명시되어있음)
+	}
+	string score;
+	updateScore(plus_score_int);
+
+	if (isForcedQuit) {
+		isForcedQuit = false;
+	}
+
+
+	updateTimer(); //시간 관리
+
+	
+
+	last_sec = limit_sec - sec;
+}
+
+void gamePlay::Render() {
+	SDL_RenderCopy(g_renderer, play_bg, NULL, NULL);
+
+
+	///time bar
+	SDL_SetRenderDrawColor(g_renderer, 255, 0, 0, 255); //red
+	SDL_RenderFillRect(g_renderer, &timebar_rect);
+
+
+	renderCat();
+
+	/// 스코프로 제한해둔 점수부분 렌더링
+	{ //score text
+		SDL_Rect tmp_r;
+		tmp_r.x = g_window_margin + 80;
+		tmp_r.y = 37;
+		tmp_r.w = score_rect.w * 0.8;
+		tmp_r.h = score_rect.h * 0.8;
+		SDL_RenderCopy(g_renderer, score_text2, &score_rect, &tmp_r);
+	}
+
+	//! ************************** gameLogic **************************
+	m_gameLogic.Render(); //~ 게임로직 렌더 함수 실행
+	//! ************************** ********* **************************
+
+	renderSetting();
+
+	SDL_RenderPresent(g_renderer);
+}
+
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+// 
+//~ 게임 페이즈 변경
+void gamePlay::changePhase(GamePhase status) {
+	g_current_game_phase = status;
+	Mix_HaltMusic();
+	m_gameLogic.resetGame(); /// gameLogic 초기화
+
+	switch (status) {
+	case PHASE_ENDING_CLEAR:
+		clear_reset = true;
+		Mix_PlayMusic(clear_music, -1);
+		break;
+	case PHASE_ENDING_GAMEOVER:
+		gameover_reset = true;
+		Mix_PlayMusic(gameover_music, -1);
+		break;
+	case PHASE_MAIN:
+		Mix_PlayMusic(main_music, -1);
+		break;
+	case PHASE_PLAYING:
+		Mix_PlayMusic(play_music, -1);
+		break;
+	default:
+		break;
+	}
+}
+
+
+
+//~ 점수 업데이트
+void gamePlay::updateScore(int s) {
+	string front_score;
+	update_score = to_string(s);
+
+	//���� ���ڸ����� ����
+	if (s == 0) {
+		front_score = "000";
+		update_score = front_score + update_score;
+	}
+	else if (s > 0 && s < 10) {
+		front_score = "000";
+		update_score = front_score + update_score;
+	}
+	else if (s >= 10 && s < 100) {
+		front_score = "00";
+		update_score = front_score + update_score;
+	}
+	else if (s >= 100 && s < 1000) {
+		front_score = "0";
+		update_score = front_score + update_score;
+	}
+	else { update_score = to_string(s); }
+
+
+	TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
+	SDL_Color white = { 255,255,255,0 };
+	SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, update_score.c_str(), white);
+	//to_string(score).c_str()
+	score_rect.x = 0;
+	score_rect.y = 0;
+	score_rect.w = tmp_surface->w;
+	score_rect.h = tmp_surface->h;
+
+	score_text2 = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
+	SDL_FreeSurface(tmp_surface);
+	TTF_CloseFont(font);
+}
+
+
+
+void gamePlay::loadIMGs() {
 	// BG
 	SDL_Surface* bg_surface = IMG_Load("../../res/game page/game_background.png");
 	play_bg = SDL_CreateTextureFromSurface(g_renderer, bg_surface);
@@ -65,119 +264,24 @@ gamePlay::gamePlay() {
 		SDL_FreeSurface(set_surface);
 
 	}
+}
 
+
+void gamePlay::loadSounds() {
 	//music
 	play_music = Mix_LoadMUS("../../res/testRes/testBGM3.mp3");
 	if (play_music == 0) {
 		cout << "Mix_LoadMUS(\"testBGM2.mp3\"): " << Mix_GetError() << endl;
 	}
-	//Mix_VolumeMusic(128);
-	//Mix_PlayMusic(play_music, -1);
 
 	setting_SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
-
-	//! ************************** gameLogic **************************
-	cout << "Level : " << m_gameLogic.getLevel() << endl;
 }
 
-gamePlay::~gamePlay() {
-	Mix_FreeMusic(play_music);
-	Mix_FreeChunk(setting_SoundEffect);
-	//SDL_DestroyTexture(exp_text);
-	SDL_DestroyTexture(score_text2);
-	SDL_DestroyTexture(play_bg);
-	SDL_DestroyTexture(cat);
-	SDL_DestroyTexture(cat2);
-	SDL_DestroyTexture(setting);
-	//SDL_DestroyTexture(setting_bt);
-	//SDL_DestroyTexture(timebar_bg);
-	//SDL_DestroyTexture(stack_img);
-	//SDL_DestroyTexture(playground_img);
-	SDL_Quit();
-	TTF_Quit();
-}
-
-void gamePlay::HandleEvents() {
-	SDL_Event event;
-	if (SDL_PollEvent(&event)) {
-		switch (event.type) {
-
-		case SDL_QUIT:
-			g_flag_running = false;
-			break;
-
-		case SDL_KEYDOWN:
-			//~ space 눌렀을때 ending으로 넘어가기
-			if (event.key.keysym.sym == SDLK_SPACE) {
-				isChanged = true;
-				isForcedQuit = true;
-				SDL_Delay(33);
-
-				changePhase(PHASE_ENDING_CLEAR);
-			}
-			//~ n 눌렀을때 gameLogic 초기화 (LoadMahjongFromCSV() 불러오는 역할임)
-			else if (event.key.keysym.sym == SDLK_n) {
-				if (m_gameLogic.getMaxLevel() > m_gameLogic.getLevel())
-				{
-					increaseLevelLogic();
-					loadMahjongBlocks();
-				}
-				else
-				{
-					cout << "MAX LEVEL!" << endl;
-				}
-			}
-			else {
-				Mix_PlayMusic(play_music, -1);
-			}
-
-		default: break;
-		}
 
 
-		if (event.type == SDL_MOUSEBUTTONDOWN) {
-			if (event.button.button == SDL_BUTTON_LEFT) {
-				int mouseX = event.button.x;
-				int mouseY = event.button.y;
 
-
-				//setting key
-				if (isSetting == false && mouseX > setting_bt_rect.x && mouseY > setting_bt_rect.y &&
-					mouseX < setting_bt_rect.x + setting_bt_rect.w && mouseY < setting_bt_rect.y + setting_bt_rect.h) {
-					isSetting = !isSetting;
-					Mix_PlayChannel(-1, setting_SoundEffect, 0);
-				}
-
-				if (isSetting == true) {
-					if (mouseX > set_Xkey_rect.x && mouseY > set_Xkey_rect.y &&
-						mouseX < set_Xkey_rect.x + set_Xkey_rect.w && mouseY < set_Xkey_rect.y + set_Xkey_rect.h) {
-						isSetting = !isSetting;
-						Mix_PlayChannel(-1, setting_SoundEffect, 0);
-					}
-
-					if (mouseX > volume_bt_rect.x && mouseY > volume_bt_rect.y &&
-						mouseX < volume_bt_rect.x + volume_bt_rect.w && mouseY < volume_bt_rect.y + volume_bt_rect.h) {
-						isVolumeOff = !isVolumeOff;
-						Mix_PlayChannel(-1, setting_SoundEffect, 0);
-						if (isVolumeOff == true) {
-							Mix_PauseMusic();
-						}
-						else if (isVolumeOff == false) {
-							Mix_ResumeMusic();
-						}
-					}
-
-					//resume
-					if (mouseX > resume_rect.x && mouseY > resume_rect.y &&
-						mouseX < resume_rect.x + resume_rect.w && mouseY < resume_rect.y + resume_rect.h) {
-						isSetting = !isSetting;
-						Mix_PlayChannel(-1, setting_SoundEffect, 0);
-					}
-
-					//go to home
-					if (mouseX > home_rect.x && mouseY > home_rect.y &&
-						mouseX < home_rect.x + home_rect.w && mouseY < home_rect.y + home_rect.h) {
-						Mix_PlayChannel(-1, setting_SoundEffect, 0);
+void gamePlay::gotoHome() {
+	Mix_PlayChannel(-1, setting_SoundEffect, 0);
 						isSetting = false;
 						isForcedQuit = true;
 						string score;
@@ -190,46 +294,9 @@ void gamePlay::HandleEvents() {
 						isChanged = true;
 						SDL_Delay(33);
 
-						changePhase(PHASE_MAIN); //~ 메인으로 페이즈 전환
-					}
-				}
-			}
-			else if (isSetting == false && event.button.button == SDL_BUTTON_RIGHT) {
-				plus_score_int += 10;
-			}
-		}
-	}
-	//! ************************** gameLogic **************************
-	m_gameLogic.HandleEvents(); //~ 게임로직 이벤트 처리 함수 실행
 }
 
-void gamePlay::Update() {
-
-	//! ************************** gameLogic **************************
-	checkGameStatus();				//~ 게임 상태 체크
-	m_gameLogic.LoadMahjongBlocksIfEmpty(m_gameLogic.getLevel());
-	m_gameLogic.RemoveSameTypeBlocks();
-	m_gameLogic.AlignStackBlocks();
-	m_gameLogic.UpdateVectorBlocks();
-	m_gameLogic.UpdateStackBlocks();
-	m_gameLogic.UpdateBonks();
-	m_gameLogic.printStatusChange();//~ 게임 상태 출력
-	checkAndLoadMahjongBlocks();	//~ 맞춰야 할 블록 체크 및 로드
-	//! ************************** ********* **************************
-
-	switch (stage) {
-	default: limit_sec = LIMIT_TIME; break; //~ 제한시간 설정 (include.h 에 명시되어있음)
-	}
-	string score;
-	updateScore(plus_score_int);
-
-	if (isForcedQuit) {
-		isForcedQuit = false;
-	}
-
-
-
-
+void gamePlay::updateTimer() {
 	if (isChanged == false) {
 
 		if (isSetting) {}
@@ -255,23 +322,10 @@ void gamePlay::Update() {
 	else if (isChanged) {
 		timebar_rect.w = 540;
 
-
-
-
 	}
-
-	last_sec = limit_sec - sec;
 }
 
-void gamePlay::Render() {
-	SDL_RenderCopy(g_renderer, play_bg, NULL, NULL);
-
-
-	///time bar
-	SDL_SetRenderDrawColor(g_renderer, 255, 0, 0, 255); //red
-	SDL_RenderFillRect(g_renderer, &timebar_rect);
-
-
+void gamePlay::renderCat() {
 	/// 고양이
 	if (cat_status == false) {
 		//cat image 1
@@ -292,21 +346,9 @@ void gamePlay::Render() {
 		tmp_r1.h = cat_rect2.h * 0.45;
 		SDL_RenderCopy(g_renderer, cat2, &cat_rect2, &tmp_r1);
 	}
+}
 
-	/// 스코프로 제한해둔 점수부분 렌더링
-	{ //score text
-		SDL_Rect tmp_r;
-		tmp_r.x = g_window_margin + 80;
-		tmp_r.y = 37;
-		tmp_r.w = score_rect.w * 0.8;
-		tmp_r.h = score_rect.h * 0.8;
-		SDL_RenderCopy(g_renderer, score_text2, &score_rect, &tmp_r);
-	}
-
-	//! ************************** gameLogic **************************
-	m_gameLogic.Render(); //~ 게임로직 렌더 함수 실행
-	//! ************************** ********* **************************
-
+void gamePlay::renderSetting() {
 	/// 설정 버튼
 	if (isSetting == true) {
 		SDL_Rect tmp_r;
@@ -323,83 +365,64 @@ void gamePlay::Render() {
 			SDL_RenderCopy(g_renderer, volume_bt_on, &volume_rect, &volume_rect);
 		}
 	}
-
-	SDL_RenderPresent(g_renderer);
 }
 
+void gamePlay::MouseButtonEvents() {
+	
+	if (event.type == SDL_MOUSEBUTTONDOWN) {
+		if (event.button.button == SDL_BUTTON_LEFT) {
+			int mouseX = event.button.x;
+			int mouseY = event.button.y;
 
-//~ 게임 페이즈 변경
-void gamePlay::changePhase(GamePhase status) {
-	g_current_game_phase = status;
-	Mix_HaltMusic();
-	m_gameLogic.resetGame(); /// gameLogic 초기화
 
-	switch (status) {
-	case PHASE_ENDING_CLEAR:
-		clear_reset = true;
-		Mix_PlayMusic(clear_music, -1);
-		break;
-	case PHASE_ENDING_GAMEOVER:
-		gameover_reset = true;
-		Mix_PlayMusic(gameover_music, -1);
-		break;
-	case PHASE_MAIN:
-		Mix_PlayMusic(main_music, -1);
-		break;
-	case PHASE_PLAYING:
-		Mix_PlayMusic(play_music, -1);
-		break;
-	default:
-		break;
+			//setting key
+			if (isSetting == false && mouseX > setting_bt_rect.x && mouseY > setting_bt_rect.y &&
+				mouseX < setting_bt_rect.x + setting_bt_rect.w && mouseY < setting_bt_rect.y + setting_bt_rect.h) {
+				isSetting = !isSetting;
+				Mix_PlayChannel(-1, setting_SoundEffect, 0);
+			}
+
+			if (isSetting == true) {
+				if (mouseX > set_Xkey_rect.x && mouseY > set_Xkey_rect.y &&
+					mouseX < set_Xkey_rect.x + set_Xkey_rect.w && mouseY < set_Xkey_rect.y + set_Xkey_rect.h) {
+					isSetting = !isSetting;
+					Mix_PlayChannel(-1, setting_SoundEffect, 0);
+				}
+
+				if (mouseX > volume_bt_rect.x && mouseY > volume_bt_rect.y &&
+					mouseX < volume_bt_rect.x + volume_bt_rect.w && mouseY < volume_bt_rect.y + volume_bt_rect.h) {
+					isVolumeOff = !isVolumeOff;
+					Mix_PlayChannel(-1, setting_SoundEffect, 0);
+					if (isVolumeOff == true) {
+						Mix_PauseMusic();
+					}
+					else if (isVolumeOff == false) {
+						Mix_ResumeMusic();
+					}
+				}
+
+				//resume
+				if (mouseX > resume_rect.x && mouseY > resume_rect.y &&
+					mouseX < resume_rect.x + resume_rect.w && mouseY < resume_rect.y + resume_rect.h) {
+					isSetting = !isSetting;
+					Mix_PlayChannel(-1, setting_SoundEffect, 0);
+				}
+
+				//go to home
+				if (mouseX > home_rect.x && mouseY > home_rect.y &&
+					mouseX < home_rect.x + home_rect.w && mouseY < home_rect.y + home_rect.h) {
+					gotoHome();
+
+					changePhase(PHASE_MAIN); //~ 메인으로 페이즈 전환
+				}
+			}
+		}
+		else if (isSetting == false && event.button.button == SDL_BUTTON_RIGHT) {
+			plus_score_int += 10;
+		}
 	}
 }
 
-//~ 제한시간바 관련 (미구현)
-void gamePlay::play_timer(int interval) {
-	//90s = 90000
-	// 
-	//const Uint32* pointer = &g_last_time_ms;
-
-}
-
-//~ 점수 업데이트
-void gamePlay::updateScore(int s) {
-	string front_score;
-	update_score = to_string(s);
-
-	//���� ���ڸ����� ����
-	if (s == 0) {
-		front_score = "000";
-		update_score = front_score + update_score;
-	}
-	else if (s > 0 && s < 10) {
-		front_score = "000";
-		update_score = front_score + update_score;
-	}
-	else if (s >= 10 && s < 100) {
-		front_score = "00";
-		update_score = front_score + update_score;
-	}
-	else if (s >= 100 && s < 1000) {
-		front_score = "0";
-		update_score = front_score + update_score;
-	}
-	else { update_score = to_string(s); }
-
-
-	TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
-	SDL_Color white = { 255,255,255,0 };
-	SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, update_score.c_str(), white);
-	//to_string(score).c_str()
-	score_rect.x = 0;
-	score_rect.y = 0;
-	score_rect.w = tmp_surface->w;
-	score_rect.h = tmp_surface->h;
-
-	score_text2 = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
-	SDL_FreeSurface(tmp_surface);
-	TTF_CloseFont(font);
-}
 
 //! ************************** gamePlay + gameLogic **************************
 
