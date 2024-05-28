@@ -17,16 +17,20 @@ public:
 	void HandleEvents();
 	void Update();
 	void Render();
+	void resetGame();
 
 	//! ********************** 페이즈 전환 **********************
 	void changePhase(GamePhase status);
 	void gotoHome();
 
 	//! ********************** 점수 및 타이머 **********************
+	void resetTimer();
 	void stageLimitTime();
 	void updateScore(int s);
 	void updateTimer();
 	void checkQuit();
+	void addSeconds(int seconds);
+	void changeTimebar();
 
 	//! ********************** 데이터 import 및 Rendering **********************
 	void loadIMGs();
@@ -42,6 +46,10 @@ public:
 	void loadMahjongBlocks();			//~ 맞춰야 할 블록 로드
 	void checkAndLoadMahjongBlocks();	//~ 맞춰야 할 블록 체크 및 로드
 	void checkGameStatus();				//~ 게임 상태 체크 (g_status 상태 확인)
+
+	//! ************************** getter & setter **************************
+	int getLastSec() const { return last_sec; }
+	void setLastSec(int sec) { last_sec = sec; }
 
 protected:
 	SDL_Event event;
@@ -77,6 +85,12 @@ protected:
 
 	Mix_Chunk* setting_SoundEffect;
 
+	int stage;
+	int count_;
+	int sec; //play second
+	int limit_sec;
+	int last_sec; //last second (stage second)
+
 };
 
 extern Mix_Music* main_music;
@@ -92,11 +106,6 @@ extern bool isChanged;
 extern bool isForcedQuit;
 
 extern SDL_Rect timebar_rect;
-extern int stage;
-extern int count_;
-extern int sec; //play second
-extern int limit_sec;
-extern int last_sec; //last second (stage second)
 extern string score;
 
 extern string original_score;

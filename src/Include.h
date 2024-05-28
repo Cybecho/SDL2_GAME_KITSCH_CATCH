@@ -1,15 +1,16 @@
-#pragma once               // 헤더가드 대신 pragma once 사용
-#define MOVE_SPEED 20.0f   // 이동 속도
-#define WINDOW_WIDTH 540   // 윈도우 너비
-#define WINDOW_HEIGHT 960  // 윈도우 높이
-#define PIVOT_X 20         // 고정 피벗 x좌표
-#define PIVOT_Y 440        // 고정 피벗 y좌표
+#pragma once                // 헤더가드 대신 pragma once 사용
+#define MOVE_SPEED 20.0f    // 이동 속도
+#define WINDOW_WIDTH 540    // 윈도우 너비
+#define WINDOW_HEIGHT 960   // 윈도우 높이
+#define PIVOT_X 20          // 고정 피벗 x좌표
+#define PIVOT_Y 440         // 고정 피벗 y좌표
 #define PIVOT_Y2 10 	    // 고정 피벗 y좌표 (vector2stack , Align Stack Block 에서 사용함)
-#define g_window_margin 20 // 윈도우 마진
-#define BLOCK_SIZE 100     // 블록 기본 크기
-#define BLOCK_SCALE 1.0f   // 블록 크기 배율
+#define g_window_margin 20  // 윈도우 마진
+#define BLOCK_SIZE 100      // 블록 기본 크기
+#define BLOCK_SCALE 1.0f    // 블록 크기 배율
 #define MAX_STACK 7 	    // 최대 스택 블록 수
-#define LIMIT_TIME 100      // 제한 시간
+#define LIMIT_TIME 30       // 제한 시간
+#define ADD_TIME 1 	        // 추가 시간
 
 //! Game Phases Enum
 enum GamePhase

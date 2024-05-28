@@ -11,6 +11,8 @@ gameLogic::gameLogic() {
     text_score_ = nullptr;
     game_font_ = nullptr;
     g_level = 0;
+    g_score = 0;
+    isPop = false;
     MAX_LEVEL = countDir("../../res/level") - 1;
 
     LoadMahjongBlocksFromCSV(0, 0, 2); // 초기 레벨 로딩)
@@ -128,15 +130,17 @@ void gameLogic::ClearGame() {
 
 void gameLogic::resetGame() {
     g_status = STATUS_GAMEPLAYING;
+    g_prevStatus = STATUS_GAMEPLAYING; // 추가: g_prevStatus 초기화
     g_level = 0;
     g_score = 0;
+    isPop = false;
     g_vector.clear();
     g_stack.clear();
     g_bonks.clear();
 
-    int seed = rand() % (countFiles("../../res/level/0") / 3);  //~ 현재 레벨에서 발생 가능한 시드 (전체파일수 / 3)
+    int seed = rand() % (countFiles("../../res/level/0") / 3);
     cout << "seed: " << seed << endl;
-    LoadMahjongBlocksFromCSV(g_level, seed, 2); // 초기 레벨 로딩
+    LoadMahjongBlocksFromCSV(g_level, seed, 2);
 }
 
 //! ******************** 마작 블록 생성 및 관리 함수 ********************
@@ -289,6 +293,7 @@ void gameLogic::RemoveSameTypeBlocks() {
                 }
             }
             cout << "Score: " << g_score << endl;
+            setIsPop(true); //~ gamePlay 의 Update에서 따로 false로 초기화해줌
         }
     }
 

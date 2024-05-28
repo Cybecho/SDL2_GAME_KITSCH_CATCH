@@ -1,25 +1,23 @@
 #include "gamePlay.h"
 
 extern SDL_Texture* exp_text; //"EXP" text
-string score;
 
 //! ******************** 생성자 소멸자 ******************** 
 
 gamePlay::gamePlay() {
-
+	
+	limit_sec = LIMIT_TIME;
 	isForcedQuit = false;
 	isChanged = false;
 	sec = 0;
 	count_ = 0;
 	stage = 1;
 
-
 	//isChanged = false;
 	isSetting = false;
 	isVolumeOff = false;
 
 	loadIMGs();
-
 	loadSounds();
 
 	//! ************************** gameLogic **************************
@@ -87,15 +85,19 @@ void gamePlay::HandleEvents() {
 void gamePlay::Update() {
 
 	//! ************************** gameLogic **************************
-	checkGameStatus();				//~ 게임 상태 체크
+	checkGameStatus();					//~ 게임 상태 체크
 	m_gameLogic.LoadMahjongBlocksIfEmpty(m_gameLogic.getLevel());
 	m_gameLogic.RemoveSameTypeBlocks();
+	if (m_gameLogic.getIsPop()) {
+		addSeconds(ADD_TIME);
+		m_gameLogic.setIsPop(false); //~ RemoveSameTypeBlocks()에서 true가 된 isPop 을 다시 fasle 처리
+	}
 	m_gameLogic.AlignStackBlocks();
 	m_gameLogic.UpdateVectorBlocks();
 	m_gameLogic.UpdateStackBlocks();
 	m_gameLogic.UpdateBonks();
-	m_gameLogic.printStatusChange();//~ 게임 상태 출력
-	checkAndLoadMahjongBlocks();	//~ 맞춰야 할 블록 체크 및 로드
+	m_gameLogic.printStatusChange();	//~ 게임 상태 출력
+	checkAndLoadMahjongBlocks();		//~ 맞춰야 할 블록 체크 및 로드
 	//! ************************** ********* **************************
 
 	stageLimitTime();						//~ 제한시간 설정
@@ -134,13 +136,19 @@ void gamePlay::Render() {
 	SDL_RenderPresent(g_renderer);
 }
 
+void gamePlay::resetGame() {
+	m_gameLogic.resetGame();
+	resetTimer();
+	isChanged = false;
+	isForcedQuit = false;
+}
 
 //! ********************** 페이즈 전환 **********************
 //~ 게임 페이즈 변경
 void gamePlay::changePhase(GamePhase status) {
 	g_current_game_phase = status;
 	Mix_HaltMusic();
-	m_gameLogic.resetGame(); /// gameLogic 초기화
+	m_gameLogic.resetGame(); // gameLogic 초기화
 
 	switch (status) {
 	case PHASE_ENDING_CLEAR:
@@ -155,6 +163,7 @@ void gamePlay::changePhase(GamePhase status) {
 		Mix_PlayMusic(main_music, -1);
 		break;
 	case PHASE_PLAYING:
+		resetTimer(); // 타이머 초기화
 		Mix_PlayMusic(play_music, -1);
 		break;
 	default:
@@ -176,11 +185,18 @@ void gamePlay::gotoHome() {
 	ofs.close();
 	isChanged = true;
 	SDL_Delay(33);
-
+	resetGame(); // 게임 초기화
 }
 
 
 //! ********************** 점수 및 타이머 **********************
+//~ 타이머 리셋
+void gamePlay::resetTimer() {
+	sec = 0;
+	last_sec = limit_sec;
+	changeTimebar();
+}
+
 //~ 제한시간 설정 (LIMIT_TIME은 include.h 에 명시되어있음)
 void gamePlay::stageLimitTime() {
 	switch (stage) {
@@ -229,31 +245,20 @@ void gamePlay::updateScore(int s) {
 
 //~ 타이머 업데이트
 void gamePlay::updateTimer() {
-	if (isChanged == false) {
+	if (!isChanged && !isSetting) {
+		count_ += 1;
+		if (count_ % 33 == 0) {
+			sec += 1;
+			last_sec = limit_sec - sec;
+			changeTimebar();
 
-		if (isSetting) {}
-		else {
-			count_ += 1;
-			if (count_ != 0 && count_ % 33 == 0) {
-				sec += 1; //play second
-				timebar_rect.w = timebar_rect.w - 540 / limit_sec;
-
-				if (last_sec == 0) { //~ 시간이 다 되었을 때
-					SDL_Delay(1000);
-					isChanged = true;
-					//isForcedQuit = true;
-					changePhase(PHASE_ENDING_GAMEOVER); //~ 게임오버로 페이즈 전환
-
-				}
-
+			if (last_sec == 0) {
+				SDL_Delay(1000);
+				isChanged = true;
+				changePhase(PHASE_ENDING_GAMEOVER);
 			}
 		}
 	}
-	else if (isChanged) {
-		timebar_rect.w = 540;
-	}
-
-	last_sec = limit_sec - sec;
 }
 
 //~ 강제종료 체크
@@ -261,6 +266,18 @@ void gamePlay::checkQuit() {
 	if (isForcedQuit) {
 		isForcedQuit = false;
 	}
+}
+
+//~ gameLogic의 isPop이 true일 경우, 시간 추가
+void gamePlay::addSeconds(int seconds) {
+	sec = max(0, sec - seconds);
+	last_sec = limit_sec - sec;
+	changeTimebar();
+}
+
+//~ 실시간 타임바 렌더링
+void gamePlay::changeTimebar() {
+	timebar_rect.w = 540 * (static_cast<double>(last_sec) / limit_sec);
 }
 
 
