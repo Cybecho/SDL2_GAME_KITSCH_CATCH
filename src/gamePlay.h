@@ -23,8 +23,10 @@ public:
 	void gotoHome();
 
 	//! ********************** 점수 및 타이머 **********************
+	void stageLimitTime();
 	void updateScore(int s);
 	void updateTimer();
+	void checkQuit();
 
 	//! ********************** 데이터 import 및 Rendering **********************
 	void loadIMGs();
@@ -35,8 +37,6 @@ public:
 	//! ********************** 마우스 이벤트 **********************
 	void MouseButtonEvents();
 
-	SDL_Event event;
-
 	//! ************************** gameLogic **************************
 	void increaseLevelLogic();			//~ 레벨 증가 로직
 	void loadMahjongBlocks();			//~ 맞춰야 할 블록 로드
@@ -44,7 +44,7 @@ public:
 	void checkGameStatus();				//~ 게임 상태 체크 (g_status 상태 확인)
 
 protected:
-
+	SDL_Event event;
 	gameLogic m_gameLogic; //~ 게임 로직 클래스 생성
 
 	//const Uint32 p_start_time_ms;
@@ -76,6 +76,7 @@ protected:
 	SDL_Rect score_rect;
 
 	Mix_Chunk* setting_SoundEffect;
+
 };
 
 extern Mix_Music* main_music;
@@ -96,6 +97,7 @@ extern int count_;
 extern int sec; //play second
 extern int limit_sec;
 extern int last_sec; //last second (stage second)
+extern string score;
 
 extern string original_score;
 extern int org_score_int;

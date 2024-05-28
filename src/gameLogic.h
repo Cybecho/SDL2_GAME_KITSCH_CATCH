@@ -48,7 +48,7 @@ public:
     int countFiles(const string& path);
 
     //! 점수 및 게임상태 관련 함수
-    void UpdateScore(int score);
+    int UpdateScore(int score);
     void printStatusChange();
 
     //! Getters and Setters
@@ -58,12 +58,14 @@ public:
     int getMaxLevel() { return MAX_LEVEL; }						    /// MAX_LEVEL getter
     int getStatus() const { return g_status; }					    /// g_status 게임 상태 getter
     int getPrevStatus() const { return g_prevStatus; }			    /// g_prevStatus 이전 게임 상태 getter
+    int getScore() const { return g_score; }					    /// m_score 이 pop되어 합산된 점수 모음 getter
 
     vector<unique_ptr<Mahjong>>& getStack() { return g_stack; }     /// g_stack 벡터 getter
     void setMaxLevel(int maxLevel) { MAX_LEVEL = maxLevel; }		/// MAX_LEVEL setter
     void setLevel(int level) { g_level = level; }				    /// g_level setter
     void setStatus(int status) { g_status = status; }               /// g_status 게임 상태 설정 setter
     void setPrevStatus(int prevStatus) { g_prevStatus = prevStatus;}/// g_prevStatus 이전 게임 상태 setter
+    void setScore(int score) { g_score = score; }				    /// m_score 이 pop되어 합산된 점수 모음 setter
 
 private:
     vector<unique_ptr<Mahjong>> g_vector; // 마작 블록 생성 벡터
@@ -84,6 +86,7 @@ private:
     int MAX_LEVEL;      /// 최대 레벨
     int g_status;       /// 게임 상태
     int g_prevStatus;   /// 이전 게임 상태
+    int g_score;        /// m_score 이 pop되어 합산된 점수 모음
 };
 
 //! ******************** 비멤버 함수 ********************

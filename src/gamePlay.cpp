@@ -1,6 +1,7 @@
 #include "gamePlay.h"
 
 extern SDL_Texture* exp_text; //"EXP" text
+string score;
 
 //! ******************** 생성자 소멸자 ******************** 
 
@@ -97,22 +98,10 @@ void gamePlay::Update() {
 	checkAndLoadMahjongBlocks();	//~ 맞춰야 할 블록 체크 및 로드
 	//! ************************** ********* **************************
 
-	switch (stage) {
-	default: limit_sec = LIMIT_TIME; break; //~ 제한시간 설정 (include.h 에 명시되어있음)
-	}
-	string score;
-	updateScore(plus_score_int);
-
-	if (isForcedQuit) {
-		isForcedQuit = false;
-	}
-
-
-	updateTimer(); //시간 관리
-
-	
-
-	last_sec = limit_sec - sec;
+	stageLimitTime();						//~ 제한시간 설정
+	updateScore(m_gameLogic.getScore());	//~ 점수 업데이트
+	checkQuit();							//~ 강제종료 체크
+	updateTimer();							//~ 시간 및 타이머 업데이트
 }
 
 void gamePlay::Render() {
@@ -192,6 +181,13 @@ void gamePlay::gotoHome() {
 
 
 //! ********************** 점수 및 타이머 **********************
+//~ 제한시간 설정 (LIMIT_TIME은 include.h 에 명시되어있음)
+void gamePlay::stageLimitTime() {
+	switch (stage) {
+	default: limit_sec = LIMIT_TIME; break;
+	}
+}
+
 //~ 점수 업데이트
 void gamePlay::updateScore(int s) {
 	string front_score;
@@ -237,8 +233,6 @@ void gamePlay::updateTimer() {
 
 		if (isSetting) {}
 		else {
-
-
 			count_ += 1;
 			if (count_ != 0 && count_ % 33 == 0) {
 				sec += 1; //play second
@@ -257,7 +251,15 @@ void gamePlay::updateTimer() {
 	}
 	else if (isChanged) {
 		timebar_rect.w = 540;
+	}
 
+	last_sec = limit_sec - sec;
+}
+
+//~ 강제종료 체크
+void gamePlay::checkQuit() {
+	if (isForcedQuit) {
+		isForcedQuit = false;
 	}
 }
 
@@ -375,7 +377,7 @@ void gamePlay::renderSetting() {
 //! ********************** 마우스 이벤트 **********************
 //~ 마우스 버튼 이벤트 처리
 void gamePlay::MouseButtonEvents() {
-	
+
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
 		if (event.button.button == SDL_BUTTON_LEFT) {
 			int mouseX = event.button.x;

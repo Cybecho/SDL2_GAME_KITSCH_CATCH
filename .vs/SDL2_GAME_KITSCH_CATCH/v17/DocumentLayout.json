@@ -11,12 +11,16 @@
       "RelativeMoniker": "D:0:0:{DE52ACA6-4D72-4673-8CD3-68E3261912CD}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|solutionrelative:src\\gamePlay.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{DE52ACA6-4D72-4673-8CD3-68E3261912CD}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameLogic.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DE52ACA6-4D72-4673-8CD3-68E3261912CD}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|solutionrelative:src\\gameLogic.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{DE52ACA6-4D72-4673-8CD3-68E3261912CD}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameLogic.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{DE52ACA6-4D72-4673-8CD3-68E3261912CD}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|solutionrelative:src\\gameLogic.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE52ACA6-4D72-4673-8CD3-68E3261912CD}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameLogic.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DE52ACA6-4D72-4673-8CD3-68E3261912CD}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|solutionrelative:src\\gameLogic.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{DE52ACA6-4D72-4673-8CD3-68E3261912CD}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\obj_Mahjong_Base.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DE52ACA6-4D72-4673-8CD3-68E3261912CD}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|solutionrelative:src\\obj_Mahjong_Base.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DE52ACA6-4D72-4673-8CD3-68E3261912CD}|SDL2_GAME_KITSCH_CATCH\\SDL2_GAME_KITSCH_CATCH.vcxproj|C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameEndingGameover.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -30,37 +34,50 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "obj_Mahjong_Base.h",
+              "DocumentMoniker": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\obj_Mahjong_Base.h",
+              "RelativeDocumentMoniker": "src\\obj_Mahjong_Base.h",
+              "ToolTip": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\obj_Mahjong_Base.h",
+              "RelativeToolTip": "src\\obj_Mahjong_Base.h",
+              "ViewState": "AQIAADMAAAAAAAAAAAAAADsAAAAPAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-05-28T04:56:07.573Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "gamePlay.h",
               "DocumentMoniker": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gamePlay.h",
               "RelativeDocumentMoniker": "src\\gamePlay.h",
-              "ToolTip": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gamePlay.h",
-              "RelativeToolTip": "src\\gamePlay.h",
-              "ViewState": "AQIAAC0AAAAAZGZmZmYSwCEAAAAAAAAA",
+              "ToolTip": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gamePlay.h*",
+              "RelativeToolTip": "src\\gamePlay.h*",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAABkAAAAXAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-05-28T02:22:25.354Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "gameLogic.h",
               "DocumentMoniker": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameLogic.h",
               "RelativeDocumentMoniker": "src\\gameLogic.h",
               "ToolTip": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameLogic.h",
               "RelativeToolTip": "src\\gameLogic.h",
-              "ViewState": "AQIAAAoAAABgZmZmZuYzwBEAAAAAAAAA",
+              "ViewState": "AQIAACsAAABgZmZmZuYzwDoAAAAeAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-05-27T09:36:57.693Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "gameEndingGameover.cpp",
               "DocumentMoniker": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameEndingGameover.cpp",
               "RelativeDocumentMoniker": "src\\gameEndingGameover.cpp",
@@ -93,13 +110,13 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "gameLogic.cpp",
               "DocumentMoniker": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameLogic.cpp",
               "RelativeDocumentMoniker": "src\\gameLogic.cpp",
               "ToolTip": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gameLogic.cpp",
               "RelativeToolTip": "src\\gameLogic.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABYAAAA3AAAA",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAAH8AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-05-27T11:00:17.649Z",
               "EditorCaption": ""
@@ -110,9 +127,9 @@
               "Title": "gamePlay.cpp",
               "DocumentMoniker": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gamePlay.cpp",
               "RelativeDocumentMoniker": "src\\gamePlay.cpp",
-              "ToolTip": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gamePlay.cpp",
-              "RelativeToolTip": "src\\gamePlay.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAHMAAAABAAAA",
+              "ToolTip": "C:\\SBU\\SDL2_GAME_KITSCH_CATCH\\src\\gamePlay.cpp*",
+              "RelativeToolTip": "src\\gamePlay.cpp*",
+              "ViewState": "AQIAAFsAAAAAAAAAAAAAAGQAAAAiAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-05-27T09:35:12.946Z",
               "EditorCaption": ""

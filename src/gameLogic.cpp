@@ -129,6 +129,7 @@ void gameLogic::ClearGame() {
 void gameLogic::resetGame() {
     g_status = STATUS_GAMEPLAYING;
     g_level = 0;
+    g_score = 0;
     g_vector.clear();
     g_stack.clear();
     g_bonks.clear();
@@ -273,6 +274,8 @@ void gameLogic::RemoveSameTypeBlocks() {
             for (int i = it->second.size() - 1; i >= 0; --i) {
                 if (count < 3) {
                     int index = it->second[i];
+                    // 점수 업데이트
+                    UpdateScore(g_stack[index]->getScore());
                     // 제거되는 블록의 위치에서 createBonk() 호출
                     int x = g_stack[index]->getX() + BLOCK_SIZE / 2;
                     int y = g_stack[index]->getY() + BLOCK_SIZE / 2;
@@ -285,6 +288,7 @@ void gameLogic::RemoveSameTypeBlocks() {
                     break;
                 }
             }
+            cout << "Score: " << g_score << endl;
         }
     }
 
@@ -476,8 +480,9 @@ int gameLogic::countFiles(const string& path) {
 
 //! ******************** 점수 및 게임상태 관련 함수 ********************
 
-void gameLogic::UpdateScore(int score) {
-    // 미구현
+int gameLogic::UpdateScore(int score) {
+    g_score += score;
+    return score;
 }
 
 void gameLogic::printStatusChange() {
