@@ -9,26 +9,31 @@
 class gamePlay : public gameClass {
 public:
 	
+	//! ******************** 생성자 소멸자 ******************** 
 	gamePlay();
 	virtual ~gamePlay();
 	
-
-	
-	void changePhase(GamePhase status);
+	//! ********************** 기본 함수 **********************
 	void HandleEvents();
 	void Update();
 	void Render();
+
+	//! ********************** 페이즈 전환 **********************
+	void changePhase(GamePhase status);
+	void gotoHome();
+
+	//! ********************** 점수 및 타이머 **********************
 	void updateScore(int s);
+	void updateTimer();
 
-
+	//! ********************** 데이터 import 및 Rendering **********************
 	void loadIMGs();
 	void loadSounds();
-	void gotoHome();
-	void updateTimer();
-	void MouseButtonEvents();
-
 	void renderCat();
 	void renderSetting();
+
+	//! ********************** 마우스 이벤트 **********************
+	void MouseButtonEvents();
 
 	SDL_Event event;
 

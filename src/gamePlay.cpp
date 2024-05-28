@@ -2,6 +2,7 @@
 
 extern SDL_Texture* exp_text; //"EXP" text
 
+//! ******************** 생성자 소멸자 ******************** 
 
 gamePlay::gamePlay() {
 
@@ -35,6 +36,9 @@ gamePlay::~gamePlay() {
 	SDL_Quit();
 	TTF_Quit();
 }
+
+
+//! ********************** 기본 함수 **********************
 
 void gamePlay::HandleEvents() {
 	//SDL_Event event;
@@ -141,10 +145,8 @@ void gamePlay::Render() {
 	SDL_RenderPresent(g_renderer);
 }
 
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
-// 
+
+//! ********************** 페이즈 전환 **********************
 //~ 게임 페이즈 변경
 void gamePlay::changePhase(GamePhase status) {
 	g_current_game_phase = status;
@@ -171,8 +173,25 @@ void gamePlay::changePhase(GamePhase status) {
 	}
 }
 
+//~ 게임 홈으로 이동
+void gamePlay::gotoHome() {
+	Mix_PlayChannel(-1, setting_SoundEffect, 0);
+	isSetting = false;
+	isForcedQuit = true;
+	string score;
+	plus_score_int = org_score_int;
+	score = original_score;
+	ofstream ofs;
+	ofs.open("../../res/testRes/scoreboard.txt");
+	ofs << score;
+	ofs.close();
+	isChanged = true;
+	SDL_Delay(33);
+
+}
 
 
+//! ********************** 점수 및 타이머 **********************
 //~ 점수 업데이트
 void gamePlay::updateScore(int s) {
 	string front_score;
@@ -212,8 +231,39 @@ void gamePlay::updateScore(int s) {
 	TTF_CloseFont(font);
 }
 
+//~ 타이머 업데이트
+void gamePlay::updateTimer() {
+	if (isChanged == false) {
+
+		if (isSetting) {}
+		else {
 
 
+			count_ += 1;
+			if (count_ != 0 && count_ % 33 == 0) {
+				sec += 1; //play second
+				timebar_rect.w = timebar_rect.w - 540 / limit_sec;
+
+				if (last_sec == 0) { //~ 시간이 다 되었을 때
+					SDL_Delay(1000);
+					isChanged = true;
+					//isForcedQuit = true;
+					changePhase(PHASE_ENDING_GAMEOVER); //~ 게임오버로 페이즈 전환
+
+				}
+
+			}
+		}
+	}
+	else if (isChanged) {
+		timebar_rect.w = 540;
+
+	}
+}
+
+
+//! ********************** 데이터 import 및 Rendering **********************
+//~ 이미지 로드
 void gamePlay::loadIMGs() {
 	// BG
 	SDL_Surface* bg_surface = IMG_Load("../../res/game page/game_background.png");
@@ -266,7 +316,7 @@ void gamePlay::loadIMGs() {
 	}
 }
 
-
+//~ 사운드 로드
 void gamePlay::loadSounds() {
 	//music
 	play_music = Mix_LoadMUS("../../res/testRes/testBGM3.mp3");
@@ -277,54 +327,7 @@ void gamePlay::loadSounds() {
 	setting_SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
 }
 
-
-
-
-void gamePlay::gotoHome() {
-	Mix_PlayChannel(-1, setting_SoundEffect, 0);
-						isSetting = false;
-						isForcedQuit = true;
-						string score;
-						plus_score_int = org_score_int;
-						score = original_score;
-						ofstream ofs;
-						ofs.open("../../res/testRes/scoreboard.txt");
-						ofs << score;
-						ofs.close();
-						isChanged = true;
-						SDL_Delay(33);
-
-}
-
-void gamePlay::updateTimer() {
-	if (isChanged == false) {
-
-		if (isSetting) {}
-		else {
-
-
-			count_ += 1;
-			if (count_ != 0 && count_ % 33 == 0) {
-				sec += 1; //play second
-				timebar_rect.w = timebar_rect.w - 540 / limit_sec;
-
-				if (last_sec == 0) { //~ 시간이 다 되었을 때
-					SDL_Delay(1000);
-					isChanged = true;
-					//isForcedQuit = true;
-					changePhase(PHASE_ENDING_GAMEOVER); //~ 게임오버로 페이즈 전환
-
-				}
-
-			}
-		}
-	}
-	else if (isChanged) {
-		timebar_rect.w = 540;
-
-	}
-}
-
+//~ 고양이 렌더링
 void gamePlay::renderCat() {
 	/// 고양이
 	if (cat_status == false) {
@@ -348,6 +351,7 @@ void gamePlay::renderCat() {
 	}
 }
 
+//~ 설정창 렌더링
 void gamePlay::renderSetting() {
 	/// 설정 버튼
 	if (isSetting == true) {
@@ -367,6 +371,9 @@ void gamePlay::renderSetting() {
 	}
 }
 
+
+//! ********************** 마우스 이벤트 **********************
+//~ 마우스 버튼 이벤트 처리
 void gamePlay::MouseButtonEvents() {
 	
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
@@ -425,7 +432,6 @@ void gamePlay::MouseButtonEvents() {
 
 
 //! ************************** gamePlay + gameLogic **************************
-
 //~ 레벨 증가 로직
 void gamePlay::increaseLevelLogic() {
 	int prevLevel = m_gameLogic.getLevel();
