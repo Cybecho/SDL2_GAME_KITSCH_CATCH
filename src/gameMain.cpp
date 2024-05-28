@@ -7,6 +7,7 @@ SDL_Texture* score_text; //get score from txt file
 
 
 gameMain::gameMain() {
+	isBasicCat = true;
 	isRule = false;
 	isSetting = false;
 	isVolumeOff = false;
@@ -19,9 +20,13 @@ gameMain::~gameMain() {
 	Mix_FreeMusic(main_music);
 	Mix_FreeChunk(SoundEffect);
 	SDL_DestroyTexture(score_text);
+	SDL_DestroyTexture(inter_bt);
 	SDL_DestroyTexture(main_bg);
 	SDL_DestroyTexture(cat);
 	SDL_DestroyTexture(setting);
+	SDL_DestroyTexture(cat_sit);
+	SDL_DestroyTexture(cat_sleep);
+
 	
 	SDL_Quit();
 	TTF_Quit();
@@ -62,37 +67,15 @@ void gameMain::Update() {
 	isChanged  = false;
 
 	timebar_rect.w = 540;
-	
+
 }
 
 void gameMain::Render() {
-	SDL_RenderCopy(g_renderer, main_bg, NULL, NULL);
+	SDL_RenderCopy(g_renderer, main_bg, NULL, NULL); 
+	SDL_RenderCopy(g_renderer, inter_bt, NULL, NULL);
 	
 	renderScore();
-	
-
-
-	if (cat_status == false) {
-		//cat image 1
-		SDL_Rect tmp_r;
-		tmp_r.x = 0;
-		tmp_r.y = 0;
-		tmp_r.w = cat_rect.w;
-		tmp_r.h = cat_rect.h;
-		SDL_RenderCopy(g_renderer, cat, &cat_rect, &tmp_r);
-
-	}
-	else {
-		//cat image 2
-		SDL_Rect tmp_r1;
-		tmp_r1.x = -540;
-		tmp_r1.y = 0;
-		tmp_r1.w = cat_rect.w;
-		tmp_r1.h = cat_rect.h;
-		SDL_RenderCopy(g_renderer, cat, &cat_rect, &tmp_r1);
-	}
-
-
+	renderCat();
 	renderButtons();
 
 	SDL_RenderPresent(g_renderer);
@@ -161,16 +144,36 @@ void gameMain::loadImgs() {
 
 
 	//cat
-	SDL_Surface* cat_surface = IMG_Load("../../res/main page/main_sprite.png");
-	cat = SDL_CreateTextureFromSurface(g_renderer, cat_surface);
+	{
+		SDL_Surface* cat_surface = IMG_Load("../../res/main page/main_sprite.png");
+		cat = SDL_CreateTextureFromSurface(g_renderer, cat_surface);
 
-	cat_rect.x = 0;
-	cat_rect.y = 0;
-	cat_rect.w = cat_surface->w;
-	cat_rect.h = cat_surface->h;
+		cat_rect.x = 0;
+		cat_rect.y = 0;
+		cat_rect.w = cat_surface->w;
+		cat_rect.h = cat_surface->h;
 
-	SDL_FreeSurface(cat_surface);
+		SDL_FreeSurface(cat_surface);
+	}
 
+	{ //cat sitting
+		SDL_Surface* c_surface = IMG_Load("../../res/game page/cat_sit_sprite.png");
+		cat_sit = SDL_CreateTextureFromSurface(g_renderer, c_surface);
+
+		cat_main_rect.x = 0;
+		cat_main_rect.y = 0;
+		cat_main_rect.w = c_surface->w;
+		cat_main_rect.h = c_surface->h;
+
+		SDL_FreeSurface(c_surface);
+
+	}
+
+	{ //cat sleeping
+		SDL_Surface* c_surface = IMG_Load("../../res/game page/cat_sleep_sprite.png");
+		cat_sleep = SDL_CreateTextureFromSurface(g_renderer, c_surface);
+		SDL_FreeSurface(c_surface);
+	}
 
 
 
@@ -190,6 +193,26 @@ void gameMain::loadImgs() {
 
 	}
 
+	{//interaction button img
+		//mainscreen setting
+		SDL_Surface* i_surface = IMG_Load("../../res/main page/main_interaction_btn.png");
+		inter_bt = SDL_CreateTextureFromSurface(g_renderer, i_surface);
+		SDL_FreeSurface(i_surface);
+	}
+
+	{
+		sleepBT_rect.x = 20;
+		sleepBT_rect.y = 200;
+		sleepBT_rect.w = 80;
+		sleepBT_rect.h = 80;
+	}
+	
+	{
+		sitBT_rect.x = 20;
+		sitBT_rect.y = 110;
+		sitBT_rect.w = 80;
+		sitBT_rect.h = 80;
+	}
 }
 
 
@@ -291,6 +314,22 @@ void gameMain::MouseButtonEvents() {
 					isSetting = !isSetting;
 					Mix_PlayChannel(-1, SoundEffect, 0);
 				}
+
+				//sleep key
+				if (mouseX > sleepBT_rect.x && mouseY > sleepBT_rect.y &&
+					mouseX < sleepBT_rect.x + sleepBT_rect.w && mouseY < sleepBT_rect.y + sleepBT_rect.h) {
+					isBasicCat = false;
+					m_RandCat = 2;
+					Mix_PlayChannel(-1, SoundEffect, 0);
+				}
+
+				//sit key
+				if (mouseX > sitBT_rect.x && mouseY > sitBT_rect.y &&
+					mouseX < sitBT_rect.x + sitBT_rect.w && mouseY < sitBT_rect.y + sitBT_rect.h) {
+					isBasicCat = false;
+					m_RandCat = 3;
+					Mix_PlayChannel(-1, SoundEffect, 0);
+				}
 			}
 
 
@@ -369,3 +408,48 @@ void gameMain::renderButtons() {
 		}
 	}
 }
+
+void gameMain::renderCat() {
+	if (isBasicCat) {
+		if (cat_status == false) {
+			//cat image 1
+			SDL_Rect tmp_r;
+			tmp_r.x = 0;
+			tmp_r.y = 0;
+			tmp_r.w = cat_rect.w;
+			tmp_r.h = cat_rect.h;
+			SDL_RenderCopy(g_renderer, cat, &cat_rect, &tmp_r);
+
+		}
+		else {
+			//cat image 2
+			SDL_Rect tmp_r1;
+			tmp_r1.x = -540;
+			tmp_r1.y = 0;
+			tmp_r1.w = cat_rect.w;
+			tmp_r1.h = cat_rect.h;
+			SDL_RenderCopy(g_renderer, cat, &cat_rect, &tmp_r1);
+		}
+	}
+	else {
+		SDL_Rect tmp_r1;
+		tmp_r1.y = 380;
+		tmp_r1.w = cat_main_rect.w * 1.7;
+		tmp_r1.h = cat_main_rect.h * 1.7;
+
+		switch (sprite_num) {
+		case 0:	tmp_r1.x = -185; break;
+		case 1: tmp_r1.x = -185 - 918; break;
+		case 2: tmp_r1.x = -185 - 918 * 2; break;
+		case 3:  tmp_r1.x = -185 - 918 * 3; break;
+		default: 0; break;
+		}
+
+		switch (m_RandCat) {
+		case 2: SDL_RenderCopy(g_renderer, cat_sit, &cat_main_rect, &tmp_r1); break;
+		case 3: SDL_RenderCopy(g_renderer, cat_sleep, &cat_main_rect, &tmp_r1); break;
+		default: SDL_RenderCopy(g_renderer, cat_sit, &cat_main_rect, &tmp_r1); break;
+		}
+	}
+}
+

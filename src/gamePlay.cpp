@@ -8,7 +8,7 @@ gamePlay::gamePlay() {
 	
 	srand(time(0));
 	RandI = rand() % 6 + 5; //5~10초 중 하나 랜덤 반환// 다른 상태 중일 때는 시간이 흐르지 않도록..
-	RandCat = rand() % 4; //cat status 설정
+	p_RandCat = rand() % 4; //cat status 설정
 	std::cout << RandI << std::endl;
 
 	isBasicCat = true;
@@ -431,22 +431,22 @@ void gamePlay::renderCat() {
 
 		switch (sprite_num) {
 		case 0:	tmp_r1.x = 0; break;
-		case 1: if (RandCat == 0 || RandCat == 1) { tmp_r1.x = -WINDOW_WIDTH; break; }
-			  else if (RandCat == 2) { tmp_r1.x = -WINDOW_WIDTH - 20; break; }
+		case 1: if (p_RandCat == 0 || p_RandCat == 1) { tmp_r1.x = -WINDOW_WIDTH; break; }
+			  else if (p_RandCat == 2) { tmp_r1.x = -WINDOW_WIDTH - 20; break; }
 			  else { tmp_r1.x = -WINDOW_WIDTH + 20; break; }
 
-		case 2: if (RandCat == 0 || RandCat == 1) { tmp_r1.x = -WINDOW_WIDTH * 2; break; }
-			  else if (RandCat == 2) { tmp_r1.x = -WINDOW_WIDTH * 2 - 40; break; }
+		case 2: if (p_RandCat == 0 || p_RandCat == 1) { tmp_r1.x = -WINDOW_WIDTH * 2; break; }
+			  else if (p_RandCat == 2) { tmp_r1.x = -WINDOW_WIDTH * 2 - 40; break; }
 			  else { tmp_r1.x = -WINDOW_WIDTH * 2 + 40; break; }
 
-		case 3: if (RandCat == 0 || RandCat == 1) { tmp_r1.x = -WINDOW_WIDTH * 3; break; }
-			  else if (RandCat == 2) { tmp_r1.x = -WINDOW_WIDTH * 3 - 60; break; }
+		case 3: if (p_RandCat == 0 || p_RandCat == 1) { tmp_r1.x = -WINDOW_WIDTH * 3; break; }
+			  else if (p_RandCat == 2) { tmp_r1.x = -WINDOW_WIDTH * 3 - 60; break; }
 			  else { tmp_r1.x = -WINDOW_WIDTH * 3 + 60; break; }
 
 		default: 0; break;
 		}
 
-		switch (RandCat) {
+		switch (p_RandCat) {
 		case 0: SDL_RenderCopy(g_renderer, cat_sit, &cat_play_rect, &tmp_r1); break;
 
 		case 1: SDL_RenderCopy(g_renderer, cat_sleep, &cat_play_rect, &tmp_r1); break;

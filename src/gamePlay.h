@@ -124,5 +124,5 @@ extern int plus_score_int; //load from txt file
 
 extern int sprite_num; //고양이 스프라이트 x좌표
 extern int RandI; //랜덤 초 
-extern int RandCat; //random cat status
+extern int p_RandCat; //random cat status
 extern int sec;

@@ -42,8 +42,10 @@ string original_score;
 int sprite_num; //고양이 이미지 스프라이트 x좌표
 bool isBasicCat; //고양이 기본상태인지?
 int RandI; //random int
-int RandCat; //random cat status
-//0 : 앉기 1: 자기 2: 왼쪽걷기 3 : 오른쪽으로 걷기 
+int p_RandCat; //random cat status in play
+//0 : 앉기 1: 자기 2: 왼쪽걷기 3 : 오른쪽으로 걷기
+//int m_RandCat; //random cat status in main
+//0: 왼쪽걷기 , 1: 오른쪽걷기, 2 : 앉기, 3 : 자기
 
 Timer main_t;
 void update1Sec();
@@ -157,14 +159,22 @@ void update1Sec() {
 		}
 		else {
 			sprite_num++;
+			
 			if (sprite_num == 4) {
 				sprite_num = 0;
 				srand(time(0));
 				a = sec + RandI; //새로운 상태가 모두 출력종료된 시점
 				RandI = rand() % 5 + a;
-				RandCat = rand() % 4;
+				if (g_current_game_phase == PHASE_PLAYING) {
+					p_RandCat = rand() % 4;
+				}
+				/*else if (g_current_game_phase == PHASE_MAIN) {
+					m_RandCat = rand() % 2;
+				}*/
 				isBasicCat = true;
 			}
+			
+			
 
 		}
 	}
