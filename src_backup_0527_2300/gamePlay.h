@@ -15,12 +15,17 @@ public:
 
 	
 	void play_timer(int interval);
-	void changePhaseToEnding();
-	void changePhaseToMain();
+	void changePhase(GamePhase status);
 	void HandleEvents();
 	void Update();
 	void Render();
 	void updateScore(int s);
+
+	//! ************************** gameLogic **************************
+	void increaseLevelLogic();			//~ 레벨 증가 로직
+	void loadMahjongBlocks();			//~ 맞춰야 할 블록 로드
+	void checkAndLoadMahjongBlocks();	//~ 맞춰야 할 블록 체크 및 로드
+	void checkGameStatus();				//~ 게임 상태 체크 (g_status 상태 확인)
 
 protected:
 
@@ -60,8 +65,10 @@ protected:
 extern Mix_Music* main_music;
 extern Mix_Music* play_music;
 extern Mix_Music* clear_music;
+extern Mix_Music* gameover_music;
 extern bool cat_status;
 extern bool clear_reset;
+extern bool gameover_reset;
 
 extern Uint32 g_last_time_ms;
 extern bool isChanged;

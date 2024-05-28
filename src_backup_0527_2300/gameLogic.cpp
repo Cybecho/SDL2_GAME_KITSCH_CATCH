@@ -1,14 +1,17 @@
 // gameLogic.cpp
 #include "gameLogic.h"
 
+//! ******************** 생성자 소멸자 ******************** 
+
 gameLogic::gameLogic() {
+    g_status = STATUS_GAMEPLAYING;
+    g_prevStatus = g_status;
     wave1_ = nullptr;
     music1_ = nullptr;
     text_score_ = nullptr;
     game_font_ = nullptr;
     g_level = 0;
     MAX_LEVEL = countDir("../../res/level") - 1;
-    g_status = STATUS_GAMEPLAYING;
 
     LoadMahjongBlocksFromCSV(0, 0, 2); // 초기 레벨 로딩)
 }
@@ -17,14 +20,7 @@ gameLogic::~gameLogic() {
     ClearGame();
 }
 
-void gameLogic::InitGame() {
-    g_flag_running = true;
-    g_status = STATUS_GAMEPLAYING;
-    g_level = 0;
-
-    g_bg_source_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
-    g_bg_destination_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
-}
+//! ********************** 기본 함수 **********************
 
 void gameLogic::HandleEvents() {
     SDL_Event event;
@@ -73,12 +69,15 @@ void gameLogic::HandleEvents() {
 }
 
 void gameLogic::Update() {
+    //~ gamePlay의 Update에서 따로 호출해줌
+    /*
     LoadMahjongBlocksIfEmpty(g_level); //~ 문제의 코드
     RemoveSameTypeBlocks();
     AlignStackBlocks();
     UpdateVectorBlocks();
     UpdateStackBlocks();
     UpdateBonks();
+    */
 }
 
 void gameLogic::Render() {
@@ -96,6 +95,52 @@ void gameLogic::Render() {
     }
 }
 
+//! ******************** 최초 초기화 및 클리어 함수 ******************** 
+
+void gameLogic::InitGame() {
+    g_flag_running = true;
+    g_status = STATUS_GAMEPLAYING;
+    g_level = 0;
+
+    g_bg_source_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+    g_bg_destination_rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+}
+
+void gameLogic::ClearGame() {
+    for (auto& block : g_vector) {
+        block->destroyTexture();
+        block->Clear2Sound();
+    }
+    g_vector.clear();
+    for (auto& block : g_stack) {
+        block->destroyTexture();
+        block->Clear2Sound();
+    }
+    g_vector.clear();
+    g_stack.clear();
+    g_bonks.clear();
+
+    Mix_FreeMusic(music1_);
+    Mix_FreeChunk(wave1_);
+
+    TTF_CloseFont(game_font_);
+}
+
+void gameLogic::resetGame() {
+    g_status = STATUS_GAMEPLAYING;
+    g_level = 0;
+    g_vector.clear();
+    g_stack.clear();
+    g_bonks.clear();
+
+    int seed = rand() % (countFiles("../../res/level/0") / 3);  //~ 현재 레벨에서 발생 가능한 시드 (전체파일수 / 3)
+    cout << "seed: " << seed << endl;
+    LoadMahjongBlocksFromCSV(g_level, seed, 2); // 초기 레벨 로딩
+}
+
+//! ******************** 마작 블록 생성 및 관리 함수 ********************
+
+/// shake 로직 있음 (보완 필요)
 void gameLogic::LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
     g_vector.clear();
 
@@ -153,13 +198,46 @@ void gameLogic::LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
         }
     }
 
+    /*
     ///! 대각선 방향으로 블록 흔들림 효과 적용
     int totalBlocks = g_vector.size();
     for (int i = 0; i < totalBlocks; ++i) {
         int delay = i * 3; // 0.03초(3ms) 지연 시간
         SDL_AddTimer(delay, shakeBlocksCallback, new int(i));
     }
+    */
 }
+
+void gameLogic::LoadMahjongBlocksIfEmpty(int level) {
+    if (checkEmptyBlocks()) {
+        for (auto it = g_vector.begin(); it != g_vector.end();) {
+            if (dynamic_cast<Mahjong_Empty*>(it->get())) {
+                it = g_vector.erase(it);
+            }
+            else {
+                ++it;
+            }
+        }
+        //! 여기부분에서 에러남..
+        //~ LoadMahjongBlocksFromCSV(0, 0, 2); // 여기서 이 함수만 불러오면 에러가...
+        /*
+        //~ 레벨 증가 로직
+        if (level < MAX_LEVEL) {
+            srand(time(NULL));
+            string dir_path = "../../res/level/" + to_string(g_level);
+            int seed = rand() % (countFiles(dir_path) / 3);  //~ 현재 레벨에서 발생 가능한 시드 (전체파일수 / 3)
+            int numDims = 2;
+            LoadMahjongBlocksFromCSV(g_level, seed, numDims);
+            g_level++;
+        }
+        else {
+            g_status = STATUS_GAMECLEAR;
+        }
+        */
+    }
+}
+
+//! ******************** 마작 블록 이동 및 정렬 함수 ********************
 
 void gameLogic::vector2stack(vector<unique_ptr<Mahjong>>::iterator it) {
     auto block = move(*it);
@@ -178,45 +256,7 @@ void gameLogic::vector2stack(vector<unique_ptr<Mahjong>>::iterator it) {
     cout << "g_blocks size: " << g_vector.size() - countEmptyBlocks() << "| g_stack size: " << g_stack.size() << endl;
 }
 
-void gameLogic::createBonk(int x, int y) {
-    if (BLOCK_SCALE == 1) {
-        g_bonks.emplace_back(x - (BLOCK_SIZE / 2), y - (BLOCK_SIZE / 2), g_renderer);
-    }
-    else {
-        g_bonks.emplace_back(x - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), y - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), g_renderer);
-    }
-}
-
-void gameLogic::LoadMahjongBlocksIfEmpty(int level) {
-    if (checkEmptyBlocks()) {
-        for (auto it = g_vector.begin(); it != g_vector.end();) {
-            if (dynamic_cast<Mahjong_Empty*>(it->get())) {
-                it = g_vector.erase(it);
-            }
-            else {
-                ++it;
-            }
-        }
-        cout << "g_vector is empty. Loading New Mahjong blocks..." << endl;
-        //! 여기부분에서 에러남..
-        //~ LoadMahjongBlocksFromCSV(0, 0, 2); // 여기서 이 함수만 불러오면 에러가...
-        /*
-        //~ 레벨 증가 로직
-        if (level < MAX_LEVEL) {
-            srand(time(NULL));
-            string dir_path = "../../res/level/" + to_string(g_level);
-            int seed = rand() % (countFiles(dir_path) / 3);  //~ 현재 레벨에서 발생 가능한 시드 (전체파일수 / 3)
-            int numDims = 2;
-            LoadMahjongBlocksFromCSV(g_level, seed, numDims);
-            g_level++;
-        }
-        else {
-            g_status = STATUS_GAMECLEAR;
-        }
-        */    
-    }
-}
-
+/// shake 로직 있음 (보완 필요)
 void gameLogic::RemoveSameTypeBlocks() {
     map<string, vector<int>> typeIndices;
     for (int i = 0; i < g_stack.size(); ++i) {
@@ -249,11 +289,13 @@ void gameLogic::RemoveSameTypeBlocks() {
     }
 
     // 블록이 제거된 경우에만 shakeBlocks() 호출
+    /*
     if (blocksRemoved) {
         for (auto& block : g_stack) {
             block->shakeBlocks(10);
         }
     }
+    */
 }
 
 void gameLogic::AlignStackBlocks() {
@@ -266,42 +308,6 @@ void gameLogic::AlignStackBlocks() {
         g_stack[i]->setY(y);
         g_stack[i]->setHovered(false); //~ 호버링 효과 제거 (이렇게 해줘야 크기 g_stack에서 이상하게 안변함)
     }
-}
-
-void gameLogic::UpdateVectorBlocks() {
-    for (auto& block : g_vector) {
-        block->handleClick();
-        block->update();
-        block->checkClickEnable(g_vector); // g_vector를 매개변수로 전달합니다.
-
-        if (g_stack.size() == 7) {
-            block->setClickable(false);
-            g_status = STATUS_GAMEOVER;
-        }
-    }
-}
-
-void gameLogic::UpdateStackBlocks() {
-    for (auto& block : g_stack) {
-        block->handleClick();
-        block->update();
-    }
-}
-
-void gameLogic::UpdateBonks() {
-    for (auto it = g_bonks.begin(); it != g_bonks.end();) {
-        it->update();
-        if (it->isTimeToDestroy()) {
-            it = g_bonks.erase(it);
-        }
-        else {
-            ++it;
-        }
-    }
-}
-
-void gameLogic::UpdateScore(int score) {
-    // 미구현
 }
 
 bool gameLogic::checkEmptyBlocks() {
@@ -382,6 +388,53 @@ void gameLogic::sortPairedBlocks() {
     }
 }
 
+//! ******************** 마작 플레이 영역 업데이트 함수 ********************
+
+void gameLogic::UpdateVectorBlocks() {
+    for (auto& block : g_vector) {
+        block->handleClick();
+        block->update();
+        block->checkClickEnable(g_vector); // g_vector를 매개변수로 전달합니다.
+
+        if (g_stack.size() == MAX_STACK) {
+            block->setClickable(false);
+            g_status = STATUS_GAMEOVER;
+        }
+    }
+}
+
+void gameLogic::UpdateStackBlocks() {
+    for (auto& block : g_stack) {
+        block->handleClick();
+        block->update();
+    }
+}
+
+//! ******************** VFX 객체 생성 및 관리 함수 ********************
+
+void gameLogic::createBonk(int x, int y) {
+    if (BLOCK_SCALE == 1) {
+        g_bonks.emplace_back(x - (BLOCK_SIZE / 2), y - (BLOCK_SIZE / 2), g_renderer);
+    }
+    else {
+        g_bonks.emplace_back(x - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), y - (BLOCK_SIZE / (BLOCK_SCALE * BLOCK_SCALE)), g_renderer);
+    }
+}
+
+void gameLogic::UpdateBonks() {
+    for (auto it = g_bonks.begin(); it != g_bonks.end();) {
+        it->update();
+        if (it->isTimeToDestroy()) {
+            it = g_bonks.erase(it);
+        }
+        else {
+            ++it;
+        }
+    }
+}
+
+//! ******************** CSV 파일 관리 함수 ********************
+
 int gameLogic::countDir(const string& path) {
     int count = 0;
     wstring search_path = wstring(path.begin(), path.end()) + L"\\*";
@@ -421,25 +474,29 @@ int gameLogic::countFiles(const string& path) {
     return count;
 }
 
-void gameLogic::ClearGame() {
-    for (auto& block : g_vector) {
-        block->destroyTexture();
-        block->Clear2Sound();
-    }
-    g_vector.clear();
-    for (auto& block : g_stack) {
-        block->destroyTexture();
-        block->Clear2Sound();
-    }
-    g_vector.clear();
-    g_stack.clear();
-    g_bonks.clear();
+//! ******************** 점수 및 게임상태 관련 함수 ********************
 
-    Mix_FreeMusic(music1_);
-    Mix_FreeChunk(wave1_);
-
-    TTF_CloseFont(game_font_);
+void gameLogic::UpdateScore(int score) {
+    // 미구현
 }
+
+void gameLogic::printStatusChange() {
+    if (g_status != g_prevStatus) {
+        switch (g_status) {
+        case STATUS_GAMECLEAR:
+            cout << "***************** Game Clear *****************" << endl;
+            break;
+        case STATUS_GAMEOVER:
+            cout << "***************** Game Over *****************" << endl;
+            break;
+        default:
+            break;
+        }
+        g_prevStatus = g_status;
+    }
+}
+
+//! ******************** 비멤버 함수 ********************
 
 Uint32 shakeBlocksCallback(Uint32 interval, void* param) {
     int index = *(static_cast<int*>(param));
