@@ -30,6 +30,7 @@ int sec; // play second
 int limit_sec;
 int last_sec;
 
+
 bool isChanged;
 bool isForcedQuit;
 bool cat_status = false; // false: image1, true : image2
@@ -38,6 +39,15 @@ int plus_score_int;
 
 string original_score;
 
+int sprite_num; //고양이 이미지 스프라이트 x좌표
+bool isBasicCat; //고양이 기본상태인지?
+int RandI; //random int
+int RandCat; //random cat status
+//0 : 앉기 1: 자기 2: 왼쪽걷기 3 : 오른쪽으로 걷기 
+
+Timer main_t;
+void update1Sec();
+
 int main(int argc, char *argv[])
 {
 
@@ -45,6 +55,7 @@ int main(int argc, char *argv[])
 	SDL_Init(SDL_INIT_EVERYTHING);
 	TTF_Init();
 	isChanged = false;
+	isForcedQuit = false;
 
 	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096) == -1)
 	{
@@ -78,13 +89,13 @@ int main(int argc, char *argv[])
 	g_last_time_ms = SDL_GetTicks();
 
 	// cat animation timer
-	Timer main_t;
+	
 	main_t.setInterval(1000);
 	main_t.start();
+	
 
 	while (g_flag_running)
 	{
-
 		// write score to txt file
 		string score;
 
@@ -105,11 +116,7 @@ int main(int argc, char *argv[])
 		ofs << score;
 		ofs.close();
 
-		if (main_t.done())
-		{
-			cat_status = !cat_status;
-			// printf("1s elapsed\n");
-		}
+		update1Sec(); //고양이 상태 지정, 1초마다 업데이트
 
 		int count = 0;
 
@@ -121,6 +128,8 @@ int main(int argc, char *argv[])
 		game_phases[g_current_game_phase]->HandleEvents();
 		game_phases[g_current_game_phase]->Update();
 		game_phases[g_current_game_phase]->Render();
+
+		
 
 		g_last_time_ms = cur_time_ms;
 
@@ -135,4 +144,28 @@ int main(int argc, char *argv[])
 	ClearGame();
 
 	return 0;
+}
+
+
+void update1Sec() {
+	if (main_t.done())
+	{
+		int a;
+		if (isBasicCat) {
+			sprite_num = 0;
+			cat_status = !cat_status;
+		}
+		else {
+			sprite_num++;
+			if (sprite_num == 4) {
+				sprite_num = 0;
+				srand(time(0));
+				a = sec + RandI; //새로운 상태가 모두 출력종료된 시점
+				RandI = rand() % 5 + a;
+				RandCat = rand() % 4;
+				isBasicCat = true;
+			}
+
+		}
+	}
 }

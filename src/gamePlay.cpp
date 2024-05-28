@@ -6,12 +6,19 @@ extern SDL_Texture* exp_text; //"EXP" text
 
 gamePlay::gamePlay() {
 	
-	limit_sec = LIMIT_TIME;
+	srand(time(0));
+	RandI = rand() % 6 + 5; //5~10초 중 하나 랜덤 반환// 다른 상태 중일 때는 시간이 흐르지 않도록..
+	RandCat = rand() % 4; //cat status 설정
+	std::cout << RandI << std::endl;
+
+	isBasicCat = true;
 	isForcedQuit = false;
+	limit_sec = LIMIT_TIME;
 	isChanged = false;
 	sec = 0;
 	count_ = 0;
 	stage = 1;
+	sprite_num = 0;
 
 	//isChanged = false;
 	isSetting = false;
@@ -32,6 +39,10 @@ gamePlay::~gamePlay() {
 	SDL_DestroyTexture(cat);
 	SDL_DestroyTexture(cat2);
 	SDL_DestroyTexture(setting);
+	SDL_DestroyTexture(cat_sit);
+	SDL_DestroyTexture(cat_sleep);
+	SDL_DestroyTexture(cat_walk_left);
+	SDL_DestroyTexture(cat_walk_right);
 	SDL_Quit();
 	TTF_Quit();
 }
@@ -100,6 +111,7 @@ void gamePlay::Update() {
 	checkQuit();							//~ 강제종료 체크
 	updateTimer();							//~ 시간 및 타이머 업데이트
 	checkGameStatus();						//~ 게임 상태 체크
+	updateCatStatus();						//~ 고양이 상태 변경
 }
 
 void gamePlay::Render() {
@@ -262,6 +274,13 @@ void gamePlay::updateTimer() {
 	}
 }
 
+//고양이 상태 업데이트
+void gamePlay::updateCatStatus() {
+	if (isBasicCat && sec == RandI) {
+		isBasicCat = false;
+	}
+}
+
 //~ 강제종료 체크
 void gamePlay::checkQuit() {
 	if (isForcedQuit) {
@@ -280,6 +299,7 @@ void gamePlay::addSeconds(int seconds) {
 void gamePlay::changeTimebar() {
 	timebar_rect.w = 540 * (static_cast<double>(last_sec) / limit_sec);
 }
+
 
 
 //! ********************** 데이터 import 및 Rendering **********************
@@ -334,6 +354,37 @@ void gamePlay::loadIMGs() {
 		SDL_FreeSurface(set_surface);
 
 	}
+
+	{ //cat sitting
+		SDL_Surface* c_surface = IMG_Load("../../res/game page/cat_sit_sprite.png");
+		cat_sit = SDL_CreateTextureFromSurface(g_renderer, c_surface);
+
+		cat_play_rect.x = 0;
+		cat_play_rect.y = 0;
+		cat_play_rect.w = c_surface->w;
+		cat_play_rect.h = c_surface->h;
+
+		SDL_FreeSurface(c_surface);
+
+	}
+
+	{ //cat sleeping
+		SDL_Surface* c_surface = IMG_Load("../../res/game page/cat_sleep_sprite.png");
+		cat_sleep = SDL_CreateTextureFromSurface(g_renderer, c_surface);
+		SDL_FreeSurface(c_surface);
+	}
+
+	{//cat walk left
+		SDL_Surface* c_surface = IMG_Load("../../res/game page/cat_walk_left_sprite.png");
+		cat_walk_left = SDL_CreateTextureFromSurface(g_renderer, c_surface);
+		SDL_FreeSurface(c_surface);
+	}
+
+	{//cat walk right
+		SDL_Surface* c_surface = IMG_Load("../../res/game page/cat_walk_right_sprite.png");
+		cat_walk_right = SDL_CreateTextureFromSurface(g_renderer, c_surface);
+		SDL_FreeSurface(c_surface);
+	}
 }
 
 //~ 사운드 로드
@@ -350,24 +401,63 @@ void gamePlay::loadSounds() {
 //~ 고양이 렌더링
 void gamePlay::renderCat() {
 	/// 고양이
-	if (cat_status == false) {
-		//cat image 1
-		SDL_Rect tmp_r;
-		tmp_r.x = 135;
-		tmp_r.y = -110;
-		tmp_r.w = cat_rect.w * 0.45;
-		tmp_r.h = cat_rect.h * 0.45;
-		SDL_RenderCopy(g_renderer, cat, &cat_rect, &tmp_r);
+	if (isBasicCat) {
+		if (cat_status == false) {
+			//cat image 1
+			SDL_Rect tmp_r;
+			tmp_r.x = 180;
+			tmp_r.y = 0;
+			tmp_r.w = cat_rect.w * 0.3;
+			tmp_r.h = cat_rect.h * 0.3;
+			SDL_RenderCopy(g_renderer, cat, &cat_rect, &tmp_r);
 
+
+		}
+		else {
+			//cat image 2
+			SDL_Rect tmp_r1;
+			tmp_r1.x = 180;
+			tmp_r1.y = 0;
+			tmp_r1.w = cat_rect2.w * 0.3;
+			tmp_r1.h = cat_rect2.h * 0.3;
+			SDL_RenderCopy(g_renderer, cat2, &cat_rect2, &tmp_r1);
+		}
 	}
 	else {
-		//cat image 2
 		SDL_Rect tmp_r1;
-		tmp_r1.x = 135;
-		tmp_r1.y = -110;
-		tmp_r1.w = cat_rect2.w * 0.45;
-		tmp_r1.h = cat_rect2.h * 0.45;
-		SDL_RenderCopy(g_renderer, cat2, &cat_rect2, &tmp_r1);
+		tmp_r1.y = 0;
+		tmp_r1.w = cat_play_rect.w;
+		tmp_r1.h = cat_play_rect.h;
+
+		switch (sprite_num) {
+		case 0:	tmp_r1.x = 0; break;
+		case 1: if (RandCat == 0 || RandCat == 1) { tmp_r1.x = -WINDOW_WIDTH; break; }
+			  else if (RandCat == 2) { tmp_r1.x = -WINDOW_WIDTH - 20; break; }
+			  else { tmp_r1.x = -WINDOW_WIDTH + 20; break; }
+
+		case 2: if (RandCat == 0 || RandCat == 1) { tmp_r1.x = -WINDOW_WIDTH * 2; break; }
+			  else if (RandCat == 2) { tmp_r1.x = -WINDOW_WIDTH * 2 - 40; break; }
+			  else { tmp_r1.x = -WINDOW_WIDTH * 2 + 40; break; }
+
+		case 3: if (RandCat == 0 || RandCat == 1) { tmp_r1.x = -WINDOW_WIDTH * 3; break; }
+			  else if (RandCat == 2) { tmp_r1.x = -WINDOW_WIDTH * 3 - 60; break; }
+			  else { tmp_r1.x = -WINDOW_WIDTH * 3 + 60; break; }
+
+		default: 0; break;
+		}
+
+		switch (RandCat) {
+		case 0: SDL_RenderCopy(g_renderer, cat_sit, &cat_play_rect, &tmp_r1); break;
+
+		case 1: SDL_RenderCopy(g_renderer, cat_sleep, &cat_play_rect, &tmp_r1); break;
+
+		case 2: SDL_RenderCopy(g_renderer, cat_walk_left, &cat_play_rect, &tmp_r1); break;
+
+		case 3: SDL_RenderCopy(g_renderer, cat_walk_right, &cat_play_rect, &tmp_r1); break;
+
+
+		default: SDL_RenderCopy(g_renderer, cat_sit, &cat_play_rect, &tmp_r1); break;
+		}
 	}
 }
 

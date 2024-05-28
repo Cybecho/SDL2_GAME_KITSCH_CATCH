@@ -4,8 +4,6 @@
 //play scene
 
 
-
-
 class gamePlay : public gameClass {
 public:
 	
@@ -47,9 +45,14 @@ public:
 	void checkAndLoadMahjongBlocks();	//~ 맞춰야 할 블록 체크 및 로드
 	void checkGameStatus();				//~ 게임 상태 체크 (g_status 상태 확인)
 
+	//! ************************** 고양이 상태 **************************
+	void updateCatStatus();
+
 	//! ************************** getter & setter **************************
 	int getLastSec() const { return last_sec; }
 	void setLastSec(int sec) { last_sec = sec; }
+
+	
 
 protected:
 	SDL_Event event;
@@ -72,11 +75,17 @@ protected:
 	SDL_Texture* setting;
 	SDL_Texture* score_text2; //get score from txt file
 
+	SDL_Texture* cat_sit;
+	SDL_Texture* cat_sleep;
+	SDL_Texture* cat_walk_left;
+	SDL_Texture* cat_walk_right;
+
 	SDL_Rect playground_rect;
 	SDL_Rect stack_rect;
 	
 	SDL_Rect cat_rect;
 	SDL_Rect cat_rect2;
+	SDL_Rect cat_play_rect;
 	SDL_Rect settingBT_rect;
 
 	//score
@@ -87,7 +96,7 @@ protected:
 
 	int stage;
 	int count_;
-	int sec; //play second
+	
 	int limit_sec;
 	int last_sec; //last second (stage second)
 
@@ -104,6 +113,7 @@ extern bool gameover_reset;
 extern Uint32 g_last_time_ms;
 extern bool isChanged;
 extern bool isForcedQuit;
+extern bool isBasicCat; //고양이 기본 상태
 
 extern SDL_Rect timebar_rect;
 extern string score;
@@ -111,3 +121,8 @@ extern string score;
 extern string original_score;
 extern int org_score_int;
 extern int plus_score_int; //load from txt file
+
+extern int sprite_num; //고양이 스프라이트 x좌표
+extern int RandI; //랜덤 초 
+extern int RandCat; //random cat status
+extern int sec;
