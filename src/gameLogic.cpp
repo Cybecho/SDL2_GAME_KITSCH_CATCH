@@ -298,13 +298,13 @@ void gameLogic::RemoveSameTypeBlocks() {
     }
 
     // 블록이 제거된 경우에만 shakeBlocks() 호출
-    /*
+    
     if (blocksRemoved) {
         for (auto& block : g_stack) {
             block->shakeBlocks(10);
         }
     }
-    */
+    
 }
 
 void gameLogic::AlignStackBlocks() {

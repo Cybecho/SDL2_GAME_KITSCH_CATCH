@@ -83,10 +83,7 @@ void gamePlay::HandleEvents() {
 }
 
 void gamePlay::Update() {
-
-	//! ************************** gameLogic **************************
-	checkGameStatus();					//~ 게임 상태 체크
-	m_gameLogic.LoadMahjongBlocksIfEmpty(m_gameLogic.getLevel());
+	//m_gameLogic.LoadMahjongBlocksIfEmpty(m_gameLogic.getLevel());
 	m_gameLogic.RemoveSameTypeBlocks();
 	if (m_gameLogic.getIsPop()) {
 		addSeconds(ADD_TIME);
@@ -96,14 +93,13 @@ void gamePlay::Update() {
 	m_gameLogic.UpdateVectorBlocks();
 	m_gameLogic.UpdateStackBlocks();
 	m_gameLogic.UpdateBonks();
-	m_gameLogic.printStatusChange();	//~ 게임 상태 출력
-	checkAndLoadMahjongBlocks();		//~ 맞춰야 할 블록 체크 및 로드
-	//! ************************** ********* **************************
-
+	m_gameLogic.printStatusChange();		//~ 게임 상태 출력
+	checkAndLoadMahjongBlocks();			//~ 맞춰야 할 블록 체크 및 로드
 	stageLimitTime();						//~ 제한시간 설정
 	updateScore(m_gameLogic.getScore());	//~ 점수 업데이트
 	checkQuit();							//~ 강제종료 체크
 	updateTimer();							//~ 시간 및 타이머 업데이트
+	checkGameStatus();						//~ 게임 상태 체크
 }
 
 void gamePlay::Render() {
@@ -154,17 +150,21 @@ void gamePlay::changePhase(GamePhase status) {
 	case PHASE_ENDING_CLEAR:
 		clear_reset = true;
 		Mix_PlayMusic(clear_music, -1);
+		resetGame();
 		break;
 	case PHASE_ENDING_GAMEOVER:
 		gameover_reset = true;
 		Mix_PlayMusic(gameover_music, -1);
+		resetGame();
 		break;
 	case PHASE_MAIN:
 		Mix_PlayMusic(main_music, -1);
+		resetGame();
 		break;
 	case PHASE_PLAYING:
-		resetTimer(); // 타이머 초기화
+		//resetTimer(); // 타이머 초기화
 		Mix_PlayMusic(play_music, -1);
+		resetGame();
 		break;
 	default:
 		break;
@@ -253,8 +253,9 @@ void gamePlay::updateTimer() {
 			changeTimebar();
 
 			if (last_sec == 0) {
-				SDL_Delay(1000);
+				SDL_Delay(500);
 				isChanged = true;
+				resetGame();
 				changePhase(PHASE_ENDING_GAMEOVER);
 			}
 		}
