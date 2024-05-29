@@ -21,14 +21,18 @@ public:
 	void changePhase(GamePhase status);
 	void gotoHome();
 
-	//! ********************** 점수 및 타이머 **********************
+	//! ********************** 타이머 관련 **********************
 	void resetTimer();
 	void stageLimitTime();
-	void updateScore(int s);
 	void updateTimer();
-	void checkQuit();
-	void addSeconds(int seconds);
 	void changeTimebar();
+	void checkQuit();
+	
+	//! ********************** 점수 관련 **********************
+	void updateScore(int s);
+	void addSeconds(int seconds);
+	void updateAddScore();
+	void writeScore(string s);
 
 	//! ********************** 데이터 import 및 Rendering **********************
 	void loadIMGs();
@@ -38,9 +42,7 @@ public:
 
 	//! ********************** 마우스 이벤트 **********************
 	void MouseButtonEvents();
-
-	//! ********************** 마우스 이벤트 **********************
-	void writeScore(string s);
+	
 
 	//! ************************** gameLogic **************************
 	void increaseLevelLogic();			//~ 레벨 증가 로직
@@ -102,7 +104,8 @@ protected:
 	
 	int limit_sec;
 	int last_sec; //last second (stage second)
-
+	Uint32 lastMatchTime; // 추가 점수 확인용
+	int addScore; // 추가 점수 멤버 변수
 };
 
 extern Mix_Music* main_music;

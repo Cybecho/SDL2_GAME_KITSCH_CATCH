@@ -5,12 +5,10 @@ extern SDL_Texture* exp_text; //"EXP" text
 //! ******************** 생성자 소멸자 ******************** 
 
 gamePlay::gamePlay() {
-	
-	srand(time(0));
+
+	srand(time(NULL));
 	RandI = rand() % 6 + 5; //5~10초 중 하나 랜덤 반환// 다른 상태 중일 때는 시간이 흐르지 않도록..
 	p_RandCat = rand() % 4; //cat status 설정
-	std::cout << RandI << std::endl;
-
 	isBasicCat = true;
 	isForcedQuit = false;
 	limit_sec = LIMIT_TIME;
@@ -43,6 +41,7 @@ gamePlay::~gamePlay() {
 	SDL_DestroyTexture(cat_sleep);
 	SDL_DestroyTexture(cat_walk_left);
 	SDL_DestroyTexture(cat_walk_right);
+	m_gameLogic.ClearGame();
 	SDL_Quit();
 	TTF_Quit();
 }
@@ -205,7 +204,7 @@ void gamePlay::gotoHome() {
 }
 
 
-//! ********************** 점수 및 타이머 **********************
+//! //! ********************** 타이머 관련 **********************
 //~ 타이머 리셋
 void gamePlay::resetTimer() {
 	sec = 0;
@@ -220,6 +219,32 @@ void gamePlay::stageLimitTime() {
 	}
 }
 
+//~ 타이머 업데이트
+void gamePlay::updateTimer() {
+	if (!isChanged && !isSetting) {
+		count_ += 1;
+		if (count_ % 33 == 0) {
+			sec += 1;
+			last_sec = limit_sec - sec;
+			changeTimebar();
+
+			if (last_sec == 0) {
+				SDL_Delay(500);
+				isChanged = true;
+				resetGame();
+				changePhase(PHASE_ENDING_GAMEOVER);
+			}
+		}
+	}
+}
+
+//~ 실시간 타임바 렌더링
+void gamePlay::changeTimebar() {
+	timebar_rect.w = 540 * (static_cast<double>(last_sec) / limit_sec);
+}
+
+
+//! ********************** 점수 관련 **********************
 //~ 점수 업데이트
 void gamePlay::updateScore(int s) {
 	string front_score;
@@ -260,51 +285,36 @@ void gamePlay::updateScore(int s) {
 	TTF_CloseFont(font);
 }
 
-//~ 타이머 업데이트
-void gamePlay::updateTimer() {
-	if (!isChanged && !isSetting) {
-		count_ += 1;
-		if (count_ % 33 == 0) {
-			sec += 1;
-			last_sec = limit_sec - sec;
-			changeTimebar();
-
-			if (last_sec == 0) {
-				SDL_Delay(500);
-				isChanged = true;
-				resetGame();
-				changePhase(PHASE_ENDING_GAMEOVER);
-			}
-		}
-	}
-}
-
-//고양이 상태 업데이트
-void gamePlay::updateCatStatus() {
-	if (isBasicCat && sec == RandI) {
-		isBasicCat = false;
-	}
-}
-
-//~ 강제종료 체크
-void gamePlay::checkQuit() {
-	if (isForcedQuit) {
-		isForcedQuit = false;
-	}
-}
-
 //~ gameLogic의 isPop이 true일 경우, 시간 추가
 void gamePlay::addSeconds(int seconds) {
 	sec = max(0, sec - seconds);
 	last_sec = limit_sec - sec;
 	changeTimebar();
 }
-
-//~ 실시간 타임바 렌더링
-void gamePlay::changeTimebar() {
-	timebar_rect.w = 540 * (static_cast<double>(last_sec) / limit_sec);
+/// 아래함수 미구현
+//~ 추가점수 구현 (기본 점수 100점, 1초당 25점 감소)
+void gamePlay::updateAddScore() {
+	// 미구현
 }
 
+//~ 점수판에 점수 기록
+void gamePlay::writeScore(string s) {
+
+
+	ofstream ofs;
+	ofs.open("../../res/testRes/scoreboard.txt");
+	ofs << s;
+	ofs.close();
+}
+
+
+//! ********************** 고양이 관련 **********************
+//~ 고양이 상태 업데이트
+void gamePlay::updateCatStatus() {
+	if (isBasicCat && sec == RandI) {
+		isBasicCat = false;
+	}
+}
 
 
 //! ********************** 데이터 import 및 Rendering **********************
@@ -591,11 +601,10 @@ void gamePlay::checkGameStatus() {
 	}
 }
 
-void gamePlay::writeScore(string s) {
-	
-
-	ofstream ofs;
-	ofs.open("../../res/testRes/scoreboard.txt");
-	ofs << s;
-	ofs.close();
+//~ 강제종료 체크
+void gamePlay::checkQuit() {
+	if (isForcedQuit) {
+		isForcedQuit = false;
+	}
 }
+
