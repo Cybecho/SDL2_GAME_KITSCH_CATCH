@@ -39,6 +39,9 @@ public:
 	//! ********************** 마우스 이벤트 **********************
 	void MouseButtonEvents();
 
+	//! ********************** 마우스 이벤트 **********************
+	void writeScore(string s);
+
 	//! ************************** gameLogic **************************
 	void increaseLevelLogic();			//~ 레벨 증가 로직
 	void loadMahjongBlocks();			//~ 맞춰야 할 블록 로드

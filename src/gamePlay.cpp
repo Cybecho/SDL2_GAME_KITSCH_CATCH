@@ -65,6 +65,13 @@ void gamePlay::HandleEvents() {
 				isChanged = true;
 				isForcedQuit = true;
 				SDL_Delay(33);
+				//plus_score_int = org_score_int;
+				//score = update_score;
+
+				//인트로 바꾸고 스트링으로 다시바꿈
+				int a = stoi(update_score);
+				string new_score = std::to_string(a);
+				writeScore(new_score);
 				changePhase(PHASE_ENDING_CLEAR);
 			}
 			//~ n 눌렀을때 gameLogic 초기화 (LoadMahjongFromCSV() 불러오는 역할임)
@@ -191,10 +198,7 @@ void gamePlay::gotoHome() {
 	string score;
 	plus_score_int = org_score_int;
 	score = original_score;
-	ofstream ofs;
-	ofs.open("../../res/testRes/scoreboard.txt");
-	ofs << score;
-	ofs.close();
+	writeScore(score);
 	isChanged = true;
 	SDL_Delay(33);
 	resetGame(); // 게임 초기화
@@ -219,26 +223,27 @@ void gamePlay::stageLimitTime() {
 //~ 점수 업데이트
 void gamePlay::updateScore(int s) {
 	string front_score;
-	update_score = to_string(s);
+	int updateScore_int = s + org_score_int;
+	update_score = std::to_string(updateScore_int);
 
 	//���� ���ڸ����� ����
-	if (s == 0) {
+	if (updateScore_int == 0) {
 		front_score = "000";
 		update_score = front_score + update_score;
 	}
-	else if (s > 0 && s < 10) {
+	else if (updateScore_int > 0 && updateScore_int < 10) {
 		front_score = "000";
 		update_score = front_score + update_score;
 	}
-	else if (s >= 10 && s < 100) {
+	else if (updateScore_int >= 10 && updateScore_int < 100) {
 		front_score = "00";
 		update_score = front_score + update_score;
 	}
-	else if (s >= 100 && s < 1000) {
+	else if (updateScore_int >= 100 && updateScore_int < 1000) {
 		front_score = "0";
 		update_score = front_score + update_score;
 	}
-	else { update_score = to_string(s); }
+	else { update_score = to_string(updateScore_int); }
 
 
 	TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
@@ -584,4 +589,13 @@ void gamePlay::checkGameStatus() {
 		m_gameLogic.setStatus(STATUS_GAMECLEAR);
 		changePhase(PHASE_ENDING_CLEAR);
 	}
+}
+
+void gamePlay::writeScore(string s) {
+	
+
+	ofstream ofs;
+	ofs.open("../../res/testRes/scoreboard.txt");
+	ofs << s;
+	ofs.close();
 }

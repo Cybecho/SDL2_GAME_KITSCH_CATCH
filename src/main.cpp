@@ -101,23 +101,6 @@ int main(int argc, char *argv[])
 		// write score to txt file
 		string score;
 
-		if (isForcedQuit == true)
-		{
-
-			plus_score_int = org_score_int;
-			score = original_score;
-		}
-		else
-		{
-			score = to_string(plus_score_int);
-		}
-		// write to txt file
-
-		ofstream ofs;
-		ofs.open("../../res/testRes/scoreboard.txt");
-		ofs << score;
-		ofs.close();
-
 		update1Sec(); //고양이 상태 지정, 1초마다 업데이트
 
 		int count = 0;
