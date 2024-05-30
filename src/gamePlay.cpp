@@ -64,14 +64,8 @@ void gamePlay::HandleEvents() {
 				isChanged = true;
 				isForcedQuit = true;
 				SDL_Delay(33);
-				//plus_score_int = org_score_int;
-				//score = update_score;
-
-				//인트로 바꾸고 스트링으로 다시바꿈
-				int a = stoi(update_score);
-				string new_score = std::to_string(a);
-				writeScore(new_score);
-				changePhase(PHASE_ENDING_CLEAR);
+				writeScore(update_score);			//~ 점수판에 점수 기록
+				changePhase(PHASE_ENDING_CLEAR);	//~ 클리어로 페이즈 전환
 			}
 			//~ n 눌렀을때 gameLogic 초기화 (LoadMahjongFromCSV() 불러오는 역할임)
 			else if (event.key.keysym.sym == SDLK_n) {
@@ -162,17 +156,18 @@ void gamePlay::resetGame() {
 void gamePlay::changePhase(GamePhase status) {
 	g_current_game_phase = status;
 	Mix_HaltMusic();
-	m_gameLogic.resetGame(); // gameLogic 초기화
-
+	m_gameLogic.resetGame();	// gameLogic 초기화
 	switch (status) {
 	case PHASE_ENDING_CLEAR:
 		clear_reset = true;
 		Mix_PlayMusic(clear_music, -1);
+		writeScore(update_score); //~ 점수판에 점수 기록
 		resetGame();
 		break;
 	case PHASE_ENDING_GAMEOVER:
 		gameover_reset = true;
 		Mix_PlayMusic(gameover_music, -1);
+		writeScore(update_score); //~ 점수판에 점수 기록
 		resetGame();
 		break;
 	case PHASE_MAIN:
@@ -194,10 +189,9 @@ void gamePlay::gotoHome() {
 	Mix_PlayChannel(-1, setting_SoundEffect, 0);
 	isSetting = false;
 	isForcedQuit = true;
-	string score;
-	plus_score_int = org_score_int;
-	score = original_score;
-	writeScore(score);
+	
+	writeScore(original_score); //~ 점수판에 점수 기록
+
 	isChanged = true;
 	SDL_Delay(33);
 	resetGame(); // 게임 초기화
@@ -298,13 +292,12 @@ void gamePlay::updateAddScore() {
 }
 
 //~ 점수판에 점수 기록
-void gamePlay::writeScore(string s) {
-
-
-	ofstream ofs;
-	ofs.open("../../res/testRes/scoreboard.txt");
-	ofs << s;
-	ofs.close();
+void gamePlay::writeScore(const string& s) {
+	ofstream ofs("../../res/testRes/scoreboard.txt");
+	if (ofs.is_open()) {
+		ofs << s;
+		ofs.close();
+	}
 }
 
 

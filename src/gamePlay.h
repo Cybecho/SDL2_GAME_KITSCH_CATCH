@@ -32,7 +32,7 @@ public:
 	void updateScore(int s);
 	void addSeconds(int seconds);
 	void updateAddScore();
-	void writeScore(string s);
+	void writeScore(const string& s);
 
 	//! ********************** 데이터 import 및 Rendering **********************
 	void loadIMGs();
