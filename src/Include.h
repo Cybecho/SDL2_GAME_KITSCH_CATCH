@@ -33,10 +33,10 @@ enum GameStatus
 
 //! Mahjong Type Enum
 enum MahjongType {
-    MahjongType_0,
-    MahjongType_1,
-    MahjongType_2,
-    MahjongType_3,
+    MahjongType_0, // 물 블록
+    MahjongType_1, // 캣타워 블록
+    MahjongType_2, // 생선 블록
+    MahjongType_3, // 쥐 블록
     NONE
 };
 

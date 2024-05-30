@@ -315,10 +315,22 @@ void gamePlay::changeCatAnimation() {
 	static int prevType = NONE;
 	if (g_curType != prevType) {
 		switch (g_curType) {
-		case MahjongType_0: cout << "A" << endl; break;
-		case MahjongType_1: cout << "B" << endl; break;
-		case MahjongType_2: cout << "C" << endl; break;
-		case MahjongType_3: cout << "D" << endl; break;
+		case MahjongType_0: 
+			cout << "A" << endl; // 물 블록
+			// 여기에 '목마름' 애니메이션 실행시켜주세요
+			break;
+		case MahjongType_1: 
+			cout << "B" << endl; // 캣타워 블록
+			// 여기에 '잠자기' 애니메이션 실행시켜주세요
+			break;
+		case MahjongType_2: 
+			cout << "C" << endl; // 생선 블록
+			// 여기에 '배부름' 애니메이션 실행시켜주세요
+			break;
+		case MahjongType_3: 
+			cout << "D" << endl; // 쥐 블록
+			// 여기에 '놀아주기' 애니메이션 실행시켜주세요
+			break;
 		case NONE: break;
 		default: break;
 		}
