@@ -52,6 +52,7 @@ public:
 
 	//! ************************** 고양이 상태 **************************
 	void updateCatStatus();
+	void changeCatAnimation();
 
 	//! ************************** getter & setter **************************
 	int getLastSec() const { return last_sec; }

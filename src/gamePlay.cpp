@@ -112,6 +112,7 @@ void gamePlay::Update() {
 	updateTimer();							//~ 시간 및 타이머 업데이트
 	checkGameStatus();						//~ 게임 상태 체크
 	updateCatStatus();						//~ 고양이 상태 변경
+	changeCatAnimation();
 }
 
 void gamePlay::Render() {
@@ -307,6 +308,24 @@ void gamePlay::updateCatStatus() {
 	if (isBasicCat && sec == RandI) {
 		isBasicCat = false;
 	}
+}
+
+//~ g_curType 에 따른 고양이 애니메이션 출력
+void gamePlay::changeCatAnimation() {
+	static int prevType = NONE;
+	if (g_curType != prevType) {
+		switch (g_curType) {
+		case MahjongType_0: cout << "A" << endl; break;
+		case MahjongType_1: cout << "B" << endl; break;
+		case MahjongType_2: cout << "C" << endl; break;
+		case MahjongType_3: cout << "D" << endl; break;
+		case NONE: break;
+		default: break;
+		}
+		prevType = g_curType;
+	}
+
+	g_curType = NONE;
 }
 
 
