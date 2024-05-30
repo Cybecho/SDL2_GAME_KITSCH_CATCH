@@ -112,7 +112,7 @@ void gamePlay::Update() {
 	updateTimer();							//~ 시간 및 타이머 업데이트
 	checkGameStatus();						//~ 게임 상태 체크
 	updateCatStatus();						//~ 고양이 상태 변경
-	changeCatAnimation();
+	changeCatAnimation();					//~ g_curType에 따른 고양이 애니메이션 변경
 }
 
 void gamePlay::Render() {

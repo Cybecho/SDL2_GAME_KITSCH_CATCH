@@ -57,7 +57,7 @@ protected:
     int m_y;
     int m_blockScale;
     int m_blockSize;
-    int m_score = 100;
+    int m_score = 10;
     //! 흔들림 효과
     int m_originalX;
     int m_originalY;

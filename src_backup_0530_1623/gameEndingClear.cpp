@@ -74,7 +74,7 @@ void gameEndingClear::HandleEvents() {
 			break;
 		}
 
-		// ��ư �۵� �κ�: ������ �ڵ� Ȱ��
+		// 버튼 동작 부분: 아래의 코드 활성
 		if (event.type == SDL_MOUSEBUTTONDOWN && bt_clickable) {
 			if (event.button.button == SDL_BUTTON_LEFT) {
 				int mouseX = event.button.x;
@@ -84,6 +84,7 @@ void gameEndingClear::HandleEvents() {
 				if (mouseX > mainBT_rect.x && mouseY > mainBT_rect.y &&
 					mouseX < mainBT_rect.x + mainBT_rect.w && mouseY < mainBT_rect.y + mainBT_rect.h) {
 					g_current_game_phase = PHASE_MAIN;
+					clear_reset = true; // 추가
 					bt_clickable = false;
 					Mix_PlayChannel(-1, SoundEffect, 0);
 					Mix_HaltMusic();
@@ -94,6 +95,7 @@ void gameEndingClear::HandleEvents() {
 				if (mouseX > retryBT_rect.x && mouseY > retryBT_rect.y &&
 					mouseX < retryBT_rect.x + retryBT_rect.w && mouseY < retryBT_rect.y + retryBT_rect.h) {
 					g_current_game_phase = PHASE_PLAYING;
+					clear_reset = true; // 추가
 					bt_clickable = false;
 					Mix_PlayChannel(-1, SoundEffect, 0);
 					Mix_HaltMusic();
@@ -131,35 +133,36 @@ void gameEndingClear::Render() {
 	SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 255);
 	SDL_RenderClear(g_renderer); // clear the renderer to the draw color
 
-	// ���� ��ȭ ���
-	bg[0].FadeIn(1); 
-	if (bg[0].is_fade_finished)
+	// 배경 등장 부분
+	bg[0].FadeIn(1);
+	if (bg[0].is_fade_finished) {
 		bg[0].Delay(1.5);
 
-	// ���� ȭ�� ���
-	if(bg[0].is_delay_finished)
-		bg[0].CrossFade(bg[1].imgClass, 0.5); // 0.5�ʰ� ���� ���� �׸��� CrossFade
+		// 배경 전환 부분
+		if (bg[0].is_delay_finished) {
+			bg[0].CrossFade(bg[1].imgClass, 0.5); // 0.5초간 다음 배경 이미지 CrossFade
+		}
 
-	if (bg[0].is_crossfade_finished) {
-		bt_clickable = true;
+		if (bg[0].is_crossfade_finished) {
+			bt_clickable = true;
 
-		// CrossFade()�� ���� ������ ���� �ݺ� ���
-		if (cat_cut == CLEAR_CAT_IMG - 1) // ���� ������ �׸��� ������ �׸��̶��
-			cat[cat_cut].CrossFade(cat[0].imgClass, 0.2); // 0.2�ʵ��� ù��° �׸��� CrossFade
-		else
-			cat[cat_cut].CrossFade(cat[cat_cut + 1].imgClass, 0.2); // 0.2�ʵ��� ���� �׸��� CrossFade
+			// CLEAR_BG_IMG 애니메이션이 완료된 후에 CLEAR_CAT_IMG 애니메이션 시작
+			if (cat_cut == CLEAR_CAT_IMG - 1)
+				cat[cat_cut].CrossFade(cat[0].imgClass, 0.2);
+			else
+				cat[cat_cut].CrossFade(cat[cat_cut + 1].imgClass, 0.2);
 
-		if(cat[cat_cut].is_crossfade_finished)
-			cat[cat_cut].Delay(0.7);
+			if (cat[cat_cut].is_crossfade_finished)
+				cat[cat_cut].Delay(0.7);
 
-		// �׸��� ���������� ���� CrossFade�� ���� ���� �Լ� �ʱ�ȭ
-		if (cat[cat_cut].is_delay_finished) {
-			cat[cat_cut].InitCrossFade();
-			cat[cat_cut].InitDelay();
-			
-			cat_cut++;
-			if(cat_cut == CLEAR_CAT_IMG) // ������ �׸��� �����ϸ� ù��° �׸����� �ʱ�ȭ
-				cat_cut = 0;
+			if (cat[cat_cut].is_delay_finished) {
+				cat[cat_cut].InitCrossFade();
+				cat[cat_cut].InitDelay();
+
+				cat_cut++;
+				if (cat_cut == CLEAR_CAT_IMG)
+					cat_cut = 0;
+			}
 		}
 	}
 
