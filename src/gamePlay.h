@@ -105,7 +105,7 @@ protected:
 	int limit_sec;
 	int last_sec; //last second (stage second)
 	Uint32 lastMatchTime; // 추가 점수 확인용
-	int addScore; // 추가 점수 멤버 변수
+	int addScore;	// 추가 점수 멤버 변수
 };
 
 extern Mix_Music* main_music;
@@ -122,12 +122,15 @@ extern bool isForcedQuit;
 extern bool isBasicCat; //고양이 기본 상태
 
 extern SDL_Rect timebar_rect;
-extern string score;
 
+///  점수 관련
+extern string score;
 extern string original_score;
 extern int org_score_int;
 extern int plus_score_int; //load from txt file
+extern int total_Score_int; // 누적 총 점수
 
+/// 
 extern int sprite_num; //고양이 스프라이트 x좌표
 extern int RandI; //랜덤 초 
 extern int p_RandCat; //random cat status

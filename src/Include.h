@@ -31,6 +31,14 @@ enum GameStatus
     STATUS_GAMEOVER
 };
 
+//! Mahjong Type Enum
+enum MahjongType {
+    MahjongType_0,
+    MahjongType_1,
+    MahjongType_2,
+    MahjongType_3
+}
+
 //! 기본 헤더
 #include <iostream>
 #include <cstdlib>

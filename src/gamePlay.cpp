@@ -243,9 +243,9 @@ void gamePlay::changeTimebar() {
 void gamePlay::updateScore(int s) {
 	string front_score;
 	int updateScore_int = s + org_score_int;
-	update_score = std::to_string(updateScore_int);
+	update_score = to_string(updateScore_int);
 
-	//���� ���ڸ����� ����
+	// 점수 4자리수로 맞추기
 	if (updateScore_int == 0) {
 		front_score = "000";
 		update_score = front_score + update_score;
