@@ -50,6 +50,7 @@ public:
     //! 점수 및 게임상태 관련 함수
     int UpdateScore(int score);
     void printStatusChange();
+    int checkMahjongType(string Type);
 
     //! Getters and Setters
     vector<unique_ptr<Mahjong>>& getVector() { return g_vector; }	/// g_vector 벡터 getter

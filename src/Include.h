@@ -36,7 +36,8 @@ enum MahjongType {
     MahjongType_0,
     MahjongType_1,
     MahjongType_2,
-    MahjongType_3
+    MahjongType_3,
+    NONE
 };
 
 //! 기본 헤더
@@ -78,7 +79,8 @@ using uint64 = std::uint64_t;
 extern bool g_flag_running;
 extern SDL_Renderer *g_renderer;
 extern Uint32 g_frame_per_sec;
-extern int g_input; // 사용자의 키를 입력받는 변수
+extern int g_input;     // 사용자의 키를 입력받는 변수
+extern int g_curType;   // 현재 블록 타입 (gameLogic, gamePlay 에서 사용)
 
 //! using namespace
 using namespace std;

@@ -3,7 +3,10 @@
 
 //! ******************** 생성자 소멸자 ******************** 
 
+int g_curType;
+
 gameLogic::gameLogic() {
+    g_curType = NONE; //enum 변수 초기화
     g_status = STATUS_GAMEPLAYING;
     g_prevStatus = g_status;
     wave1_ = nullptr;
@@ -263,7 +266,7 @@ void gameLogic::vector2stack(vector<unique_ptr<Mahjong>>::iterator it) {
 
 /// shake 로직 있음 (보완 필요)
 void gameLogic::RemoveSameTypeBlocks() {
-    map<string, vector<int>> typeIndices;
+    map<string, vector<int>> typeIndices; // 타입별 인덱스 저장
     for (int i = 0; i < g_stack.size(); ++i) {
         if (dynamic_cast<Mahjong_Empty*>(g_stack[i].get()) == nullptr) {
             typeIndices[g_stack[i]->getType()].push_back(i);
@@ -272,6 +275,7 @@ void gameLogic::RemoveSameTypeBlocks() {
 
     bool blocksRemoved = false;
 
+    // 타입이 3개 이상인 경우 제거
     for (auto it = typeIndices.rbegin(); it != typeIndices.rend(); ++it) {
         if (it->second.size() >= 3) {
             int count = 0;
@@ -284,6 +288,8 @@ void gameLogic::RemoveSameTypeBlocks() {
                     int x = g_stack[index]->getX() + BLOCK_SIZE / 2;
                     int y = g_stack[index]->getY() + BLOCK_SIZE / 2;
                     createBonk(x, y);
+                    // 제거되는 블록의 인덱스를 g_stack에서 제거
+                    checkMahjongType(g_stack[index]->getType()); //~방금 맞춘 마작 타입을 g_curType에 저장
                     g_stack.erase(g_stack.begin() + index);
                     ++count;
                     blocksRemoved = true;
@@ -504,6 +510,14 @@ void gameLogic::printStatusChange() {
         }
         g_prevStatus = g_status;
     }
+}
+
+int gameLogic::checkMahjongType(string Type) {
+    if      (Type == "A") { g_curType = MahjongType_0;  return g_curType; }
+    else if (Type == "B") { g_curType = MahjongType_1;  return g_curType; }
+	else if (Type == "C") { g_curType = MahjongType_2;  return g_curType; }
+	else if (Type == "D") { g_curType = MahjongType_3;  return g_curType; }
+	else                  { g_curType = NONE;  return g_curType; }
 }
 
 //! ******************** 비멤버 함수 ********************
