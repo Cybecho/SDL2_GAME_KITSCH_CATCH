@@ -37,7 +37,7 @@ enum MahjongType {
     MahjongType_1,
     MahjongType_2,
     MahjongType_3
-}
+};
 
 //! 기본 헤더
 #include <iostream>
