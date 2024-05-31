@@ -9,7 +9,7 @@
 #define BLOCK_SIZE 100      // 블록 기본 크기
 #define BLOCK_SCALE 1.0f    // 블록 크기 배율
 #define MAX_STACK 7 	    // 최대 스택 블록 수
-#define LIMIT_TIME 60       // 제한 시간
+#define LIMIT_TIME 90       // 제한 시간
 #define ADD_TIME 1 	        // 추가 시간
 
 //! Game Phases Enum
