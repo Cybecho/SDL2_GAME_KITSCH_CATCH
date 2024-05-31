@@ -12,3 +12,4 @@
 
 # Except the following directories and their contents
 !/doc/**
+.vs/SDL2_GAME_KITSCH_CATCH/v17/DocumentLayout.json
