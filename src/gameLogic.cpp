@@ -27,62 +27,41 @@ gameLogic::~gameLogic() {
 
 //! ********************** 기본 함수 **********************
 
-void gameLogic::HandleEvents() {
-    SDL_Event event;
+void gameLogic::HandleEvents(SDL_Event& event) {
+    if (event.type == SDL_MOUSEMOTION) {
+        int mouse_x = event.motion.x;
+        int mouse_y = event.motion.y;
 
-    while (SDL_PollEvent(&event)) {
-        // SDL_QUIT 이벤트 제거
-        if (event.type == SDL_QUIT) {
-            continue;
-        }
-
-        //! 스페이스바 누르면 벡터&스택 초기화
-        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == 'r') {
-            g_vector.clear();
-            g_stack.clear();
-        }
-
-        if (event.type == SDL_MOUSEMOTION) {
-            int mouse_x = event.motion.x;
-            int mouse_y = event.motion.y;
-
-            for (auto& block : g_vector) {
-                if (block->isClickable()) {
-                    block->setHovered(block->isHovered(mouse_x, mouse_y));
-                }
+        // 마우스 위치에 해당하는 블록만 확인
+        for (auto& block : g_vector) {
+            if (block->isClickable() && block->isHovered(mouse_x, mouse_y)) {
+                block->setHovered(true);
+            }
+            else {
+                block->setHovered(false);
             }
         }
+    }
 
-        //! 마우스 클릭 이벤트 처리
-        if (event.type == SDL_MOUSEBUTTONDOWN) {
-            int mouse_x = event.button.x;
-            int mouse_y = event.button.y;
+    if (event.type == SDL_MOUSEBUTTONDOWN) {
+        int mouse_x = event.button.x;
+        int mouse_y = event.button.y;
 
-            // g_vector를 역순으로 순회하여 상위 레이어부터 클릭 이벤트 처리
-            for (auto it = g_vector.rbegin(); it != g_vector.rend(); ++it) {
-                //! clickEnable이 true이고 Mahjong_Empty 블록이 아닌 경우에만 클릭 이벤트 처리
-                if ((*it)->isClickable() && !dynamic_cast<Mahjong_Empty*>(it->get()) && (*it)->isClicked(mouse_x, mouse_y)) {
-                    (*it)->Play2Sound();
-
-                    vector2stack(it.base() - 1); //! 클릭된 블록을 g_stack으로 이동
-                    createBonk(mouse_x, mouse_y); //! 클릭 위치에 bonk 객체 생성
-                    break;
-                }
+        for (auto it = g_vector.rbegin(); it != g_vector.rend(); ++it) {
+            if ((*it)->isClickable() && !dynamic_cast<Mahjong_Empty*>(it->get()) && (*it)->isClicked(mouse_x, mouse_y)) {
+                (*it)->Play2Sound();
+                vector2stack(it.base() - 1);
+                createBonk(mouse_x, mouse_y);
+                break;
             }
         }
     }
 }
 
 void gameLogic::Update() {
-    //~ gamePlay의 Update에서 따로 호출해줌
-    /*
-    LoadMahjongBlocksIfEmpty(g_level); //~ 문제의 코드
-    RemoveSameTypeBlocks();
-    AlignStackBlocks();
     UpdateVectorBlocks();
     UpdateStackBlocks();
     UpdateBonks();
-    */
 }
 
 void gameLogic::Render() {
@@ -258,10 +237,12 @@ void gameLogic::vector2stack(vector<unique_ptr<Mahjong>>::iterator it) {
     block->setX(x);
     block->setY(y);
 
-    g_stack.emplace_back(move(block));
+    g_stack.emplace_back(move(block)); /// 뒤에다가 블록
 
     // g_blocks와 g_stack의 사이즈 출력
     cout << "g_blocks size: " << g_vector.size() - countEmptyBlocks() << "| g_stack size: " << g_stack.size() << endl;
+
+    AlignStackBlocks(); /// 블록 정렬 즉시 수행
 }
 
 /// shake 로직 있음 (보완 필요)

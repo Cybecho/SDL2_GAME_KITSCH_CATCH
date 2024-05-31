@@ -50,7 +50,7 @@ gamePlay::~gamePlay() {
 //! ********************** 기본 함수 **********************
 
 void gamePlay::HandleEvents() {
-	//SDL_Event event;
+
 	if (SDL_PollEvent(&event)) {
 		switch (event.type) {
 
@@ -86,11 +86,10 @@ void gamePlay::HandleEvents() {
 		default: break;
 		}
 
-
+		m_gameLogic.HandleEvents(event); //~ 게임로직 이벤트 처리 함수 실행
 		MouseButtonEvents();
 	}
-	//! ************************** gameLogic **************************
-	m_gameLogic.HandleEvents(); //~ 게임로직 이벤트 처리 함수 실행
+	
 }
 
 void gamePlay::Update() {
@@ -100,10 +99,6 @@ void gamePlay::Update() {
 		addSeconds(ADD_TIME);
 		m_gameLogic.setIsPop(false); //~ RemoveSameTypeBlocks()에서 true가 된 isPop 을 다시 fasle 처리
 	}
-	m_gameLogic.AlignStackBlocks();
-	m_gameLogic.UpdateVectorBlocks();
-	m_gameLogic.UpdateStackBlocks();
-	m_gameLogic.UpdateBonks();
 	m_gameLogic.printStatusChange();		//~ 게임 상태 출력
 	checkAndLoadMahjongBlocks();			//~ 맞춰야 할 블록 체크 및 로드
 	stageLimitTime();						//~ 제한시간 설정

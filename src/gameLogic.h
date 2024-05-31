@@ -12,7 +12,7 @@ public:
     ~gameLogic();
 
     //! 기본 함수
-    void HandleEvents();
+    HandleEvents(SDL_Event& event);
     void Update();
     void Render();
 
