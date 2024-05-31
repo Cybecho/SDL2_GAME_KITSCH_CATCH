@@ -1,33 +1,28 @@
-#include "gameIntro.h"
+﻿#include "gameIntro.h"
 
 bool intro_reset = false;
 
 gameIntro::gameIntro() {
-	// Load cartoons
-	cartoon.resize(cartoon_cut);
+	cartoon.resize(CARTOON_IMG);
 
-	cartoon[0].imgClass.surface = IMG_Load("../../res/intro_cartoon/intro_cartoon1.png");
-	cartoon[1].imgClass.surface = IMG_Load("../../res/intro_cartoon/intro_cartoon2.png");
-	cartoon[2].imgClass.surface = IMG_Load("../../res/intro_cartoon/intro_cartoon3.png");
-	cartoon[3].imgClass.surface = IMG_Load("../../res/intro_cartoon/intro_cartoon4.png");
-	cartoon[4].imgClass.surface = IMG_Load("../../res/intro_cartoon/intro_cartoon5.png");
-	cartoon[5].imgClass.surface = IMG_Load("../../res/intro_cartoon/intro_cartoon6.png");
+	// 만화 이미지 로드
+	cartoon[0].SetImgClassSurface(IMG_Load("../../res/intro_cartoon/intro.png"));
+	cartoon[1].SetImgClassSurface(IMG_Load("../../res/intro_cartoon/intro_cartoon1.png"));
+	cartoon[2].SetImgClassSurface(IMG_Load("../../res/intro_cartoon/intro_cartoon2.png"));
+	cartoon[3].SetImgClassSurface(IMG_Load("../../res/intro_cartoon/intro_cartoon3.png"));
+	cartoon[4].SetImgClassSurface(IMG_Load("../../res/intro_cartoon/intro_cartoon4.png"));
+	cartoon[5].SetImgClassSurface(IMG_Load("../../res/intro_cartoon/intro_cartoon5.png"));
+	cartoon[6].SetImgClassSurface(IMG_Load("../../res/intro_cartoon/intro_cartoon6.png"));
 
-	// Cartoon surfaces
-	for (int i = 0; i < cartoon_cut; i++) {
-		cartoon[i].imgClass.texture = SDL_CreateTextureFromSurface(g_renderer, cartoon[i].imgClass.surface);
-		SDL_FreeSurface(cartoon[i].imgClass.surface);
-		SDL_QueryTexture(cartoon[i].imgClass.texture, NULL, NULL, &cartoon[i].imgClass.srcrect.w, &cartoon[i].imgClass.srcrect.h);
-		cartoon[i].imgClass.srcrect.x = cartoon[i].imgClass.srcrect.y = 0;
-		
-		// Set cartoon destination rect
-		cartoon[i].imgClass.dstrect.x = 0;
-		cartoon[i].imgClass.dstrect.y = 0;
-		cartoon[i].imgClass.dstrect.w = cartoon[i].imgClass.srcrect.w;
-		cartoon[i].imgClass.dstrect.h = cartoon[i].imgClass.srcrect.h;
+	// 텍스처 생성
+	for (auto& i : cartoon) {
+		i.SetImgClassTexture(SDL_CreateTextureFromSurface(g_renderer, i.GetImgClass().surface));
+		i.SetImgClassSrcRect({ 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT });
+		i.SetImgClassDstRect({ 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT });
+		SDL_FreeSurface(i.GetImgClass().surface);
 	}
 
-	// Init Sound
+	// BGM and SoundEffect
 	intro_music = Mix_LoadMUS("../../res/testRes/testBGM1.mp3");
 	if (intro_music == 0) {
 		printf("Couldn't load the wav: %s\n", Mix_GetError());
@@ -38,8 +33,8 @@ gameIntro::gameIntro() {
 
 gameIntro::~gameIntro() {
 	Mix_FreeMusic(intro_music);
-	for (int i = 0;i < cartoon_cut;i++) {
-		SDL_DestroyTexture(cartoon[i].imgClass.texture);
+	for (auto& i : cartoon) {
+		SDL_DestroyTexture(i.GetImgClass().texture);
 	}
 }
 
@@ -92,7 +87,7 @@ void gameIntro::HandleEvents() {
 
 void gameIntro::Update() {
 	if (intro_reset) {
-		for (int i = 0; i < cartoon_cut; i++) {
+		for (int i = 0; i < CARTOON_IMG-1; i++) {
 			cartoon[i].InitFade();
 			cartoon[i].InitCrossFade();
 			cartoon[i].InitDelay();
@@ -106,43 +101,40 @@ void gameIntro::Render() {
 	SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 255);
 	SDL_RenderClear(g_renderer);
 
-	/*
-	* Cartoon functions
-	* 1. We can't use Sleep() and SDL_Delay(), so use these functions
-	* 2. When FadeIn() function finished, "is_fade_finished" = true
-	*	 When Delay() function finished, "is_delay_finished" = true
-	* 3. Use these functions selectively for next cartoons
-	*/
-
 	cartoon[0].FadeIn(0.5);
-	if (cartoon[0].is_fade_finished)
-		cartoon[0].Delay(3);
+	if (cartoon[0].isFadeFinished())
+		cartoon[0].Delay(1);
 
-	if (cartoon[0].is_delay_finished)
-		cartoon[1].FadeIn(0.5);
-	if (cartoon[1].is_fade_finished)
-		cartoon[1].Delay(1);
+	if (cartoon[0].isDelayFinished())
+		cartoon[1].FadeIn(0.3);
+	if (cartoon[1].isFadeFinished())
+		cartoon[1].Delay(3);
 
-	if (cartoon[1].is_delay_finished)
+	if (cartoon[1].isDelayFinished())
 		cartoon[2].FadeIn(0.5);
-	if (cartoon[2].is_fade_finished)
-		cartoon[2].Delay(2);
+	if (cartoon[2].isFadeFinished())
+		cartoon[2].Delay(1);
 
-	if (cartoon[2].is_delay_finished)
+	if (cartoon[2].isDelayFinished())
 		cartoon[3].FadeIn(0.5);
-	if (cartoon[3].is_fade_finished)
-		cartoon[3].Delay(5);
+	if (cartoon[3].isFadeFinished())
+		cartoon[3].Delay(2);
 
-	if (cartoon[3].is_delay_finished)
+	if (cartoon[3].isDelayFinished())
 		cartoon[4].FadeIn(0.5);
-	if (cartoon[4].is_fade_finished)
-		cartoon[4].Delay(2);
+	if (cartoon[4].isFadeFinished())
+		cartoon[4].Delay(5);
 
-	if (cartoon[4].is_delay_finished)
+	if (cartoon[4].isDelayFinished())
 		cartoon[5].FadeIn(0.5);
+	if (cartoon[5].isFadeFinished())
+		cartoon[5].Delay(2);
+
+	if (cartoon[5].isDelayFinished())
+		cartoon[6].FadeIn(0.5);
 
 	// Prevent skipping cartoon
-	if (cartoon[5].is_fade_finished)
+	if (cartoon[6].isFadeFinished())
 		is_cartoon_finished = true;
 
 	// Draw to the screen

@@ -14,11 +14,12 @@ public:
 	void Update();
 	void Render();
 
-	vector<Cartoon> bg; // ��� �̹��� (Fade�� ���� Cartoon ���)
-	vector<Cartoon> cat; // ������ �̹��� (Fade�� ���� Cartoon ���)
+	Cartoon a, b;
+	vector<Cartoon> bg; // 배경 이미지 (Fade를 위해 Cartoon 사용)
+	vector<Cartoon> cat; // 고양이 이미지 (Fade를 위해 Cartoon 사용)
 	SDL_Rect mainBT_rect;
 	SDL_Rect retryBT_rect;
-	int cat_cut; // ������ �̹��� ��ȣ
+	int cat_cut; // 고양이 이미지 번호
 	bool bt_clickable;
 
 	Mix_Chunk* SoundEffect;

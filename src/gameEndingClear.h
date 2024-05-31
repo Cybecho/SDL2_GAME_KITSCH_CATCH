@@ -14,11 +14,11 @@ public:
 	void Update();
 	void Render();
 
-	std::vector<Cartoon> bg; // ¹è°æ ÀÌ¹ÌÁö (Fade¸¦ À§ÇØ Cartoon »ç¿ë)
-	std::vector<Cartoon> cat; // °í¾çÀÌ ÀÌ¹ÌÁö (Fade¸¦ À§ÇØ Cartoon »ç¿ë)
+	std::vector<Cartoon> bg; // ë°°ê²½ ì´ë¯¸ì§€ (Fadeë¥¼ ìœ„í•´ Cartoon ì‚¬ìš©)
+	std::vector<Cartoon> cat; // ê³ ì–‘ì´ ì´ë¯¸ì§€ (Fadeë¥¼ ìœ„í•´ Cartoon ì‚¬ìš©)
 	SDL_Rect mainBT_rect;
 	SDL_Rect retryBT_rect;
-	int cat_cut; // °í¾çÀÌ ÀÌ¹ÌÁö ¹øÈ£
+	int cat_cut; // ê³ ì–‘ì´ ì´ë¯¸ì§€ ë²ˆí˜¸
 	bool bt_clickable;
 
 	Mix_Chunk* SoundEffect;

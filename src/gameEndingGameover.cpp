@@ -10,25 +10,29 @@ gameEndingGameover::gameEndingGameover() {
 	cat_cut = 0;
 	bt_clickable = false;
 
-	// ���ӿ��� ���� �̹��� �ε�
-	bg[0].imgClass.surface = IMG_Load("../../res/ending/ending_over/ending_over_cut1.png");
-	bg[1].imgClass.surface = IMG_Load("../../res/ending/ending_over/ending_over_cut2.png");
-	cat[0].imgClass.surface = IMG_Load("../../res/ending/ending_over/ending_over_cat_1.png");
-	cat[1].imgClass.surface = IMG_Load("../../res/ending/ending_over/ending_over_cat_2.png");
-	cat[2].imgClass.surface = IMG_Load("../../res/ending/ending_over/ending_over_cat_3.png");
-	cat[3].imgClass.surface = IMG_Load("../../res/ending/ending_over/ending_over_cat_4.png");
-	cat[4].imgClass.surface = IMG_Load("../../res/ending/ending_over/ending_over_cat_5.png");
+	// 게임오버 엔딩 이미지 로드
+	bg[0].SetImgClassSurface(IMG_Load("../../res/ending/ending_over/ending_over_cut1.png"));
+	bg[1].SetImgClassSurface(IMG_Load("../../res/ending/ending_over/ending_over_cut2.png"));
+	cat[0].SetImgClassSurface(IMG_Load("../../res/ending/ending_over/ending_over_cat_1.png"));
+	cat[1].SetImgClassSurface(IMG_Load("../../res/ending/ending_over/ending_over_cat_2.png"));
+	cat[2].SetImgClassSurface(IMG_Load("../../res/ending/ending_over/ending_over_cat_3.png"));
+	cat[3].SetImgClassSurface(IMG_Load("../../res/ending/ending_over/ending_over_cat_4.png"));
+	cat[4].SetImgClassSurface(IMG_Load("../../res/ending/ending_over/ending_over_cat_5.png"));
+	a.SetImgClassSurface(IMG_Load("../../res/ending/1.jpg"));
+	b.SetImgClassSurface(IMG_Load("../../res/ending/2.jpg"));
 
-	// �ؽ�ó ����
+	// 텍스처 생성
 	for (auto& i : bg) {
-		i.imgClass.texture = SDL_CreateTextureFromSurface(g_renderer, i.imgClass.surface);
-		i.imgClass.srcrect = i.imgClass.dstrect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
-		SDL_FreeSurface(i.imgClass.surface);
+		i.SetImgClassTexture(SDL_CreateTextureFromSurface(g_renderer, i.GetImgClass().surface));
+		i.SetImgClassSrcRect({ 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT });
+		i.SetImgClassDstRect({ 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT });
+		SDL_FreeSurface(i.GetImgClass().surface);
 	}
 	for (auto& i : cat) {
-		i.imgClass.texture = SDL_CreateTextureFromSurface(g_renderer, i.imgClass.surface);
-		i.imgClass.srcrect = i.imgClass.dstrect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
-		SDL_FreeSurface(i.imgClass.surface);
+		i.SetImgClassTexture(SDL_CreateTextureFromSurface(g_renderer, i.GetImgClass().surface));
+		i.SetImgClassSrcRect({ 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT });
+		i.SetImgClassDstRect({ 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT });
+		SDL_FreeSurface(i.GetImgClass().surface);
 	}
 
 	// BGM and SoundEffect
@@ -41,10 +45,10 @@ gameEndingGameover::gameEndingGameover() {
 
 gameEndingGameover::~gameEndingGameover() {
 	for (auto& i : bg) {
-		SDL_DestroyTexture(i.imgClass.texture);
+		SDL_DestroyTexture(i.GetImgClass().texture);
 	}
 	for (auto& i : cat) {
-		SDL_DestroyTexture(i.imgClass.texture);
+		SDL_DestroyTexture(i.GetImgClass().texture);
 	}
 	Mix_FreeMusic(gameover_music);
 	Mix_FreeChunk(SoundEffect);
@@ -131,35 +135,38 @@ void gameEndingGameover::Render() {
 	SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 255);
 	SDL_RenderClear(g_renderer); // clear the renderer to the draw color
 
-	// 배경 등장 부분
-	bg[0].FadeIn(1);
-	if (bg[0].is_fade_finished) {
-		bg[0].Delay(1.5);
+	if (!gameover_reset) { // 1틱동안 이전 엔딩 화면이 뜨는 오류 방지
 
-		// 배경 전환 부분
-		if (bg[0].is_delay_finished) {
-			bg[0].CrossFade(bg[1].imgClass, 0.5); // 0.5초간 다음 배경 이미지 CrossFade
-		}
+		// 배경 등장 부분
+		bg[0].FadeIn(1);
+		if (bg[0].isFadeFinished()) {
+			bg[0].Delay(1.5);
 
-		if (bg[0].is_crossfade_finished) {
-			bt_clickable = true;
+			// 배경 전환 부분
+			if (bg[0].isDelayFinished()) {
+				bg[0].CrossFade(bg[1].GetImgClass(), 0.5); // 0.5초간 다음 배경 이미지 CrossFade
+			}
 
-			// GAMEOVER_BG_IMG 애니메이션이 완료된 후에 GAMEOVER_CAT_IMG 애니메이션 시작
-			if (cat_cut == GAMEOVER_CAT_IMG - 1)
-				cat[cat_cut].CrossFade(cat[0].imgClass, 0.2);
-			else
-				cat[cat_cut].CrossFade(cat[cat_cut + 1].imgClass, 0.2);
+			if (bg[0].isCrossFadeFinished()) {
+				bt_clickable = true;
 
-			if (cat[cat_cut].is_crossfade_finished)
-				cat[cat_cut].Delay(0.7);
+				// GAMEOVER_BG_IMG 애니메이션이 완료된 후에 GAMEOVER_CAT_IMG 애니메이션 시작
+				if (cat_cut == GAMEOVER_CAT_IMG - 1)
+					cat[cat_cut].CrossFade(cat[0].GetImgClass(), 0.2);
+				else
+					cat[cat_cut].CrossFade(cat[cat_cut + 1].GetImgClass(), 0.2);
 
-			if (cat[cat_cut].is_delay_finished) {
-				cat[cat_cut].InitCrossFade();
-				cat[cat_cut].InitDelay();
+				if (cat[cat_cut].isCrossFadeFinished())
+					cat[cat_cut].Delay(0.7);
 
-				cat_cut++;
-				if (cat_cut == GAMEOVER_CAT_IMG)
-					cat_cut = 0;
+				if (cat[cat_cut].isDelayFinished()) {
+					cat[cat_cut].InitCrossFade();
+					cat[cat_cut].InitDelay();
+
+					cat_cut++;
+					if (cat_cut == GAMEOVER_CAT_IMG)
+						cat_cut = 0;
+				}
 			}
 		}
 	}

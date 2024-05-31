@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Include.h"
 #include "gameIntro.h"
 
@@ -14,23 +14,33 @@ public:
 	void InitCrossFade();
 	void InitDelay();
 
-	ImgClass imgClass;
+	ImgClass GetImgClass();
+	void SetImgClassSurface(SDL_Surface* new_surface);
+	void SetImgClassTexture(SDL_Texture* new_texture);
+	void SetImgClassSrcRect(SDL_Rect new_srcrect);
+	void SetImgClassDstRect(SDL_Rect new_dstrect);
+
+	bool isFadeFinished() { return is_fade_finished; }
+	bool isCrossFadeFinished() { return is_crossfade_finished; }
+	bool isDelayFinished() { return is_delay_finished; }
+
+private:
+	ImgClass img_class;
 
 	// FadeIn() Variables
-	int fade_alpha = 0;
-	double fade_value = 0;
-	double fade_delta = 0;
-	bool is_fade_finished = false;
+	double fade_delta;
+	double fade_value;
+	int fade_alpha;
+	bool is_fade_finished;
 
 	// CrossFade() Variables
-	int crossfade_alpha1 = 0;
-	int crossfade_alpha2 = 255;
-	double crossfade_value1 = 255;
-	double crossfade_value2 = 0;
-	double crossfade_delta = 0;
-	bool is_crossfade_finished = false;
+	double crossfade_delta;
+	double crossfade_value;
+	int crossfade_alpha1;
+	int crossfade_alpha2;
+	bool is_crossfade_finished;
 
 	// Delay() Variables
-	double delay_elapsed_time = 0;
-	bool is_delay_finished = false;
+	double delay_elapsed_time;
+	bool is_delay_finished;
 };

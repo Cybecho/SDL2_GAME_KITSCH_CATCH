@@ -1,11 +1,10 @@
-#pragma once
+﻿#pragma once
 
 #include "Include.h"
 #include "gameClass.h"
 #include "obj_gameIntroCartoon.h"
+#define CARTOON_IMG 7
 
-// Number of cartoons
-#define cartoon_cut 6
 class Cartoon; // Prevent compile error
 class gameIntro : public gameClass {
 public:
@@ -16,7 +15,7 @@ public:
 	void Update();
 	void Render();
 
-	vector<Cartoon> cartoon;
+	std::vector<Cartoon> cartoon;
 	bool is_cartoon_finished = false;
 };
 extern Mix_Music* intro_music;
