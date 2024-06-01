@@ -21,7 +21,7 @@ gamePlay::gamePlay() {
 	//isChanged = false;
 	isSetting = false;
 	isVolumeOff = false;
-
+	
 	loadIMGs();
 	loadSounds();
 
@@ -119,7 +119,7 @@ void gamePlay::Render() {
 	SDL_RenderFillRect(g_renderer, &timebar_rect);
 
 
-	renderCat();
+	renderCat(); //~ 고양이 렌더링
 
 	/// 스코프로 제한해둔 점수부분 렌더링
 	{ //score text
