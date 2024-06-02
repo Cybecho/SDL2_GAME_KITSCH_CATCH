@@ -16,6 +16,7 @@ public:
 	void changePhaseToPlay();
 	void loadImgs(); //load and init images
 	void loadSounds();
+	void loadTxts();
 	void renderScore();
 	void renderButtons();
 	void renderCat();
@@ -48,6 +49,10 @@ protected:
 	SDL_Texture* cat_sleep;
 	//SDL_Texture* cat_walk_left;
 	//SDL_Texture* cat_walk_right;
+
+	SDL_Texture* exp_txt; //"EXP" text
+	TTF_Font* score_font; //get score from txt file
+	SDL_Texture* score_txt;
 	
 	SDL_Texture* rule;
 

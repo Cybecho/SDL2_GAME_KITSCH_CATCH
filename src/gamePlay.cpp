@@ -24,6 +24,7 @@ gamePlay::gamePlay() {
 	
 	loadIMGs();
 	loadSounds();
+	loadTxts();
 
 	//! ************************** gameLogic **************************
 	cout << "Level : " << m_gameLogic.getLevel() << endl;
@@ -41,6 +42,7 @@ gamePlay::~gamePlay() {
 	SDL_DestroyTexture(cat_sleep);
 	SDL_DestroyTexture(cat_walk_left);
 	SDL_DestroyTexture(cat_walk_right);
+	TTF_CloseFont(score_font);
 	m_gameLogic.ClearGame();
 	SDL_Quit();
 	TTF_Quit();
@@ -64,7 +66,7 @@ void gamePlay::HandleEvents() {
 				isChanged = true;
 				isForcedQuit = true;
 				SDL_Delay(33);
-				writeScore(update_score);			//~ 점수판에 점수 기록
+				writeScore(update_score); //~ 누적 점수가 저장됨
 				changePhase(PHASE_ENDING_CLEAR);	//~ 클리어로 페이즈 전환
 			}
 			//~ n 눌렀을때 gameLogic 초기화 (LoadMahjongFromCSV() 불러오는 역할임)
@@ -157,13 +159,13 @@ void gamePlay::changePhase(GamePhase status) {
 	case PHASE_ENDING_CLEAR:
 		clear_reset = true;
 		Mix_PlayMusic(clear_music, -1);
-		writeScore(update_score); //~ 점수판에 점수 기록
+		writeScore(update_score); //~ 점수판에 점수 기록(누적 점수)
 		resetGame();
 		break;
 	case PHASE_ENDING_GAMEOVER:
 		gameover_reset = true;
 		Mix_PlayMusic(gameover_music, -1);
-		writeScore(update_score); //~ 점수판에 점수 기록
+		writeScore(update_score); //~ 점수판에 점수 기록(누적 점수)
 		resetGame();
 		break;
 	case PHASE_MAIN:
@@ -186,7 +188,7 @@ void gamePlay::gotoHome() {
 	isSetting = false;
 	isForcedQuit = true;
 	
-	writeScore(original_score); //~ 점수판에 점수 기록
+	writeScore(original_score); //~ 점수판에 점수 기록(게임 시작 전 점수)
 
 	isChanged = true;
 	SDL_Delay(33);
@@ -237,34 +239,36 @@ void gamePlay::changeTimebar() {
 //! ********************** 점수 관련 **********************
 //~ 점수 업데이트
 void gamePlay::updateScore(int s) {
+	SDL_DestroyTexture(score_text2); //메모리 누수 관리
+
 	string front_score;
+	string new_score;
 	int updateScore_int = s + org_score_int;
-	update_score = to_string(updateScore_int);
+	update_score = to_string(updateScore_int); //누적 점수 저장
 
+	//게임플레이 페이즈로 가면 0부터 시작
 	// 점수 4자리수로 맞추기
-	if (updateScore_int == 0) {
+	if (s == 0) {
 		front_score = "000";
-		update_score = front_score + update_score;
+		new_score = front_score + std::to_string(s);
 	}
-	else if (updateScore_int > 0 && updateScore_int < 10) {
+	else if (s > 0 && s < 10) {
 		front_score = "000";
-		update_score = front_score + update_score;
+		new_score = front_score + std::to_string(s);
 	}
-	else if (updateScore_int >= 10 && updateScore_int < 100) {
+	else if (s >= 10 && s < 100) {
 		front_score = "00";
-		update_score = front_score + update_score;
+		new_score = front_score + std::to_string(s);
 	}
-	else if (updateScore_int >= 100 && updateScore_int < 1000) {
+	else if (s >= 100 && s < 1000) {
 		front_score = "0";
-		update_score = front_score + update_score;
+		new_score = front_score + std::to_string(s);
 	}
-	else { update_score = to_string(updateScore_int); }
+	else { new_score = to_string(s); }
 
-
-	TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
 	SDL_Color white = { 255,255,255,0 };
-	SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, update_score.c_str(), white);
-	//to_string(score).c_str()
+	SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(score_font, new_score.c_str(), white);
+	
 	score_rect.x = 0;
 	score_rect.y = 0;
 	score_rect.w = tmp_surface->w;
@@ -272,7 +276,6 @@ void gamePlay::updateScore(int s) {
 
 	score_text2 = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
 	SDL_FreeSurface(tmp_surface);
-	TTF_CloseFont(font);
 }
 
 //~ gameLogic의 isPop이 true일 경우, 시간 추가
@@ -373,7 +376,7 @@ void gamePlay::loadIMGs() {
 		timebar_rect.h = g_window_margin;
 	}
 
-	plus_score_int = org_score_int;
+	
 
 	{//setting img
 		//mainscreen setting
@@ -430,6 +433,20 @@ void gamePlay::loadSounds() {
 	}
 
 	setting_SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
+}
+
+void gamePlay::loadTxts() {
+	score_font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
+	SDL_Color white = { 255,255,255,0 };
+	SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(score_font, "0000", white);
+
+	score_rect.x = 0;
+	score_rect.y = 0;
+	score_rect.w = tmp_surface->w;
+	score_rect.h = tmp_surface->h;
+
+	score_text2 = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
+	SDL_FreeSurface(tmp_surface);
 }
 
 //~ 고양이 렌더링
@@ -567,9 +584,6 @@ void gamePlay::MouseButtonEvents() {
 					changePhase(PHASE_MAIN); //~ 메인으로 페이즈 전환
 				}
 			}
-		}
-		else if (isSetting == false && event.button.button == SDL_BUTTON_RIGHT) {
-			plus_score_int += 10;
 		}
 	}
 }

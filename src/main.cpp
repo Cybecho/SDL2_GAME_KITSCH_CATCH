@@ -35,7 +35,6 @@ bool isChanged;
 bool isForcedQuit;
 bool cat_status = false; // false: image1, true : image2
 int org_score_int;
-int plus_score_int;
 
 string original_score;
 
@@ -99,7 +98,7 @@ int main(int argc, char *argv[])
 	while (g_flag_running)
 	{
 		// write score to txt file
-		string score;
+		//string score;
 
 		update1Sec(); //고양이 상태 지정, 1초마다 업데이트
 
@@ -156,9 +155,6 @@ void update1Sec() {
 				}*/
 				isBasicCat = true;
 			}
-			
-			
-
 		}
 	}
 }

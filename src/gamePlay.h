@@ -37,6 +37,7 @@ public:
 	//! ********************** 데이터 import 및 Rendering **********************
 	void loadIMGs();
 	void loadSounds();
+	void loadTxts();
 	void renderCat();
 	void renderSetting();
 
@@ -67,7 +68,7 @@ protected:
 	//const Uint32 p_start_time_ms;
 	Uint32 p_last_time_ms;
 	string string_time;
-	string update_score;
+	string update_score; //누적 점수
 	//int update_score; //new score
 	//float timebarw;
 
@@ -80,6 +81,8 @@ protected:
 	SDL_Texture* setting_bt;
 	SDL_Texture* setting;
 	SDL_Texture* score_text2; //get score from txt file
+
+	TTF_Font* score_font;
 
 	SDL_Texture* cat_sit;
 	SDL_Texture* cat_sleep;
@@ -127,9 +130,8 @@ extern SDL_Rect timebar_rect;
 ///  점수 관련
 extern string score;
 extern string original_score;
-extern int org_score_int;
-extern int plus_score_int; //load from txt file
-extern int total_Score_int; // 누적 총 점수
+extern int org_score_int; // 게임 시작 전 메모장에 저장된 점수
+extern int total_Score_int; // 누적 총 점수(메인화면)
 
 /// 
 extern int sprite_num; //고양이 스프라이트 x좌표
