@@ -127,7 +127,6 @@ int main(int argc, char *argv[])
 void updateAni() {
 	if (main_t.done())
 	{
-		int a;
 		if (isBasicCat) {
 			sprite_num = 0;
 			cat_status = !cat_status;
