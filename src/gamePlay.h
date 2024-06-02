@@ -52,8 +52,12 @@ public:
 	void checkGameStatus();				//~ 게임 상태 체크 (g_status 상태 확인)
 
 	//! ************************** 고양이 상태 **************************
-	void updateCatStatus();
 	void changeCatAnimation();
+	void waterAnimation();
+	void sleepAnimation();
+	void fishAnimation();
+	void mouseAnimation();
+
 
 	//! ************************** getter & setter **************************
 	int getLastSec() const { return last_sec; }
@@ -83,18 +87,22 @@ protected:
 	SDL_Texture* score_text2; //get score from txt file
 
 	TTF_Font* score_font;
-
-	SDL_Texture* cat_sit;
+	
 	SDL_Texture* cat_sleep;
 	SDL_Texture* cat_walk_left;
 	SDL_Texture* cat_walk_right;
+	SDL_Texture* cat_mouse;
+	SDL_Texture* cat_fish;
+	SDL_Texture* cat_scratcher;
+	SDL_Texture* cat_water;
 
 	SDL_Rect playground_rect;
 	SDL_Rect stack_rect;
 	
 	SDL_Rect cat_rect;
 	SDL_Rect cat_rect2;
-	SDL_Rect cat_play_rect;
+	SDL_Rect cat_play_rect; //스프라이트 그림 4개일때
+	SDL_Rect cat_play_rect2; //스프라이트 그림 3개일때
 	SDL_Rect settingBT_rect;
 
 	//score
@@ -105,6 +113,7 @@ protected:
 
 	int stage;
 	int count_;
+	int Cat_Ani_Status; //cat animation status // 0 : 목마름, 1 : 배부름,  2 : 놀아주기,  3 : 잠자기
 	
 	int limit_sec;
 	int last_sec; //last second (stage second)
@@ -135,6 +144,4 @@ extern int total_Score_int; // 누적 총 점수(메인화면)
 
 /// 
 extern int sprite_num; //고양이 스프라이트 x좌표
-extern int RandI; //랜덤 초 
-extern int p_RandCat; //random cat status
 extern int sec;

@@ -7,8 +7,6 @@ extern SDL_Texture* exp_text; //"EXP" text
 gamePlay::gamePlay() {
 
 	srand(time(NULL));
-	RandI = rand() % 6 + 5; //5~10초 중 하나 랜덤 반환// 다른 상태 중일 때는 시간이 흐르지 않도록..
-	p_RandCat = rand() % 4; //cat status 설정
 	isBasicCat = true;
 	isForcedQuit = false;
 	limit_sec = LIMIT_TIME;
@@ -38,10 +36,13 @@ gamePlay::~gamePlay() {
 	SDL_DestroyTexture(cat);
 	SDL_DestroyTexture(cat2);
 	SDL_DestroyTexture(setting);
-	SDL_DestroyTexture(cat_sit);
+	SDL_DestroyTexture(cat_mouse);
 	SDL_DestroyTexture(cat_sleep);
 	SDL_DestroyTexture(cat_walk_left);
 	SDL_DestroyTexture(cat_walk_right);
+	SDL_DestroyTexture(cat_fish);
+	SDL_DestroyTexture(cat_scratcher);
+	SDL_DestroyTexture(cat_water);
 	TTF_CloseFont(score_font);
 	m_gameLogic.ClearGame();
 	SDL_Quit();
@@ -108,7 +109,6 @@ void gamePlay::Update() {
 	checkQuit();							//~ 강제종료 체크
 	updateTimer();							//~ 시간 및 타이머 업데이트
 	checkGameStatus();						//~ 게임 상태 체크
-	updateCatStatus();						//~ 고양이 상태 변경
 	changeCatAnimation();					//~ g_curType에 따른 고양이 애니메이션 변경
 }
 
@@ -301,12 +301,7 @@ void gamePlay::writeScore(const string& s) {
 
 
 //! ********************** 고양이 관련 **********************
-//~ 고양이 상태 업데이트
-void gamePlay::updateCatStatus() {
-	if (isBasicCat && sec == RandI) {
-		isBasicCat = false;
-	}
-}
+
 
 //~ g_curType 에 따른 고양이 애니메이션 출력
 void gamePlay::changeCatAnimation() {
@@ -315,19 +310,19 @@ void gamePlay::changeCatAnimation() {
 		switch (g_curType) {
 		case MahjongType_0: 
 			cout << "A" << endl; // 물 블록
-			// 여기에 '목마름' 애니메이션 실행시켜주세요
+			waterAnimation(); //목마름 애니메이션
 			break;
 		case MahjongType_1: 
 			cout << "B" << endl; // 캣타워 블록
-			// 여기에 '잠자기' 애니메이션 실행시켜주세요
+			sleepAnimation();  //잠자기 애니메이션
 			break;
 		case MahjongType_2: 
 			cout << "C" << endl; // 생선 블록
-			// 여기에 '배부름' 애니메이션 실행시켜주세요
+			fishAnimation(); //배부름 애니메이션
 			break;
 		case MahjongType_3: 
 			cout << "D" << endl; // 쥐 블록
-			// 여기에 '놀아주기' 애니메이션 실행시켜주세요
+			mouseAnimation(); //놀아주기 애니메이션
 			break;
 		case NONE: break;
 		default: break;
@@ -336,6 +331,29 @@ void gamePlay::changeCatAnimation() {
 	}
 
 	g_curType = NONE;
+}
+
+
+//~ 고양이 애니메이션 스프라이트 이동 함수들
+
+void gamePlay::waterAnimation() { //목마름 애니메이션(sprite : 3)
+	isBasicCat = false;
+	Cat_Ani_Status = 0;
+}
+
+void gamePlay::fishAnimation() { //배부름 애니메이션(sprite : 3)
+	isBasicCat = false;
+	Cat_Ani_Status = 1;
+}
+
+void gamePlay::mouseAnimation() { //놀아주기 애니메이션(sprite : 3)
+	isBasicCat = false;
+	Cat_Ani_Status = 2;
+}
+
+void gamePlay::sleepAnimation() { //잠자기 애니메이션(sprite : 4)
+	isBasicCat = false;
+	Cat_Ani_Status = 3;
 }
 
 
@@ -392,9 +410,9 @@ void gamePlay::loadIMGs() {
 
 	}
 
-	{ //cat sitting
-		SDL_Surface* c_surface = IMG_Load("../../res/game page/cat_sit_sprite.png");
-		cat_sit = SDL_CreateTextureFromSurface(g_renderer, c_surface);
+	{ //cat mouse playing
+		SDL_Surface* c_surface = IMG_Load("../../res/game page/cat_mouse_sprite.png");
+		cat_mouse = SDL_CreateTextureFromSurface(g_renderer, c_surface);
 
 		cat_play_rect.x = 0;
 		cat_play_rect.y = 0;
@@ -421,6 +439,32 @@ void gamePlay::loadIMGs() {
 		SDL_Surface* c_surface = IMG_Load("../../res/game page/cat_walk_right_sprite.png");
 		cat_walk_right = SDL_CreateTextureFromSurface(g_renderer, c_surface);
 		SDL_FreeSurface(c_surface);
+	}
+
+
+	{//cat fish //sprite : 3
+		SDL_Surface* c_surface2 = IMG_Load("../../res/game page/cat_fish_sprite.png");
+		cat_fish = SDL_CreateTextureFromSurface(g_renderer, c_surface2);
+
+		cat_play_rect2.x = 0;
+		cat_play_rect2.y = 0;
+		cat_play_rect2.w = c_surface2->w;
+		cat_play_rect2.h = c_surface2->h;
+
+		SDL_FreeSurface(c_surface2);
+	}
+
+	{//cat water //sprite : 3
+		SDL_Surface* c_surface2 = IMG_Load("../../res/game page/cat_water_sprite.png");
+		cat_water = SDL_CreateTextureFromSurface(g_renderer, c_surface2);
+		SDL_FreeSurface(c_surface2);
+	}
+
+
+	{//cat scratcher //sprite : 3
+		SDL_Surface* c_surface2 = IMG_Load("../../res/game page/cat_scratcher_sprite.png");
+		cat_scratcher = SDL_CreateTextureFromSurface(g_renderer, c_surface2);
+		SDL_FreeSurface(c_surface2);
 	}
 }
 
@@ -451,15 +495,15 @@ void gamePlay::loadTxts() {
 
 //~ 고양이 렌더링
 void gamePlay::renderCat() {
-	/// 고양이
-	if (isBasicCat) {
+	/// 고양이 애니메이션
+	if (isBasicCat) { //기본 애니메이션
 		if (cat_status == false) {
 			//cat image 1
 			SDL_Rect tmp_r;
-			tmp_r.x = 180;
-			tmp_r.y = 0;
-			tmp_r.w = cat_rect.w * 0.3;
-			tmp_r.h = cat_rect.h * 0.3;
+			tmp_r.x = 175;
+			tmp_r.y = -45;
+			tmp_r.w = cat_rect.w * 0.35;
+			tmp_r.h = cat_rect.h * 0.35;
 			SDL_RenderCopy(g_renderer, cat, &cat_rect, &tmp_r);
 
 
@@ -467,49 +511,58 @@ void gamePlay::renderCat() {
 		else {
 			//cat image 2
 			SDL_Rect tmp_r1;
-			tmp_r1.x = 180;
-			tmp_r1.y = 0;
-			tmp_r1.w = cat_rect2.w * 0.3;
-			tmp_r1.h = cat_rect2.h * 0.3;
+			tmp_r1.x = 175;
+			tmp_r1.y = -45;
+			tmp_r1.w = cat_rect2.w * 0.35;
+			tmp_r1.h = cat_rect2.h * 0.35;
 			SDL_RenderCopy(g_renderer, cat2, &cat_rect2, &tmp_r1);
 		}
 	}
-	else {
-		SDL_Rect tmp_r1;
-		tmp_r1.y = 0;
-		tmp_r1.w = cat_play_rect.w;
-		tmp_r1.h = cat_play_rect.h;
+	
+	else { //블럭 상태 따른 애니메이션      
+		
+		if (Cat_Ani_Status == 3) { //3 : 잠자기
+			SDL_Rect tmp_r1;
+			tmp_r1.y = 0;
+			tmp_r1.w = cat_play_rect.w;
+			tmp_r1.h = cat_play_rect.h;
 
-		switch (sprite_num) {
-		case 0:	tmp_r1.x = 0; break;
-		case 1: if (p_RandCat == 0 || p_RandCat == 1) { tmp_r1.x = -WINDOW_WIDTH; break; }
-			  else if (p_RandCat == 2) { tmp_r1.x = -WINDOW_WIDTH - 20; break; }
-			  else { tmp_r1.x = -WINDOW_WIDTH + 20; break; }
-
-		case 2: if (p_RandCat == 0 || p_RandCat == 1) { tmp_r1.x = -WINDOW_WIDTH * 2; break; }
-			  else if (p_RandCat == 2) { tmp_r1.x = -WINDOW_WIDTH * 2 - 40; break; }
-			  else { tmp_r1.x = -WINDOW_WIDTH * 2 + 40; break; }
-
-		case 3: if (p_RandCat == 0 || p_RandCat == 1) { tmp_r1.x = -WINDOW_WIDTH * 3; break; }
-			  else if (p_RandCat == 2) { tmp_r1.x = -WINDOW_WIDTH * 3 - 60; break; }
-			  else { tmp_r1.x = -WINDOW_WIDTH * 3 + 60; break; }
-
-		default: 0; break;
+			switch (sprite_num) {
+			case 0:	tmp_r1.x = 0; break;
+			case 1: tmp_r1.x = -WINDOW_WIDTH; break;
+			case 2: tmp_r1.x = -WINDOW_WIDTH * 2; break;
+			case 3:  tmp_r1.x = -WINDOW_WIDTH * 3; break;
+			default: 0; break;
+			}
+			SDL_RenderCopy(g_renderer, cat_sleep, &cat_play_rect, &tmp_r1);
 		}
+		else {
+			SDL_Rect tmp_r1;
+			tmp_r1.y = 0;
+			tmp_r1.w = cat_play_rect2.w;
+			tmp_r1.h = cat_play_rect2.h;
 
-		switch (p_RandCat) {
-		case 0: SDL_RenderCopy(g_renderer, cat_sit, &cat_play_rect, &tmp_r1); break;
+			switch (sprite_num) {
+			case 0:	tmp_r1.x = 0; break;
+			case 1: tmp_r1.x = -WINDOW_WIDTH; break;
+			case 2: tmp_r1.x = -WINDOW_WIDTH * 2; break;
+			case 3:sprite_num = 0; isBasicCat = true; break;
+			default: 0; break;
+			}
+			if (Cat_Ani_Status == 0) { //0 : 목마름
+				SDL_RenderCopy(g_renderer, cat_water, &cat_play_rect2, &tmp_r1);
+			}
+			else if(Cat_Ani_Status == 1) { //1 : 배부름
+				SDL_RenderCopy(g_renderer, cat_fish, &cat_play_rect2, &tmp_r1);
+			}
+			else { //2: 놀아주기
+				SDL_RenderCopy(g_renderer, cat_scratcher, &cat_play_rect2, &tmp_r1);
+			}
 
-		case 1: SDL_RenderCopy(g_renderer, cat_sleep, &cat_play_rect, &tmp_r1); break;
-
-		case 2: SDL_RenderCopy(g_renderer, cat_walk_left, &cat_play_rect, &tmp_r1); break;
-
-		case 3: SDL_RenderCopy(g_renderer, cat_walk_right, &cat_play_rect, &tmp_r1); break;
-
-
-		default: SDL_RenderCopy(g_renderer, cat_sit, &cat_play_rect, &tmp_r1); break;
+			
 		}
 	}
+	
 }
 
 //~ 설정창 렌더링

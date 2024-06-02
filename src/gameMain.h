@@ -91,10 +91,7 @@ extern int sec; //play second
 extern int last_sec;
 extern int org_score_int;
 
-//extern int m_RandCat; //random cat status in main
-//0: 왼쪽걷기 , 1: 오른쪽걷기, 2 : 앉기, 3 : 자기
 extern int sprite_num; //고양이 스프라이트 x좌표
-extern int RandI; //랜덤 초 
 
 extern string original_score;
 extern SDL_Rect timebar_rect;

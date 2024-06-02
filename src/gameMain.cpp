@@ -158,8 +158,8 @@ void gameMain::loadImgs() {
 		SDL_FreeSurface(cat_surface);
 	}
 
-	{ //cat sitting
-		SDL_Surface* c_surface = IMG_Load("../../res/game page/cat_sit_sprite.png");
+	{ //cat playing
+		SDL_Surface* c_surface = IMG_Load("../../res/main page/play_sprite.png");
 		cat_sit = SDL_CreateTextureFromSurface(g_renderer, c_surface);
 
 		cat_main_rect.x = 0;
@@ -172,7 +172,7 @@ void gameMain::loadImgs() {
 	}
 
 	{ //cat sleeping
-		SDL_Surface* c_surface = IMG_Load("../../res/game page/cat_sleep_sprite.png");
+		SDL_Surface* c_surface = IMG_Load("../../res/main page/sleep_sprite.png");
 		cat_sleep = SDL_CreateTextureFromSurface(g_renderer, c_surface);
 		SDL_FreeSurface(c_surface);
 	}
@@ -483,15 +483,15 @@ void gameMain::renderCat() {
 	}
 	else {
 		SDL_Rect tmp_r1;
-		tmp_r1.y = 380;
-		tmp_r1.w = cat_main_rect.w * 1.7;
-		tmp_r1.h = cat_main_rect.h * 1.7;
+		tmp_r1.y = 0;
+		tmp_r1.w = cat_main_rect.w;
+		tmp_r1.h = cat_main_rect.h;
 
 		switch (sprite_num) {
-		case 0:	tmp_r1.x = -185; break;
-		case 1: tmp_r1.x = -185 - 918; break;
-		case 2: tmp_r1.x = -185 - 918 * 2; break;
-		case 3:  tmp_r1.x = -185 - 918 * 3; break;
+		case 0:	tmp_r1.x = 0; break;
+		case 1: tmp_r1.x = -WINDOW_WIDTH; break;
+		case 2: tmp_r1.x = -WINDOW_WIDTH * 2; break;
+		case 3:  tmp_r1.x = -WINDOW_WIDTH * 3; break;
 		default: 0; break;
 		}
 
