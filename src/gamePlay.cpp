@@ -21,7 +21,7 @@ gamePlay::gamePlay() {
 	//isChanged = false;
 	isSetting = false;
 	isVolumeOff = false;
-	
+
 	loadIMGs();
 	loadSounds();
 	loadTxts();
@@ -258,19 +258,19 @@ void gamePlay::updateScore(int s) {
 	// 점수 4자리수로 맞추기
 	if (s == 0) {
 		front_score = "000";
-		new_score = front_score + std::to_string(s);
+		new_score = front_score + to_string(s);
 	}
 	else if (s > 0 && s < 10) {
 		front_score = "000";
-		new_score = front_score + std::to_string(s);
+		new_score = front_score + to_string(s);
 	}
 	else if (s >= 10 && s < 100) {
 		front_score = "00";
-		new_score = front_score + std::to_string(s);
+		new_score = front_score + to_string(s);
 	}
 	else if (s >= 100 && s < 1000) {
 		front_score = "0";
-		new_score = front_score + std::to_string(s);
+		new_score = front_score + to_string(s);
 	}
 	else { new_score = to_string(s); }
 
