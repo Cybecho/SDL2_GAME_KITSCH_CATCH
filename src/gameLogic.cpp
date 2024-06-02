@@ -59,9 +59,9 @@ void gameLogic::HandleEvents(SDL_Event& event) {
 }
 
 void gameLogic::Update() {
-    UpdateVectorBlocks();
-    UpdateStackBlocks();
-    UpdateBonks();
+    //UpdateVectorBlocks();
+    //UpdateStackBlocks();
+    //UpdateBonks();
 }
 
 void gameLogic::Render() {
@@ -241,8 +241,6 @@ void gameLogic::vector2stack(vector<unique_ptr<Mahjong>>::iterator it) {
 
     // g_blocks와 g_stack의 사이즈 출력
     cout << "g_blocks size: " << g_vector.size() - countEmptyBlocks() << "| g_stack size: " << g_stack.size() << endl;
-
-    AlignStackBlocks(); /// 블록 정렬 즉시 수행
 }
 
 /// shake 로직 있음 (보완 필요)

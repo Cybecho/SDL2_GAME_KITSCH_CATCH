@@ -97,7 +97,12 @@ void gamePlay::HandleEvents() {
 
 void gamePlay::Update() {
 	//m_gameLogic.LoadMahjongBlocksIfEmpty(m_gameLogic.getLevel());
+	
 	m_gameLogic.RemoveSameTypeBlocks();
+	m_gameLogic.UpdateVectorBlocks();
+	m_gameLogic.UpdateStackBlocks();
+	m_gameLogic.UpdateBonks();
+	m_gameLogic.AlignStackBlocks();
 	if (m_gameLogic.getIsPop()) {
 		addSeconds(ADD_TIME);
 		m_gameLogic.setIsPop(false); //~ RemoveSameTypeBlocks()에서 true가 된 isPop 을 다시 fasle 처리
