@@ -1,6 +1,7 @@
 //메인화면
 #pragma once
 #include "gameClass.h"
+#include "gamePlay.h"
 
 
 
@@ -32,13 +33,13 @@ public:
 
 	SDL_Event event;
 
-	bool isRule;
+	
 
 
 protected:
-	int m_RandCat;//0: 왼쪽걷기 , 1: 오른쪽걷기, 2 : 앉기, 3 : 자기
-
+	gamePlay m_gameplay; //게임플레이 클래스 생성
 	SDL_Texture* main_bg;
+	SDL_Texture* difficulty_bg;
 	SDL_Texture* cat;
 	SDL_Texture* inter_bt;
 	SDL_Texture* play_bt;
@@ -71,11 +72,12 @@ protected:
 	//text
 	SDL_Rect exp_rect;
 	SDL_Rect score_rect;
-
 	Mix_Chunk* SoundEffect;
-
 	Uint32 play_time_ms;
 	
+	bool isRule;
+	bool isDifficulty;
+	int m_RandCat;//0: 왼쪽걷기 , 1: 오른쪽걷기, 2 : 앉기, 3 : 자기
 };
 extern Mix_Music* main_music;
 extern Mix_Music* play_music;

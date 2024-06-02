@@ -83,9 +83,6 @@ protected:
 	//float timebarw;
 
 	SDL_Texture* play_bg;
-	SDL_Texture* playground_img;
-	SDL_Texture* stack_img;
-	SDL_Texture* timebar_bg;
 	SDL_Texture* cat;
 	SDL_Texture* cat2;
 	SDL_Texture* setting_bt;

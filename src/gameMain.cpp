@@ -10,6 +10,7 @@ gameMain::gameMain() {
 	isRule = false;
 	isSetting = false;
 	isVolumeOff = false;
+	isDifficulty = false;
 
 	loadImgs();
 	loadSounds();
@@ -21,6 +22,7 @@ gameMain::~gameMain() {
 	Mix_FreeChunk(SoundEffect);
 	SDL_DestroyTexture(inter_bt);
 	SDL_DestroyTexture(main_bg);
+	SDL_DestroyTexture(difficulty_bg);
 	SDL_DestroyTexture(cat);
 	SDL_DestroyTexture(setting);
 	SDL_DestroyTexture(cat_sit);
@@ -48,8 +50,39 @@ void gameMain::HandleEvents() {
 			if (event.key.keysym.sym == SDLK_SPACE) {
 				changePhaseToPlay();
 			}
-			else {
-				Mix_PlayMusic(main_music, -1);
+
+			if (isDifficulty) {
+				//난이도 조절(숫자 키 1~4)
+				if (event.key.keysym.sym == SDLK_1) {
+					m_gameplay.setLastSec(120);
+					m_gameplay.setAddSec(1);
+					m_gameplay.setAddScore(5);
+					std::cout << m_gameplay.getLastSec() << " "<< m_gameplay.getAddSec() << " " << m_gameplay.getAddScore() << std::endl;
+					changePhaseToPlay();
+				}
+				else if (event.key.keysym.sym == SDLK_2) {
+					m_gameplay.setLastSec(90);
+					m_gameplay.setAddSec(1);
+					m_gameplay.setAddScore(10);
+					std::cout << m_gameplay.getLastSec() << " " << m_gameplay.getAddSec() << " " << m_gameplay.getAddScore() << std::endl;
+					changePhaseToPlay();
+				}
+				else if (event.key.keysym.sym == SDLK_3) {
+					m_gameplay.setLastSec(45);
+					m_gameplay.setAddSec(2);
+					m_gameplay.setAddScore(20);
+					std::cout << m_gameplay.getLastSec() << " " << m_gameplay.getAddSec() << " " << m_gameplay.getAddScore() << std::endl;
+					changePhaseToPlay();
+				}
+				else if (event.key.keysym.sym == SDLK_4) {
+					m_gameplay.setLastSec(10);
+					m_gameplay.setAddSec(3);
+					m_gameplay.setAddScore(30);
+					std::cout << m_gameplay.getLastSec() << " " << m_gameplay.getAddSec() << " " << m_gameplay.getAddScore() << std::endl;
+					changePhaseToPlay();
+				}
+			
+			
 			}break;
 
 		default: break;
@@ -95,7 +128,7 @@ void gameMain::changePhaseToPlay() {
 	g_current_game_phase = PHASE_PLAYING;
 	Mix_HaltMusic();
 	Mix_PlayMusic(play_music, -1);
-
+	isDifficulty = false;
 }
 
 
@@ -131,18 +164,25 @@ void gameMain::loadImgs() {
 	}
 
 
+	{
+		//rule image
+		SDL_Surface* rule_surface = IMG_Load("../../res/main page/rule.png");
+		rule = SDL_CreateTextureFromSurface(g_renderer, rule_surface);
 
-	//rule image
-	SDL_Surface* rule_surface = IMG_Load("../../res/main page/rule.png");
-	rule = SDL_CreateTextureFromSurface(g_renderer, rule_surface);
+		rule_rect.x = 0;
+		rule_rect.y = 0;
+		rule_rect.w = rule_surface->w;
+		rule_rect.h = rule_surface->h;
 
-	rule_rect.x = 0;
-	rule_rect.y = 0;
-	rule_rect.w = rule_surface->w;
-	rule_rect.h = rule_surface->h;
+		SDL_FreeSurface(rule_surface);
+	}
 
-	SDL_FreeSurface(rule_surface);
 
+	{//난이도 조절하는 단계 이미지
+		SDL_Surface* surface = IMG_Load("../../res/testRes/testPlayBG.png");
+		difficulty_bg = SDL_CreateTextureFromSurface(g_renderer, surface);
+		SDL_FreeSurface(surface);
+	}
 
 
 	//cat
@@ -245,24 +285,28 @@ void gameMain::loadTxts() {
 
 		//점수 네자리수로 고정
 		if (org_score_int == 0) {
-			front_score = "000";
+			front_score = "0000";
 			new_score = front_score + original_score;
 		}
 		else if (org_score_int > 0 && org_score_int < 10) {
-			front_score = "000";
+			front_score = "0000";
 			new_score = front_score + original_score;
 		}
 		else if (org_score_int >= 10 && org_score_int < 100) {
-			front_score = "00";
+			front_score = "000";
 			new_score = front_score + original_score;
 		}
 		else if (org_score_int >= 100 && org_score_int < 1000) {
+			front_score = "00";
+			new_score = front_score + original_score;
+		}
+		else if (org_score_int >= 1000 && org_score_int < 10000) {
 			front_score = "0";
 			new_score = front_score + original_score;
 		}
 		else { new_score = original_score; }
 
-		score_font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
+		score_font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 20);
 		SDL_Color white = { 255,255,255,0 };
 		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(score_font, new_score.c_str(), white);
 		//to_string(score).c_str()
@@ -293,18 +337,22 @@ void gameMain::renderScore() {
 
 		//점수 네자리수로 고정
 		if (org_score_int == 0) {
-			front_score = "000";
+			front_score = "0000";
 			new_score = front_score + original_score;
 		}
 		else if (org_score_int > 0 && org_score_int < 10) {
-			front_score = "000";
+			front_score = "0000";
 			new_score = front_score + original_score;
 		}
 		else if (org_score_int >= 10 && org_score_int < 100) {
-			front_score = "00";
+			front_score = "000";
 			new_score = front_score + original_score;
 		}
 		else if (org_score_int >= 100 && org_score_int < 1000) {
+			front_score = "00";
+			new_score = front_score + original_score;
+		}
+		else if (org_score_int >= 1000 && org_score_int < 10000) {
 			front_score = "0";
 			new_score = front_score + original_score;
 		}
@@ -325,10 +373,10 @@ void gameMain::renderScore() {
 	}
 	{ //score text
 		SDL_Rect tmp_r;
-		tmp_r.x = g_window_margin + 80;
-		tmp_r.y = 37;
-		tmp_r.w = score_rect.w * 0.8;
-		tmp_r.h = score_rect.h * 0.8;
+		tmp_r.x = g_window_margin + 77;
+		tmp_r.y = 38;
+		tmp_r.w = score_rect.w;
+		tmp_r.h = score_rect.h;
 		SDL_RenderCopy(g_renderer, score_txt, &score_rect, &tmp_r);
 	}
 }
@@ -341,12 +389,12 @@ void gameMain::MouseButtonEvents() {
 			int mouseY = event.button.y;
 
 
-			if (isRule == false && isSetting == false) { //main screen
+			if (isRule == false && isSetting == false && isDifficulty == false) { //main screen
 
 				//click play button
 				if (mouseX > playBT_dir_rect.x && mouseY > playBT_dir_rect.y &&
 					mouseX < playBT_dir_rect.x + playBT_dir_rect.w && mouseY < playBT_dir_rect.y + playBT_dir_rect.h) {
-					changePhaseToPlay();
+					isDifficulty = !isDifficulty;
 					Mix_PlayChannel(-1, SoundEffect, 0);
 				}
 
@@ -432,7 +480,7 @@ void gameMain::MouseButtonEvents() {
 }
 
 void gameMain::renderButtons() {
-	if (isRule == true) {
+	if (isRule) {
 		SDL_Rect tmp_r;
 		tmp_r.x = 0;
 		tmp_r.y = 0;
@@ -441,7 +489,7 @@ void gameMain::renderButtons() {
 		SDL_RenderCopy(g_renderer, rule, &rule_rect, &tmp_r);
 	}
 
-	if (isSetting == true) {
+	if (isSetting) {
 		SDL_Rect tmp_r;
 		tmp_r.x = 0;
 		tmp_r.y = 0;
@@ -456,6 +504,10 @@ void gameMain::renderButtons() {
 		else if (isVolumeOff == true) {
 			SDL_RenderCopy(g_renderer, volume_bt_on, &volume_rect, &volume_rect);
 		}
+	}
+
+	if (isDifficulty) {
+		SDL_RenderCopy(g_renderer, difficulty_bg, NULL, NULL);
 	}
 }
 

@@ -124,7 +124,7 @@ void gamePlay::Render() {
 
 
 	///time bar
-	SDL_SetRenderDrawColor(g_renderer, 255, 0, 0, 255); //red
+	SDL_SetRenderDrawColor(g_renderer, 255, 60, 60, 255); //다홍색
 	SDL_RenderFillRect(g_renderer, &timebar_rect);
 
 
@@ -133,10 +133,10 @@ void gamePlay::Render() {
 	/// 스코프로 제한해둔 점수부분 렌더링
 	{ //score text
 		SDL_Rect tmp_r;
-		tmp_r.x = g_window_margin + 80;
-		tmp_r.y = 37;
-		tmp_r.w = score_rect.w * 0.8;
-		tmp_r.h = score_rect.h * 0.8;
+		tmp_r.x = g_window_margin + 77;
+		tmp_r.y = 38;
+		tmp_r.w = score_rect.w;
+		tmp_r.h = score_rect.h;
 		SDL_RenderCopy(g_renderer, score_text2, &score_rect, &tmp_r);
 	}
 
@@ -232,6 +232,7 @@ void gamePlay::updateTimer() {
 				SDL_Delay(500);
 				isChanged = true;
 				resetGame();
+				SDL_Delay(1000);
 				changePhase(PHASE_ENDING_GAMEOVER);
 			}
 		}
@@ -257,18 +258,22 @@ void gamePlay::updateScore(int s) {
 	//게임플레이 페이즈로 가면 0부터 시작
 	// 점수 4자리수로 맞추기
 	if (s == 0) {
-		front_score = "000";
+		front_score = "0000";
 		new_score = front_score + to_string(s);
 	}
 	else if (s > 0 && s < 10) {
-		front_score = "000";
+		front_score = "0000";
 		new_score = front_score + to_string(s);
 	}
 	else if (s >= 10 && s < 100) {
-		front_score = "00";
+		front_score = "000";
 		new_score = front_score + to_string(s);
 	}
 	else if (s >= 100 && s < 1000) {
+		front_score = "00";
+		new_score = front_score + to_string(s);
+	}
+	else if (s >= 1000 && s < 10000) {
 		front_score = "0";
 		new_score = front_score + to_string(s);
 	}
@@ -488,9 +493,9 @@ void gamePlay::loadSounds() {
 }
 
 void gamePlay::loadTxts() {
-	score_font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
+	score_font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 20);
 	SDL_Color white = { 255,255,255,0 };
-	SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(score_font, "0000", white);
+	SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(score_font, "00000", white);
 
 	score_rect.x = 0;
 	score_rect.y = 0;
@@ -685,6 +690,7 @@ void gamePlay::checkGameStatus() {
 	// g_stack이 더 이상 추가할 수 없는 경우 (예: 최대 스택 크기에 도달한 경우)
 	if (m_gameLogic.getStack().size() >= MAX_STACK) {
 		m_gameLogic.setStatus(STATUS_GAMEOVER);
+		SDL_Delay(1000);
 		changePhase(PHASE_ENDING_GAMEOVER);
 	}
 
