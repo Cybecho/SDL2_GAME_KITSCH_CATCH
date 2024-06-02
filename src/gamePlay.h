@@ -61,8 +61,14 @@ public:
 
 	//! ************************** getter & setter **************************
 	int getLastSec() const { return last_sec; }
-	void setLastSec(int sec) { last_sec = sec; }
+	int getLimitSec() const { return limit_sec; }
+	int getAddSec() const { return add_sec; }
+	int getAddScore() const { return addScore; }
 
+	void setLastSec(int sec) { last_sec = sec; }
+	void setLimitSec(int sec) { limit_sec = sec; }
+	void setAddSec(int sec) { add_sec = sec; }
+	void setAddScore(int score) { addScore = score; }
 	
 
 protected:
@@ -115,7 +121,8 @@ protected:
 	int count_;
 	int Cat_Ani_Status; //cat animation status // 0 : 목마름, 1 : 배부름,  2 : 놀아주기,  3 : 잠자기
 	
-	int limit_sec;
+	int add_sec; //추가 시간
+	int limit_sec; //제한 시간
 	int last_sec; //last second (stage second)
 	Uint32 lastMatchTime; // 추가 점수 확인용
 	int addScore;	// 추가 점수 멤버 변수

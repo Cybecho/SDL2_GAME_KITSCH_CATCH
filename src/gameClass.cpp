@@ -86,10 +86,6 @@ void ClearGame() {
 	SDL_Quit();
 }
 
-
-
-
-
 Timer::Timer() {
 	interval = 0;
 	startTicks = 0;

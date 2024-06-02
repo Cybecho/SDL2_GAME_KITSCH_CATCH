@@ -10,6 +10,8 @@ gamePlay::gamePlay() {
 	isBasicCat = true;
 	isForcedQuit = false;
 	limit_sec = LIMIT_TIME;
+	add_sec = ADD_TIME;
+	addScore = 0;
 	isChanged = false;
 	sec = 0;
 	count_ = 0;
@@ -104,7 +106,7 @@ void gamePlay::Update() {
 	m_gameLogic.UpdateBonks();
 	m_gameLogic.AlignStackBlocks();
 	if (m_gameLogic.getIsPop()) {
-		addSeconds(ADD_TIME);			//~ isPop이 true일 경우, 시간 추가
+		addSeconds(add_sec);			//~ isPop이 true일 경우, 시간 추가
 		m_gameLogic.setIsPop(false);	//~ RemoveSameTypeBlocks()에서 true가 된 isPop 을 다시 fasle 처리
 	}
 	for (auto& block : m_gameLogic.getStack()) { block->update(); } //~ 스택 블록 shake 업데이트
@@ -249,7 +251,7 @@ void gamePlay::updateScore(int s) {
 
 	string front_score;
 	string new_score;
-	int updateScore_int = s + org_score_int;
+	int updateScore_int = s + org_score_int + addScore;
 	update_score = to_string(updateScore_int); //누적 점수 저장
 
 	//게임플레이 페이즈로 가면 0부터 시작
