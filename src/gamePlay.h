@@ -67,7 +67,7 @@ protected:
 	//const Uint32 p_start_time_ms;
 	Uint32 p_last_time_ms;
 	string string_time;
-	string update_score;
+	string update_score; //누적 점수
 	//int update_score; //new score
 	//float timebarw;
 
