@@ -127,9 +127,8 @@ extern SDL_Rect timebar_rect;
 ///  점수 관련
 extern string score;
 extern string original_score;
-extern int org_score_int;
-extern int plus_score_int; //load from txt file
-extern int total_Score_int; // 누적 총 점수
+extern int org_score_int; // 게임 시작 전 메모장에 저장된 점수
+extern int total_Score_int; // 누적 총 점수(메인화면)
 
 /// 
 extern int sprite_num; //고양이 스프라이트 x좌표
