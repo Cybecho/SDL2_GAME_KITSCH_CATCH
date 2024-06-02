@@ -37,6 +37,7 @@ public:
 	//! ********************** 데이터 import 및 Rendering **********************
 	void loadIMGs();
 	void loadSounds();
+	void loadTxts();
 	void renderCat();
 	void renderSetting();
 
@@ -80,6 +81,8 @@ protected:
 	SDL_Texture* setting_bt;
 	SDL_Texture* setting;
 	SDL_Texture* score_text2; //get score from txt file
+
+	TTF_Font* score_font;
 
 	SDL_Texture* cat_sit;
 	SDL_Texture* cat_sleep;

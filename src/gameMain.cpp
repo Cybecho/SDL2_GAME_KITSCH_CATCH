@@ -1,7 +1,6 @@
 ﻿#include "gameMain.h"
 
-SDL_Texture* exp_text; //"EXP" text
-SDL_Texture* score_text; //get score from txt file
+
 
 
 
@@ -14,20 +13,23 @@ gameMain::gameMain() {
 
 	loadImgs();
 	loadSounds();
+	loadTxts();
 }
 
 gameMain::~gameMain() {
 	Mix_FreeMusic(main_music);
 	Mix_FreeChunk(SoundEffect);
-	SDL_DestroyTexture(score_text);
 	SDL_DestroyTexture(inter_bt);
 	SDL_DestroyTexture(main_bg);
 	SDL_DestroyTexture(cat);
 	SDL_DestroyTexture(setting);
 	SDL_DestroyTexture(cat_sit);
 	SDL_DestroyTexture(cat_sleep);
+	SDL_DestroyTexture(score_txt);
+	SDL_DestroyTexture(exp_txt);
 
-	
+	TTF_CloseFont(score_font);
+
 	SDL_Quit();
 	TTF_Quit();
 }
@@ -213,6 +215,8 @@ void gameMain::loadImgs() {
 		sitBT_rect.w = 80;
 		sitBT_rect.h = 80;
 	}
+
+	
 }
 
 
@@ -229,7 +233,7 @@ void gameMain::loadSounds() {
 	SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
 }
 
-void gameMain::renderScore() {
+void gameMain::loadTxts() {
 	{ //score text
 
 		ifstream file("../../res/testRes/scoreboard.txt"); //read scoreboard
@@ -238,7 +242,6 @@ void gameMain::renderScore() {
 		file.close();
 		string front_score;
 		string new_score;
-
 
 		//점수 네자리수로 고정
 		if (org_score_int == 0) {
@@ -259,18 +262,65 @@ void gameMain::renderScore() {
 		}
 		else { new_score = original_score; }
 
-		TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
+		score_font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
 		SDL_Color white = { 255,255,255,0 };
-		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, new_score.c_str(), white);
+		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(score_font, new_score.c_str(), white);
 		//to_string(score).c_str()
 		score_rect.x = 0;
 		score_rect.y = 0;
 		score_rect.w = tmp_surface->w;
 		score_rect.h = tmp_surface->h;
 
-		score_text = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
+		score_txt = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
 		SDL_FreeSurface(tmp_surface);
-		TTF_CloseFont(font);
+		
+
+	}
+}
+
+void gameMain::renderScore() {
+	{ //score text
+
+		SDL_DestroyTexture(score_txt); //메모리 누수 관리
+
+
+		ifstream file("../../res/testRes/scoreboard.txt"); //read scoreboard
+		getline(file, original_score);
+		org_score_int = stoi(original_score);
+		file.close();
+		string front_score;
+		string new_score;
+
+		//점수 네자리수로 고정
+		if (org_score_int == 0) {
+			front_score = "000";
+			new_score = front_score + original_score;
+		}
+		else if (org_score_int > 0 && org_score_int < 10) {
+			front_score = "000";
+			new_score = front_score + original_score;
+		}
+		else if (org_score_int >= 10 && org_score_int < 100) {
+			front_score = "00";
+			new_score = front_score + original_score;
+		}
+		else if (org_score_int >= 100 && org_score_int < 1000) {
+			front_score = "0";
+			new_score = front_score + original_score;
+		}
+		else { new_score = original_score; }
+
+		
+		SDL_Color white = { 255,255,255,0 };
+		SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(score_font, new_score.c_str(), white);
+		//to_string(score).c_str()
+		score_rect.x = 0;
+		score_rect.y = 0;
+		score_rect.w = tmp_surface->w;
+		score_rect.h = tmp_surface->h;
+
+		score_txt = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
+		SDL_FreeSurface(tmp_surface);
 
 	}
 	{ //score text
@@ -279,7 +329,7 @@ void gameMain::renderScore() {
 		tmp_r.y = 37;
 		tmp_r.w = score_rect.w * 0.8;
 		tmp_r.h = score_rect.h * 0.8;
-		SDL_RenderCopy(g_renderer, score_text, &score_rect, &tmp_r);
+		SDL_RenderCopy(g_renderer, score_txt, &score_rect, &tmp_r);
 	}
 }
 

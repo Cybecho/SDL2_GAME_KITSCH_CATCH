@@ -24,6 +24,7 @@ gamePlay::gamePlay() {
 	
 	loadIMGs();
 	loadSounds();
+	loadTxts();
 
 	//! ************************** gameLogic **************************
 	cout << "Level : " << m_gameLogic.getLevel() << endl;
@@ -41,6 +42,7 @@ gamePlay::~gamePlay() {
 	SDL_DestroyTexture(cat_sleep);
 	SDL_DestroyTexture(cat_walk_left);
 	SDL_DestroyTexture(cat_walk_right);
+	TTF_CloseFont(score_font);
 	m_gameLogic.ClearGame();
 	SDL_Quit();
 	TTF_Quit();
@@ -237,6 +239,8 @@ void gamePlay::changeTimebar() {
 //! ********************** 점수 관련 **********************
 //~ 점수 업데이트
 void gamePlay::updateScore(int s) {
+	SDL_DestroyTexture(score_text2); //메모리 누수 관리
+
 	string front_score;
 	string new_score;
 	int updateScore_int = s + org_score_int;
@@ -262,11 +266,9 @@ void gamePlay::updateScore(int s) {
 	}
 	else { new_score = to_string(s); }
 
-
-	TTF_Font* font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
 	SDL_Color white = { 255,255,255,0 };
-	SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(font, new_score.c_str(), white);
-	//to_string(score).c_str()
+	SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(score_font, new_score.c_str(), white);
+	
 	score_rect.x = 0;
 	score_rect.y = 0;
 	score_rect.w = tmp_surface->w;
@@ -274,7 +276,6 @@ void gamePlay::updateScore(int s) {
 
 	score_text2 = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
 	SDL_FreeSurface(tmp_surface);
-	TTF_CloseFont(font);
 }
 
 //~ gameLogic의 isPop이 true일 경우, 시간 추가
@@ -432,6 +433,20 @@ void gamePlay::loadSounds() {
 	}
 
 	setting_SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
+}
+
+void gamePlay::loadTxts() {
+	score_font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 30);
+	SDL_Color white = { 255,255,255,0 };
+	SDL_Surface* tmp_surface = TTF_RenderUTF8_Blended(score_font, "0000", white);
+
+	score_rect.x = 0;
+	score_rect.y = 0;
+	score_rect.w = tmp_surface->w;
+	score_rect.h = tmp_surface->h;
+
+	score_text2 = SDL_CreateTextureFromSurface(g_renderer, tmp_surface);
+	SDL_FreeSurface(tmp_surface);
 }
 
 //~ 고양이 렌더링
