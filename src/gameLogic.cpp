@@ -185,14 +185,14 @@ void gameLogic::LoadMahjongBlocksFromCSV(int level, int seed, int numDims) {
         }
     }
 
-    /*
+    
     ///! 대각선 방향으로 블록 흔들림 효과 적용
     int totalBlocks = g_vector.size();
     for (int i = 0; i < totalBlocks; ++i) {
         int delay = i * 3; // 0.03초(3ms) 지연 시간
         SDL_AddTimer(delay, shakeBlocksCallback, new int(i));
     }
-    */
+    
 }
 
 void gameLogic::LoadMahjongBlocksIfEmpty(int level) {

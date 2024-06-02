@@ -96,24 +96,24 @@ void gamePlay::HandleEvents() {
 }
 
 void gamePlay::Update() {
-	//m_gameLogic.LoadMahjongBlocksIfEmpty(m_gameLogic.getLevel());
-	
+	checkQuit();							//~ 강제종료 체크
+
 	m_gameLogic.RemoveSameTypeBlocks();
 	m_gameLogic.UpdateVectorBlocks();
 	m_gameLogic.UpdateStackBlocks();
 	m_gameLogic.UpdateBonks();
 	m_gameLogic.AlignStackBlocks();
 	if (m_gameLogic.getIsPop()) {
-		addSeconds(ADD_TIME);
-		m_gameLogic.setIsPop(false); //~ RemoveSameTypeBlocks()에서 true가 된 isPop 을 다시 fasle 처리
+		addSeconds(ADD_TIME);			//~ isPop이 true일 경우, 시간 추가
+		m_gameLogic.setIsPop(false);	//~ RemoveSameTypeBlocks()에서 true가 된 isPop 을 다시 fasle 처리
 	}
+	for (auto& block : m_gameLogic.getStack()) { block->update(); } //~ 스택 블록 shake 업데이트
 	m_gameLogic.printStatusChange();		//~ 게임 상태 출력
 	checkAndLoadMahjongBlocks();			//~ 맞춰야 할 블록 체크 및 로드
 	stageLimitTime();						//~ 제한시간 설정
 	updateScore(m_gameLogic.getScore());	//~ 점수 업데이트
-	checkQuit();							//~ 강제종료 체크
 	updateTimer();							//~ 시간 및 타이머 업데이트
-	checkGameStatus();						//~ 게임 상태 체크
+	checkGameStatus();						//~ 게임 상태 체크q
 	changeCatAnimation();					//~ g_curType에 따른 고양이 애니메이션 변경
 }
 
@@ -139,6 +139,7 @@ void gamePlay::Render() {
 	}
 
 	//! ************************** gameLogic **************************
+	for (const auto& block : m_gameLogic.getStack()) { block->render(g_renderer); } //~ 스택 블록 흔들림 렌더링
 	m_gameLogic.Render(); //~ 게임로직 렌더 함수 실행
 	//! ************************** ********* **************************
 
