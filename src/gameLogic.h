@@ -98,6 +98,7 @@ private:
     int g_addScore;         /// 추가 점수j
     int g_addScore_origin;  /// 추가 점수 원본
     bool isPop;             /// 마작 블록이 pop 되었는지 여부 (점수 반환을 위함)
+    Uint32 m_lastUpdateTime;/// 마지막으로 점수를 업데이트한 시간
 };
 
 //! ******************** 비멤버 함수 ********************

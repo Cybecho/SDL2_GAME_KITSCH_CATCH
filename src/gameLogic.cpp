@@ -6,6 +6,7 @@
 int g_curType;
 
 gameLogic::gameLogic() {
+    m_lastUpdateTime = SDL_GetTicks(); // 현재 시간을 저장
     g_curType = NONE; //enum 변수 초기화
     g_status = STATUS_GAMEPLAYING;
     g_prevStatus = g_status;
@@ -504,9 +505,13 @@ int gameLogic::checkMahjongType(string Type) {
 }
 
 void gameLogic::updateAddScore() {
-    if (0 < getAddScore()) {
-        setAddScore(getAddScore() - 1);
-        cout << "Add Score: " << getAddScore() << endl;
+    Uint32 currentTime = SDL_GetTicks();
+    if (currentTime - m_lastUpdateTime >= 500) {  // 1초(1000ms)마다 실행
+        if (getAddScore() > 0) { 
+            setAddScore(getAddScore() - 1); 
+            cout << "Add Score: " << getAddScore() << endl;
+        }
+        m_lastUpdateTime = currentTime;
     }
 }
 
