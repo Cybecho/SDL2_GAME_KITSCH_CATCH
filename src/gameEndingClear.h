@@ -7,15 +7,18 @@
 
 class gameEndingClear : public gameClass {
 public:
+	//! ******************** 생성자 소멸자 ******************** 
 	gameEndingClear();
 	~gameEndingClear();
 
+	//! ******************** 기본 함수 ********************
 	void HandleEvents();
 	void Update();
 	void Render();
 
-	std::vector<Cartoon> bg; // 배경 이미지 (Fade를 위해 Cartoon 사용)
-	std::vector<Cartoon> cat; // 고양이 이미지 (Fade를 위해 Cartoon 사용)
+protected:
+	vector<Cartoon> bg; // 배경 이미지 (Fade를 위해 Cartoon class 사용)
+	vector<Cartoon> cat; // 고양이 이미지 (Fade를 위해 Cartoon class 사용)
 	SDL_Rect mainBT_rect;
 	SDL_Rect retryBT_rect;
 	int cat_cut; // 고양이 이미지 번호
@@ -27,7 +30,6 @@ extern Mix_Music* clear_music;
 extern Mix_Music* gameover_music;
 extern Mix_Music* play_music;
 extern bool gameover_reset;
-
 extern bool isChanged;
 extern SDL_Rect timebar_rect;
 extern int sec;

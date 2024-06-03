@@ -22,16 +22,16 @@ gameEndingClear::gameEndingClear() {
 
 	// 텍스처 생성
 	for (auto& i : bg) {
-		i.SetImgClassTexture(SDL_CreateTextureFromSurface(g_renderer, i.GetImgClass().surface));
+		i.SetImgClassTexture(SDL_CreateTextureFromSurface(g_renderer, i.GetImgClass().GetSurface()));
 		i.SetImgClassSrcRect({ 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT });
 		i.SetImgClassDstRect({ 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT });
-		SDL_FreeSurface(i.GetImgClass().surface);
+		SDL_FreeSurface(i.GetImgClass().GetSurface());
 	}
 	for (auto& i : cat) {
-		i.SetImgClassTexture(SDL_CreateTextureFromSurface(g_renderer, i.GetImgClass().surface));
+		i.SetImgClassTexture(SDL_CreateTextureFromSurface(g_renderer, i.GetImgClass().GetSurface()));
 		i.SetImgClassSrcRect({ 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT });
 		i.SetImgClassDstRect({ 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT });
-		SDL_FreeSurface(i.GetImgClass().surface);
+		SDL_FreeSurface(i.GetImgClass().GetSurface());
 	}
 
 	// BGM and SoundEffect
@@ -46,10 +46,10 @@ gameEndingClear::gameEndingClear() {
 
 gameEndingClear::~gameEndingClear() {
 	for (auto& i : bg) {
-		SDL_DestroyTexture(i.GetImgClass().texture);
+		SDL_DestroyTexture(i.GetImgClass().GetTexture());
 	}
 	for (auto& i : cat) {
-		SDL_DestroyTexture(i.GetImgClass().texture);
+		SDL_DestroyTexture(i.GetImgClass().GetTexture());
 	}
 	Mix_FreeMusic(clear_music);
 	Mix_FreeChunk(SoundEffect);

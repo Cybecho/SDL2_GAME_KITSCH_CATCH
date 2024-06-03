@@ -126,3 +126,12 @@ bool Timer::done() {
 	return false;
 }
 
+ImgClass::ImgClass() {
+	surface = 0;
+	texture = 0;
+	srcrect = { 0, };
+	dstrect = { 0, };
+}
+
+ImgClass::~ImgClass() {
+}

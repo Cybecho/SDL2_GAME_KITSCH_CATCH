@@ -8,14 +8,16 @@
 class Cartoon; // Prevent compile error
 class gameIntro : public gameClass {
 public:
+	//! ******************** 생성자 소멸자 ******************** 
 	gameIntro();
 	~gameIntro();
 
+	//! ******************** 기본 함수 ******************** 
 	void HandleEvents();
 	void Update();
 	void Render();
 
-	std::vector<Cartoon> cartoon;
+	vector<Cartoon> cartoon;
 	bool is_cartoon_finished = false;
 };
 extern Mix_Music* intro_music;

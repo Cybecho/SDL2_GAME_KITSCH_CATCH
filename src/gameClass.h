@@ -50,10 +50,26 @@ private:
 // ImgRect: 이미지 생성에 필요한 변수들을 class로 묶음
 class ImgClass {
 public:
-	SDL_Surface* surface = 0;
-	SDL_Texture* texture = 0;
-	SDL_Rect srcrect = { 0, };
-	SDL_Rect dstrect = { 0, };
+	//! ******************** 생성자 소멸자 ******************** 
+	ImgClass();
+	~ImgClass();
+
+	//! ************************** getter & setter **************************
+	SDL_Surface* GetSurface() const { return surface; }
+	SDL_Texture* GetTexture() const { return texture; }
+	SDL_Rect GetSrcRect() const { return srcrect; }
+	SDL_Rect GetDstRect() const { return dstrect; }
+
+	void SetSurface(SDL_Surface* new_surface) { surface = new_surface; }
+	void SetTexture(SDL_Texture* new_texture) { texture = new_texture; }
+	void SetSrcRect(SDL_Rect new_srcrect) { srcrect = new_srcrect; }
+	void SetDstRect(SDL_Rect new_dstrect) { dstrect = new_dstrect; }
+
+private:
+	SDL_Surface* surface;
+	SDL_Texture* texture;
+	SDL_Rect srcrect;
+	SDL_Rect dstrect;
 };
 
 void InitGame();

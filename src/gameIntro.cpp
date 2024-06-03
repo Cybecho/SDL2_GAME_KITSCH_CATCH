@@ -16,10 +16,10 @@ gameIntro::gameIntro() {
 
 	// 텍스처 생성
 	for (auto& i : cartoon) {
-		i.SetImgClassTexture(SDL_CreateTextureFromSurface(g_renderer, i.GetImgClass().surface));
+		i.SetImgClassTexture(SDL_CreateTextureFromSurface(g_renderer, i.GetImgClass().GetSurface()));
 		i.SetImgClassSrcRect({ 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT });
 		i.SetImgClassDstRect({ 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT });
-		SDL_FreeSurface(i.GetImgClass().surface);
+		SDL_FreeSurface(i.GetImgClass().GetSurface());
 	}
 
 	// BGM and SoundEffect
@@ -34,7 +34,7 @@ gameIntro::gameIntro() {
 gameIntro::~gameIntro() {
 	Mix_FreeMusic(intro_music);
 	for (auto& i : cartoon) {
-		SDL_DestroyTexture(i.GetImgClass().texture);
+		SDL_DestroyTexture(i.GetImgClass().GetTexture());
 	}
 }
 

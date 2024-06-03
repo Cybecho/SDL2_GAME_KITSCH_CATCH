@@ -7,14 +7,16 @@
 
 class gameEndingGameover : public gameClass {
 public:
+	//! ******************** 생성자 소멸자 ******************** 
 	gameEndingGameover();
 	~gameEndingGameover();
 
+	//! ******************** 기본 함수 ********************
 	void HandleEvents();
 	void Update();
 	void Render();
 
-	Cartoon a, b;
+protected:
 	vector<Cartoon> bg; // 배경 이미지 (Fade를 위해 Cartoon 사용)
 	vector<Cartoon> cat; // 고양이 이미지 (Fade를 위해 Cartoon 사용)
 	SDL_Rect mainBT_rect;
