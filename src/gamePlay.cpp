@@ -19,6 +19,7 @@ gamePlay::gamePlay() {
 	isSetting = false;
 	isVolumeOff = false;
 
+
 	setLimitSec(LIMIT_TIME);
 	setAddSec(ADD_TIME);
 	setAddScore(10);
@@ -607,7 +608,7 @@ void gamePlay::renderSetting() {
 
 
 //! ********************** 마우스 이벤트 **********************
-//~ 마우스 버튼 이벤트 처리
+//~ 마우스 버튼 이벤트 처리 (난이도 조절 버튼)
 void gamePlay::MouseButtonEvents() {
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
 		if (event.button.button == SDL_BUTTON_LEFT) {
@@ -619,21 +620,25 @@ void gamePlay::MouseButtonEvents() {
 				//슈퍼 겁쟁이 모드
 				if (mouseX > difficulty_rect.x && mouseY > difficulty_rect.y &&
 					mouseX < difficulty_rect.x + difficulty_rect.w && mouseY < difficulty_rect.y + difficulty_rect.h) {
-					setLimitSec(120);
-					setAddSec(1);
-					m_gameLogic.setAddScore(3);
-					setOrgAddScore(m_gameLogic.getAddScore());
-					isDifficulty = false;
+					setLimitSec(90);								//~ 게임 제한시간
+					setAddSec(2);									//~ 블록 추가시간
+					setAddScore(5);									//~ 블록 최대 추가 점수
+					m_gameLogic.setAddScore(getAddScore());			//~ 추가 점수 설정 gamePlay의 AddScore를 gameLogic AddScore에 전달
+					m_gameLogic.setAddScoreOrigin(getAddScore());	//~ g_addScore_origin 설정
+
 					Mix_PlayChannel(-1, setting_SoundEffect, 0);
+					isDifficulty = false;
 					std::cout << getLimitSec() << " " << getAddSec() << " " << getAddScore() <<  " " << getOrgAddScore() << std::endl;
 				}
 				//겁쟁이 모드
 				if (mouseX > difficulty_rect.x && mouseY > difficulty_rect.y + difficulty_margin &&
 					mouseX < difficulty_rect.x + difficulty_rect.w && mouseY < difficulty_rect.y + difficulty_margin + difficulty_rect.h) {
-					setLimitSec(90);
-					setAddSec(1);
-					m_gameLogic.setAddScore(10);
-					setOrgAddScore(m_gameLogic.getAddScore());
+					setLimitSec(60);								//~ 게임 제한시간
+					setAddSec(1);									//~ 블록 추가시간
+					setAddScore(20);								//~ 블록 최대 추가 점수
+					m_gameLogic.setAddScore(getAddScore());			//~ 추가 점수 설정 gamePlay의 AddScore를 gameLogic AddScore에 전달
+					m_gameLogic.setAddScoreOrigin(getAddScore());	//~ g_addScore_origin 설정
+					
 					Mix_PlayChannel(-1, setting_SoundEffect, 0);
 					isDifficulty = false;
 					std::cout << getLimitSec() << " " << getAddSec() << " " << getAddScore() << std::endl;
@@ -641,10 +646,12 @@ void gamePlay::MouseButtonEvents() {
 				//사나이 모드
 				if (mouseX > difficulty_rect.x && mouseY > difficulty_rect.y + difficulty_margin * 2 &&
 					mouseX < difficulty_rect.x + difficulty_rect.w && mouseY < difficulty_rect.y + difficulty_margin * 2 + difficulty_rect.h) {
-					setLimitSec(45);
-					setAddSec(2);
-					m_gameLogic.setAddScore(20);
-					setOrgAddScore(m_gameLogic.getAddScore());
+					setLimitSec(15);								//~ 게임 제한시간
+					setAddSec(2);									//~ 블록 추가시간
+					setAddScore(30);								//~ 블록 최대 추가 점수
+					m_gameLogic.setAddScore(getAddScore());			//~ 추가 점수 설정 gamePlay의 AddScore를 gameLogic AddScore에 전달
+					m_gameLogic.setAddScoreOrigin(getAddScore());	//~ g_addScore_origin 설정
+
 					Mix_PlayChannel(-1, setting_SoundEffect, 0);
 					isDifficulty = false;
 					std::cout << getLimitSec() << " " << getAddSec() << " " << getAddScore() << std::endl;
@@ -652,10 +659,12 @@ void gamePlay::MouseButtonEvents() {
 				//슈퍼 사나이 모드
 				if (mouseX > difficulty_rect.x && mouseY > difficulty_rect.y + difficulty_margin * 3 &&
 					mouseX < difficulty_rect.x + difficulty_rect.w && mouseY < difficulty_rect.y + difficulty_margin * 3 + difficulty_rect.h) {
-					setLimitSec(10);
-					setAddSec(3);
-					m_gameLogic.setAddScore(30);
-					setOrgAddScore(m_gameLogic.getAddScore());
+					setLimitSec(3);									//~ 게임 제한시간
+					setAddSec(2);									//~ 블록 추가시간
+					setAddScore(50);								//~ 블록 최대 추가 점수
+					m_gameLogic.setAddScore(getAddScore());			//~ 추가 점수 설정 gamePlay의 AddScore를 gameLogic AddScore에 전달
+					m_gameLogic.setAddScoreOrigin(getAddScore());	//~ g_addScore_origin 설정
+
 					Mix_PlayChannel(-1, setting_SoundEffect, 0);
 					isDifficulty = false;
 					std::cout << getLimitSec() << " " << getAddSec() << " " << getAddScore() << std::endl;

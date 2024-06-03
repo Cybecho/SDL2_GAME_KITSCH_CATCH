@@ -512,10 +512,10 @@ int gameLogic::checkMahjongType(string Type) {
 
 void gameLogic::updateAddScore() {
     Uint32 currentTime = SDL_GetTicks();
-    if (currentTime - m_lastUpdateTime >= 500) {  // 1초(1000ms)마다 실행
+    if (currentTime - m_lastUpdateTime >= 500) {  // 0.5초마다 추가점수 1초씩 줄어듦
         if (getAddScore() > 0) { 
             setAddScore(getAddScore() - 1); 
-            cout << "Add Score: " << getAddScore() << endl;
+            cout << "Add Score: " << getAddScore() << endl; // 추가 점수 출력
         }
         m_lastUpdateTime = currentTime;
     }
