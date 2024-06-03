@@ -23,7 +23,7 @@ gameIntro::gameIntro() {
 	}
 
 	// BGM and SoundEffect
-	intro_music = Mix_LoadMUS("../../res/testRes/testBGM1.mp3");
+	intro_music = Mix_LoadMUS("../../res/music/intro_music.mp3");
 	if (intro_music == 0) {
 		printf("Couldn't load the wav: %s\n", Mix_GetError());
 	}

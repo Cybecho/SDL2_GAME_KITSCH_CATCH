@@ -35,11 +35,13 @@ gameEndingClear::gameEndingClear() {
 	}
 
 	// BGM and SoundEffect
-	clear_music = Mix_LoadMUS("../../res/testRes/testBGM2.mp3");
+	clear_music = Mix_LoadMUS("../../res/music/clear_music.mp3");
 	if (clear_music == 0) {
 		printf("Couldn't load the wav: %s\n", Mix_GetError());
 	}
 	SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
+	// 효과음 볼륨 설정 (0 ~ 128)
+	Mix_VolumeChunk(SoundEffect, 12);  // 배경음 볼륨 10% 수준으로 설정
 }
 
 gameEndingClear::~gameEndingClear() {

@@ -36,11 +36,13 @@ gameEndingGameover::gameEndingGameover() {
 	}
 
 	// BGM and SoundEffect
-	gameover_music = Mix_LoadMUS("../../res/testRes/testBGM2.mp3");
+	gameover_music = Mix_LoadMUS("../../res/music/gameover_music.mp3");
 	if (gameover_music == 0) {
 		printf("Couldn't load the wav: %s\n", Mix_GetError());
 	}
 	SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
+	// 효과음 볼륨 설정 (0 ~ 128)
+	Mix_VolumeChunk(SoundEffect, 12);  // 배경음 볼륨 10% 수준으로 설정
 }
 
 gameEndingGameover::~gameEndingGameover() {

@@ -483,12 +483,14 @@ void gamePlay::loadIMGs() {
 //~ 사운드 로드
 void gamePlay::loadSounds() {
 	//music
-	play_music = Mix_LoadMUS("../../res/testRes/testBGM3.mp3");
+	play_music = Mix_LoadMUS("../../res/music/play_music.mp3");
 	if (play_music == 0) {
-		cout << "Mix_LoadMUS(\"testBGM2.mp3\"): " << Mix_GetError() << endl;
+		cout << "Mix_LoadMUS(\"play_music.mp3\"): " << Mix_GetError() << endl;
 	}
 
 	setting_SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
+	// 효과음 볼륨 설정 (0 ~ 128)
+	Mix_VolumeChunk(setting_SoundEffect, 12);  // 배경음 볼륨 10% 수준으로 설정
 }
 
 //~ 텍스트 로드

@@ -262,15 +262,17 @@ void gameMain::loadImgs() {
 
 void gameMain::loadSounds() {
 	//music
-	main_music = Mix_LoadMUS("../../res/testRes/testBGM2.mp3");
+	main_music = Mix_LoadMUS("../../res/music/main_music.mp3");
 	if (main_music == 0) {
-		cout << "Mix_LoadMUS(\"testBGM2.mp3\"): " << Mix_GetError() << endl;
+		cout << "Mix_LoadMUS(\"main_music.mp3\"): " << Mix_GetError() << endl;
 	}
 
 
 
 	//sound effect(play button)
 	SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
+	// 효과음 볼륨 설정 (0 ~ 128)
+	Mix_VolumeChunk(SoundEffect, 12);  // 배경음 볼륨 10% 수준으로 설정
 }
 
 void gameMain::loadTxts() {
