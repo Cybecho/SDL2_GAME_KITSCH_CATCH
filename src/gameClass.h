@@ -60,10 +60,10 @@ public:
 	~ImgClass();
 
 	//! ************************** getter & setter **************************
-	SDL_Surface* GetSurface() const { return surface; }
-	SDL_Texture* GetTexture() const { return texture; }
-	SDL_Rect GetSrcRect() const { return srcrect; }
-	SDL_Rect GetDstRect() const { return dstrect; }
+	SDL_Surface* GetSurface() { return surface; }
+	SDL_Texture* GetTexture() { return texture; }
+	SDL_Rect GetSrcRect() { return srcrect; }
+	SDL_Rect GetDstRect() { return dstrect; }
 
 	void SetSurface(SDL_Surface* new_surface) { surface = new_surface; }
 	void SetTexture(SDL_Texture* new_texture) { texture = new_texture; }
