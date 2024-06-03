@@ -490,7 +490,7 @@ void gamePlay::loadSounds() {
 
 	setting_SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
 	// 효과음 볼륨 설정 (0 ~ 128)
-	Mix_VolumeChunk(setting_SoundEffect, 12);  // 배경음 볼륨 10% 수준으로 설정
+	Mix_VolumeChunk(setting_SoundEffect, 12);  // 효과음 볼륨 10% 수준으로 설정
 }
 
 //~ 텍스트 로드
