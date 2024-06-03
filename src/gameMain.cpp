@@ -51,39 +51,7 @@ void gameMain::HandleEvents() {
 				changePhaseToPlay();
 			}
 
-			if (isDifficulty) {
-				//난이도 조절(숫자 키 1~4)
-				if (event.key.keysym.sym == SDLK_1) {
-					m_gameplay.setLastSec(120);
-					m_gameplay.setAddSec(1);
-					m_gameplay.setAddScore(5);
-					std::cout << m_gameplay.getLastSec() << " "<< m_gameplay.getAddSec() << " " << m_gameplay.getAddScore() << std::endl;
-					changePhaseToPlay();
-				}
-				else if (event.key.keysym.sym == SDLK_2) {
-					m_gameplay.setLastSec(90);
-					m_gameplay.setAddSec(1);
-					m_gameplay.setAddScore(10);
-					std::cout << m_gameplay.getLastSec() << " " << m_gameplay.getAddSec() << " " << m_gameplay.getAddScore() << std::endl;
-					changePhaseToPlay();
-				}
-				else if (event.key.keysym.sym == SDLK_3) {
-					m_gameplay.setLastSec(45);
-					m_gameplay.setAddSec(2);
-					m_gameplay.setAddScore(20);
-					std::cout << m_gameplay.getLastSec() << " " << m_gameplay.getAddSec() << " " << m_gameplay.getAddScore() << std::endl;
-					changePhaseToPlay();
-				}
-				else if (event.key.keysym.sym == SDLK_4) {
-					m_gameplay.setLastSec(10);
-					m_gameplay.setAddSec(3);
-					m_gameplay.setAddScore(30);
-					std::cout << m_gameplay.getLastSec() << " " << m_gameplay.getAddSec() << " " << m_gameplay.getAddScore() << std::endl;
-					changePhaseToPlay();
-				}
-			
-			
-			}break;
+			break;
 
 		default: break;
 		}
@@ -112,7 +80,9 @@ void gameMain::Render() {
 	renderScore();
 	renderCat();
 	renderButtons();
-
+	if (isDifficulty) {
+		SDL_RenderCopy(g_renderer, difficulty_bg, NULL, NULL);
+	}
 	SDL_RenderPresent(g_renderer);
 }
 
@@ -125,10 +95,10 @@ void gameMain::Render() {
 
 
 void gameMain::changePhaseToPlay() { 
+	isDifficulty = true;
 	g_current_game_phase = PHASE_PLAYING;
 	Mix_HaltMusic();
 	Mix_PlayMusic(play_music, -1);
-	isDifficulty = false;
 }
 
 
@@ -163,6 +133,8 @@ void gameMain::loadImgs() {
 		rule_Xkey_rect.h = 30;
 	}
 
+	
+
 
 	{
 		//rule image
@@ -178,11 +150,7 @@ void gameMain::loadImgs() {
 	}
 
 
-	{//난이도 조절하는 단계 이미지
-		SDL_Surface* surface = IMG_Load("../../res/testRes/testPlayBG.png");
-		difficulty_bg = SDL_CreateTextureFromSurface(g_renderer, surface);
-		SDL_FreeSurface(surface);
-	}
+	
 
 
 	//cat
@@ -396,7 +364,7 @@ void gameMain::MouseButtonEvents() {
 				//click play button
 				if (mouseX > playBT_dir_rect.x && mouseY > playBT_dir_rect.y &&
 					mouseX < playBT_dir_rect.x + playBT_dir_rect.w && mouseY < playBT_dir_rect.y + playBT_dir_rect.h) {
-					isDifficulty = !isDifficulty;
+					changePhaseToPlay();
 					Mix_PlayChannel(-1, SoundEffect, 0);
 				}
 
@@ -432,6 +400,8 @@ void gameMain::MouseButtonEvents() {
 				}
 			}
 
+
+			
 
 			//click X -> back to main screen
 			if (isRule == true && mouseX > rule_Xkey_rect.x && mouseY > rule_Xkey_rect.y &&
@@ -508,9 +478,7 @@ void gameMain::renderButtons() {
 		}
 	}
 
-	if (isDifficulty) {
-		SDL_RenderCopy(g_renderer, difficulty_bg, NULL, NULL);
-	}
+	
 }
 
 void gameMain::renderCat() {

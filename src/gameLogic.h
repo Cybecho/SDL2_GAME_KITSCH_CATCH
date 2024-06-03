@@ -74,8 +74,11 @@ public:
     void setAddScore(int addScore) { g_addScore = addScore; }       /// 추가 점수 setter
     void setAddScoreOrigin(int addScoreOrigin) { g_addScore_origin = addScoreOrigin; } /// 추가 점수 원본 setter
     void setIsPop(bool value) { isPop = value; };                   /// 마작 블록이 pop 되었는지 여부 setter
-
+  
+protected:
+   // gamePlay m_gamePlay; //상호참조 오류
 private:
+    
     vector<unique_ptr<Mahjong>> g_vector; // 마작 블록 생성 벡터
     vector<unique_ptr<Mahjong>> g_stack; // 마작 블록 스택 벡터
     vector<bonk> g_bonks; // 효과 블록 생성 벡터
@@ -100,7 +103,7 @@ private:
     bool isPop;             /// 마작 블록이 pop 되었는지 여부 (점수 반환을 위함)
     Uint32 m_lastUpdateTime;/// 마지막으로 점수를 업데이트한 시간
 };
-
+extern bool isDifficulty;
 //! ******************** 비멤버 함수 ********************
 gameLogic* GameLogicInstance();                             //~ 게임 로직 인스턴스 생성 함수
 Uint32 shakeBlocksCallback(Uint32 interval, void* param);   //~ 블록 흔들기 콜백 함수

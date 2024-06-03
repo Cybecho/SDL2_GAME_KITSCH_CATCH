@@ -30,7 +30,7 @@ int sec; // play second
 int limit_sec;
 int last_sec;
 
-
+bool isDifficulty;
 bool isChanged;
 bool isForcedQuit;
 bool cat_status = false; // false: image1, true : image2
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 	}
 
 	// 음악 볼륨 설정 (0 ~ 128)
-	Mix_VolumeMusic(8);  // 배경음 볼륨 5% 수준으로 설정
+	Mix_VolumeMusic(15);  // 배경음 볼륨 설정
 
 	g_window = SDL_CreateWindow("Operation Kitsch Catch", 100, 100, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	g_renderer = SDL_CreateRenderer(g_window, -1, 0);

@@ -16,10 +16,12 @@ public:
 
 	int setting_bt_w = 310;
 	int setting_bt_h = 70;
-
+	const int difficulty_margin = 140; // 난이도 조절 창 : 버튼 간 y 간격
 	
+	SDL_Texture* difficulty_bg;
 	SDL_Texture* volume_bt_off;
 	SDL_Texture* volume_bt_on;
+	SDL_Rect difficulty_rect;
 	SDL_Rect setting_rect;
 	SDL_Rect setting_bt_rect;
 	SDL_Rect set_Xkey_rect;

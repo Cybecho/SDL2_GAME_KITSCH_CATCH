@@ -34,3 +34,4 @@ extern bool intro_reset;
 extern bool isChanged;
 extern SDL_Rect timebar_rect;
 extern int sec;
+extern bool isDifficulty;

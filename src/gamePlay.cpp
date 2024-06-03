@@ -102,54 +102,57 @@ void gamePlay::HandleEvents() {
 
 void gamePlay::Update() {
 	checkQuit();							//~ 강제종료 체크
-
-	m_gameLogic.RemoveSameTypeBlocks();
-	m_gameLogic.UpdateVectorBlocks();
-	m_gameLogic.UpdateStackBlocks();
-	m_gameLogic.UpdateBonks();
-	m_gameLogic.AlignStackBlocks();
-	if (m_gameLogic.getIsPop()) {
-		addSeconds(add_sec);			//~ isPop이 true일 경우, 시간 추가
-		m_gameLogic.setIsPop(false);	//~ RemoveSameTypeBlocks()에서 true가 된 isPop 을 다시 fasle 처리
+	if (!isDifficulty) {
+		m_gameLogic.RemoveSameTypeBlocks();
+		m_gameLogic.UpdateVectorBlocks();
+		m_gameLogic.UpdateStackBlocks();
+		m_gameLogic.UpdateBonks();
+		m_gameLogic.AlignStackBlocks();
+		if (m_gameLogic.getIsPop()) {
+			addSeconds(add_sec);			//~ isPop이 true일 경우, 시간 추가
+			m_gameLogic.setIsPop(false);	//~ RemoveSameTypeBlocks()에서 true가 된 isPop 을 다시 fasle 처리
+		}
+		for (auto& block : m_gameLogic.getStack()) { block->update(); } //~ 스택 블록 shake 업데이트
+		m_gameLogic.printStatusChange();		//~ 게임 상태 출력
+		m_gameLogic.updateAddScore();			//~ 추가 점수 업데이트 (매 업데이트마다 addScore 1점씩 떨어짐 )
+		checkAndLoadMahjongBlocks();			//~ 맞춰야 할 블록 체크 및 로드
+		stageLimitTime();						//~ 제한시간 설정
+		updateScore(m_gameLogic.getScore());	//~ 점수 업데이트
+		updateTimer();							//~ 시간 및 타이머 업데이트
+		checkGameStatus();						//~ 게임 상태 체크q
+		changeCatAnimation();					//~ g_curType에 따른 고양이 애니메이션 변경
 	}
-	for (auto& block : m_gameLogic.getStack()) { block->update(); } //~ 스택 블록 shake 업데이트
-	m_gameLogic.printStatusChange();		//~ 게임 상태 출력
-	m_gameLogic.updateAddScore();			//~ 추가 점수 업데이트 (매 업데이트마다 addScore 1점씩 떨어짐 )
-	checkAndLoadMahjongBlocks();			//~ 맞춰야 할 블록 체크 및 로드
-	stageLimitTime();						//~ 제한시간 설정
-	updateScore(m_gameLogic.getScore());	//~ 점수 업데이트
-	updateTimer();							//~ 시간 및 타이머 업데이트
-	checkGameStatus();						//~ 게임 상태 체크q
-	changeCatAnimation();					//~ g_curType에 따른 고양이 애니메이션 변경
 }
 
 void gamePlay::Render() {
 	SDL_RenderCopy(g_renderer, play_bg, NULL, NULL);
 
-
-	///time bar
-	SDL_SetRenderDrawColor(g_renderer, 255, 60, 60, 255); //다홍색
-	SDL_RenderFillRect(g_renderer, &timebar_rect);
-
-
-	renderCat(); //~ 고양이 렌더링
-
-	/// 스코프로 제한해둔 점수부분 렌더링
-	{ //score text
-		SDL_Rect tmp_r;
-		tmp_r.x = g_window_margin + 77;
-		tmp_r.y = 38;
-		tmp_r.w = score_rect.w;
-		tmp_r.h = score_rect.h;
-		SDL_RenderCopy(g_renderer, score_text2, &score_rect, &tmp_r);
+	if (isDifficulty) {
+		SDL_RenderCopy(g_renderer, difficulty_bg, NULL, NULL);
 	}
+	else {
 
-	//! ************************** gameLogic **************************
-	for (const auto& block : m_gameLogic.getStack()) { block->render(g_renderer); } //~ 스택 블록 흔들림 렌더링
-	m_gameLogic.Render(); //~ 게임로직 렌더 함수 실행
-	//! ************************** ********* **************************
+		///time bar
+		SDL_SetRenderDrawColor(g_renderer, 255, 60, 60, 255); //다홍색
+		SDL_RenderFillRect(g_renderer, &timebar_rect);
 
-	renderSetting();
+		/// 스코프로 제한해둔 점수부분 렌더링
+		{ //score text
+			SDL_Rect tmp_r;
+			tmp_r.x = g_window_margin + 77;
+			tmp_r.y = 38;
+			tmp_r.w = score_rect.w;
+			tmp_r.h = score_rect.h;
+			SDL_RenderCopy(g_renderer, score_text2, &score_rect, &tmp_r);
+		}
+
+		//! ************************** gameLogic **************************
+		for (const auto& block : m_gameLogic.getStack()) { block->render(g_renderer); } //~ 스택 블록 흔들림 렌더링
+		m_gameLogic.Render(); //~ 게임로직 렌더 함수 실행
+		//! ************************** ********* **************************
+		renderCat(); //~ 고양이 렌더링
+		renderSetting();
+	}
 
 	SDL_RenderPresent(g_renderer);
 }
@@ -225,7 +228,7 @@ void gamePlay::stageLimitTime() {
 
 //~ 타이머 업데이트
 void gamePlay::updateTimer() {
-	if (!isChanged && !isSetting) {
+	if (!isChanged && !isSetting && !isDifficulty) {
 		count_ += 1;
 		if (count_ % 33 == 0) {
 			sec += 1;
@@ -604,52 +607,99 @@ void gamePlay::renderSetting() {
 //! ********************** 마우스 이벤트 **********************
 //~ 마우스 버튼 이벤트 처리
 void gamePlay::MouseButtonEvents() {
-
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
 		if (event.button.button == SDL_BUTTON_LEFT) {
 			int mouseX = event.button.x;
 			int mouseY = event.button.y;
 
-
-			//setting key
-			if (isSetting == false && mouseX > setting_bt_rect.x && mouseY > setting_bt_rect.y &&
-				mouseX < setting_bt_rect.x + setting_bt_rect.w && mouseY < setting_bt_rect.y + setting_bt_rect.h) {
-				isSetting = !isSetting;
-				Mix_PlayChannel(-1, setting_SoundEffect, 0);
+			//난이도 조절 버튼
+			if (isDifficulty) {
+				//슈퍼 겁쟁이 모드
+				if (mouseX > difficulty_rect.x && mouseY > difficulty_rect.y &&
+					mouseX < difficulty_rect.x + difficulty_rect.w && mouseY < difficulty_rect.y + difficulty_rect.h) {
+					setLimitSec(120);
+					setAddSec(1);
+					m_gameLogic.setAddScore(3);
+					setOrgAddScore(m_gameLogic.getAddScore());
+					isDifficulty = false;
+					Mix_PlayChannel(-1, setting_SoundEffect, 0);
+					std::cout << getLimitSec() << " " << getAddSec() << " " << getAddScore() <<  " " << getOrgAddScore() << std::endl;
+				}
+				//겁쟁이 모드
+				if (mouseX > difficulty_rect.x && mouseY > difficulty_rect.y + difficulty_margin &&
+					mouseX < difficulty_rect.x + difficulty_rect.w && mouseY < difficulty_rect.y + difficulty_margin + difficulty_rect.h) {
+					setLimitSec(90);
+					setAddSec(1);
+					m_gameLogic.setAddScore(10);
+					setOrgAddScore(m_gameLogic.getAddScore());
+					Mix_PlayChannel(-1, setting_SoundEffect, 0);
+					isDifficulty = false;
+					std::cout << getLimitSec() << " " << getAddSec() << " " << getAddScore() << std::endl;
+				}
+				//사나이 모드
+				if (mouseX > difficulty_rect.x && mouseY > difficulty_rect.y + difficulty_margin * 2 &&
+					mouseX < difficulty_rect.x + difficulty_rect.w && mouseY < difficulty_rect.y + difficulty_margin * 2 + difficulty_rect.h) {
+					setLimitSec(45);
+					setAddSec(2);
+					m_gameLogic.setAddScore(20);
+					setOrgAddScore(m_gameLogic.getAddScore());
+					Mix_PlayChannel(-1, setting_SoundEffect, 0);
+					isDifficulty = false;
+					std::cout << getLimitSec() << " " << getAddSec() << " " << getAddScore() << std::endl;
+				}
+				//슈퍼 사나이 모드
+				if (mouseX > difficulty_rect.x && mouseY > difficulty_rect.y + difficulty_margin * 3 &&
+					mouseX < difficulty_rect.x + difficulty_rect.w && mouseY < difficulty_rect.y + difficulty_margin * 3 + difficulty_rect.h) {
+					setLimitSec(10);
+					setAddSec(3);
+					m_gameLogic.setAddScore(30);
+					setOrgAddScore(m_gameLogic.getAddScore());
+					Mix_PlayChannel(-1, setting_SoundEffect, 0);
+					isDifficulty = false;
+					std::cout << getLimitSec() << " " << getAddSec() << " " << getAddScore() << std::endl;
+				}
 			}
-
-			if (isSetting == true) {
-				if (mouseX > set_Xkey_rect.x && mouseY > set_Xkey_rect.y &&
-					mouseX < set_Xkey_rect.x + set_Xkey_rect.w && mouseY < set_Xkey_rect.y + set_Xkey_rect.h) {
+			else {
+				//setting key
+				if (isSetting == false && mouseX > setting_bt_rect.x && mouseY > setting_bt_rect.y &&
+					mouseX < setting_bt_rect.x + setting_bt_rect.w && mouseY < setting_bt_rect.y + setting_bt_rect.h) {
 					isSetting = !isSetting;
 					Mix_PlayChannel(-1, setting_SoundEffect, 0);
 				}
 
-				if (mouseX > volume_bt_rect.x && mouseY > volume_bt_rect.y &&
-					mouseX < volume_bt_rect.x + volume_bt_rect.w && mouseY < volume_bt_rect.y + volume_bt_rect.h) {
-					isVolumeOff = !isVolumeOff;
-					Mix_PlayChannel(-1, setting_SoundEffect, 0);
-					if (isVolumeOff == true) {
-						Mix_PauseMusic();
+				if (isSetting == true) {
+					if (mouseX > set_Xkey_rect.x && mouseY > set_Xkey_rect.y &&
+						mouseX < set_Xkey_rect.x + set_Xkey_rect.w && mouseY < set_Xkey_rect.y + set_Xkey_rect.h) {
+						isSetting = !isSetting;
+						Mix_PlayChannel(-1, setting_SoundEffect, 0);
 					}
-					else if (isVolumeOff == false) {
-						Mix_ResumeMusic();
+
+					if (mouseX > volume_bt_rect.x && mouseY > volume_bt_rect.y &&
+						mouseX < volume_bt_rect.x + volume_bt_rect.w && mouseY < volume_bt_rect.y + volume_bt_rect.h) {
+						isVolumeOff = !isVolumeOff;
+						Mix_PlayChannel(-1, setting_SoundEffect, 0);
+						if (isVolumeOff == true) {
+							Mix_PauseMusic();
+						}
+						else if (isVolumeOff == false) {
+							Mix_ResumeMusic();
+						}
 					}
-				}
 
-				//resume
-				if (mouseX > resume_rect.x && mouseY > resume_rect.y &&
-					mouseX < resume_rect.x + resume_rect.w && mouseY < resume_rect.y + resume_rect.h) {
-					isSetting = !isSetting;
-					Mix_PlayChannel(-1, setting_SoundEffect, 0);
-				}
+					//resume
+					if (mouseX > resume_rect.x && mouseY > resume_rect.y &&
+						mouseX < resume_rect.x + resume_rect.w && mouseY < resume_rect.y + resume_rect.h) {
+						isSetting = !isSetting;
+						Mix_PlayChannel(-1, setting_SoundEffect, 0);
+					}
 
-				//go to home
-				if (mouseX > home_rect.x && mouseY > home_rect.y &&
-					mouseX < home_rect.x + home_rect.w && mouseY < home_rect.y + home_rect.h) {
-					gotoHome();
+					//go to home
+					if (mouseX > home_rect.x && mouseY > home_rect.y &&
+						mouseX < home_rect.x + home_rect.w && mouseY < home_rect.y + home_rect.h) {
+						gotoHome();
 
-					changePhase(PHASE_MAIN); //~ 메인으로 페이즈 전환
+						changePhase(PHASE_MAIN); //~ 메인으로 페이즈 전환
+					}
 				}
 			}
 		}

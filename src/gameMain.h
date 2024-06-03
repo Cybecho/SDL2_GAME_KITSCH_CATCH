@@ -37,9 +37,7 @@ public:
 
 
 protected:
-	gamePlay m_gameplay; //게임플레이 클래스 생성
 	SDL_Texture* main_bg;
-	SDL_Texture* difficulty_bg;
 	SDL_Texture* cat;
 	SDL_Texture* inter_bt;
 	SDL_Texture* play_bt;
@@ -76,8 +74,8 @@ protected:
 	Uint32 play_time_ms;
 	
 	bool isRule;
-	bool isDifficulty;
 	int m_RandCat;//0: 왼쪽걷기 , 1: 오른쪽걷기, 2 : 앉기, 3 : 자기
+	
 };
 extern Mix_Music* main_music;
 extern Mix_Music* play_music;
@@ -86,7 +84,7 @@ extern bool cat_status; //false: image1, true : image2
 extern bool isChanged;
 extern bool isForcedQuit;
 extern bool isBasicCat;
-
+extern bool isDifficulty;
 
 extern int count_;
 extern int sec; //play second
@@ -97,3 +95,5 @@ extern int sprite_num; //고양이 스프라이트 x좌표
 
 extern string original_score;
 extern SDL_Rect timebar_rect;
+
+

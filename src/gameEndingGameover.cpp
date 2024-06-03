@@ -97,6 +97,7 @@ void gameEndingGameover::HandleEvents() {
 				//click retry button
 				if (mouseX > retryBT_rect.x && mouseY > retryBT_rect.y &&
 					mouseX < retryBT_rect.x + retryBT_rect.w && mouseY < retryBT_rect.y + retryBT_rect.h) {
+					isDifficulty = true;
 					g_current_game_phase = PHASE_PLAYING;
 					gameover_reset = true; // 추가
 					bt_clickable = false;

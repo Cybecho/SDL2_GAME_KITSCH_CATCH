@@ -63,14 +63,17 @@ public:
 	int getLimitSec() const { return limit_sec; }
 	int getAddSec() const { return add_sec; }
 	int getAddScore() const { return addScore; }
+	int getOrgAddScore() const { return org_addScore; }
 
 	void setLastSec(int sec) { last_sec = sec; }
 	void setLimitSec(int sec) { limit_sec = sec; }
 	void setAddSec(int sec) { add_sec = sec; }
 	void setAddScore(int score) { addScore = score; }
+	void setOrgAddScore(int s) { org_addScore = s; }
 	
 
 protected:
+
 	SDL_Event event;
 	gameLogic m_gameLogic; //~ 게임 로직 클래스 생성
 
@@ -121,6 +124,7 @@ protected:
 	int limit_sec; //제한 시간
 	int last_sec; //last second (stage second)
 	int addScore;	// 추가 점수 멤버 변수
+	int org_addScore;
 };
 
 extern Mix_Music* main_music;
@@ -135,6 +139,7 @@ extern Uint32 g_last_time_ms;
 extern bool isChanged;
 extern bool isForcedQuit;
 extern bool isBasicCat; //고양이 기본 상태
+extern bool isDifficulty;
 
 extern SDL_Rect timebar_rect;
 

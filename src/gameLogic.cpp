@@ -1,5 +1,6 @@
 // gameLogic.cpp
 #include "gameLogic.h"
+#include "gamePlay.h"
 
 //! ******************** 생성자 소멸자 ******************** 
 
@@ -34,14 +35,15 @@ void gameLogic::HandleEvents(SDL_Event& event) {
     if (event.type == SDL_MOUSEMOTION) {
         int mouse_x = event.motion.x;
         int mouse_y = event.motion.y;
-
-        // 마우스 위치에 해당하는 블록만 확인
-        for (auto& block : g_vector) {
-            if (block->isClickable() && block->isHovered(mouse_x, mouse_y)) {
-                block->setHovered(true);
-            }
-            else {
-                block->setHovered(false);
+        if (!isDifficulty) {
+            // 마우스 위치에 해당하는 블록만 확인
+            for (auto& block : g_vector) {
+                if (block->isClickable() && block->isHovered(mouse_x, mouse_y)) {
+                    block->setHovered(true);
+                }
+                else {
+                    block->setHovered(false);
+                }
             }
         }
     }
@@ -49,13 +51,14 @@ void gameLogic::HandleEvents(SDL_Event& event) {
     if (event.type == SDL_MOUSEBUTTONDOWN) {
         int mouse_x = event.button.x;
         int mouse_y = event.button.y;
-
-        for (auto it = g_vector.rbegin(); it != g_vector.rend(); ++it) {
-            if ((*it)->isClickable() && !dynamic_cast<Mahjong_Empty*>(it->get()) && (*it)->isClicked(mouse_x, mouse_y)) {
-                (*it)->Play2Sound();
-                vector2stack(it.base() - 1);
-                createBonk(mouse_x, mouse_y);
-                break;
+        if (!isDifficulty) {
+            for (auto it = g_vector.rbegin(); it != g_vector.rend(); ++it) {
+                if ((*it)->isClickable() && !dynamic_cast<Mahjong_Empty*>(it->get()) && (*it)->isClicked(mouse_x, mouse_y)) {
+                    (*it)->Play2Sound();
+                    vector2stack(it.base() - 1);
+                    createBonk(mouse_x, mouse_y);
+                    break;
+                }
             }
         }
     }
@@ -280,10 +283,13 @@ void gameLogic::RemoveSameTypeBlocks() {
                     break;
                 }
             }
-            UpdateScore(getAddScore());             //~ 추가 점수 업데이트
-            cout << "Score: " << g_score << endl;
-            setIsPop(true);                         //~ gamePlay 의 Update에서 따로 false로 초기화해줌
-            setAddScore(getAddScoreOrigin());       //~ 추가 점수 초기화
+            if (!isDifficulty) {
+                UpdateScore(getAddScore());             //~ 추가 점수 업데이트
+                cout << "Score: " << g_score << endl;
+                setIsPop(true);                         //~ gamePlay 의 Update에서 따로 false로 초기화해줌
+                //setAddScore(m_gamePlay.getOrgAddScore());       //~ 추가 점수 초기화
+                setAddScore(getAddScoreOrigin());
+            }
         }
     }
 

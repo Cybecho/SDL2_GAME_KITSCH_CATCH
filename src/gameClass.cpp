@@ -38,7 +38,18 @@ gameClass::gameClass() {
 	}
 
 
-	
+	{//난이도 조절 창 : 첫 번째 버튼 영역
+		difficulty_rect.x = 90;
+		difficulty_rect.y = 270;
+		difficulty_rect.w = 360;
+		difficulty_rect.h = 80;
+	}
+
+	{//난이도 조절하는 단계 이미지
+		SDL_Surface* surface = IMG_Load("../../res/game_mode/game_mode.png");
+		difficulty_bg = SDL_CreateTextureFromSurface(g_renderer, surface);
+		SDL_FreeSurface(surface);
+	}
 	
 	
 
@@ -68,7 +79,7 @@ gameClass::gameClass() {
 }
 
 gameClass::~gameClass() {
-	
+	SDL_DestroyTexture(difficulty_bg);
 	SDL_DestroyTexture(volume_bt_off);
 	SDL_DestroyTexture(volume_bt_on);
 }
