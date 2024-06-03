@@ -251,6 +251,8 @@ void gameLogic::vector2stack(vector<unique_ptr<Mahjong>>::iterator it) {
 
 /// shake 로직 있음 (보완 필요)
 void gameLogic::RemoveSameTypeBlocks() {
+    int localScore = 0;
+
     map<string, vector<int>> typeIndices; // 타입별 인덱스 저장
     for (int i = 0; i < g_stack.size(); ++i) {
         if (dynamic_cast<Mahjong_Empty*>(g_stack[i].get()) == nullptr) {
@@ -267,8 +269,9 @@ void gameLogic::RemoveSameTypeBlocks() {
             for (int i = it->second.size() - 1; i >= 0; --i) {
                 if (count < 3) {
                     int index = it->second[i];
-                    // 점수 업데이트 (기본 점수)
-                    UpdateScore(g_stack[index]->getScore());
+                    
+                    UpdateScore(g_stack[index]->getScore()); // 점수 업데이트 (기본 점수 , 저장용)
+                    localScore += g_stack[index]->getScore(); // 로컬 점수 업데이트 (기본 점수 , 출력용)
                     // 제거되는 블록의 위치에서 createBonk() 호출
                     int x = g_stack[index]->getX() + BLOCK_SIZE / 2;
                     int y = g_stack[index]->getY() + BLOCK_SIZE / 2;
@@ -284,11 +287,11 @@ void gameLogic::RemoveSameTypeBlocks() {
                 }
             }
             if (!isDifficulty) {
-                UpdateScore(getAddScore());             //~ 추가 점수 업데이트
-                cout << "Score: " << g_score << endl;
+                UpdateScore(getAddScore());             //~ 추가 점수 업데이트 (저장용)
+                localScore += getAddScore();            //~ 로컬 점수 업데이트 (출력용)
+                cout << "Score: " << localScore << endl;
                 setIsPop(true);                         //~ gamePlay 의 Update에서 따로 false로 초기화해줌
-                //setAddScore(m_gamePlay.getOrgAddScore());       //~ 추가 점수 초기화
-                setAddScore(getAddScoreOrigin());
+                setAddScore(getAddScoreOrigin());       //~ 추가 점수 초기화
             }
         }
     }
@@ -515,7 +518,7 @@ void gameLogic::updateAddScore() {
     if (currentTime - m_lastUpdateTime >= 500) {  // 0.5초마다 추가점수 1초씩 줄어듦
         if (getAddScore() > 0) { 
             setAddScore(getAddScore() - 1); 
-            cout << "Add Score: " << getAddScore() << endl; // 추가 점수 출력
+            //cout << "Add Score: " << getAddScore() << endl; // 추가 점수 출력
         }
         m_lastUpdateTime = currentTime;
     }
