@@ -494,6 +494,8 @@ void gamePlay::loadSounds() {
 	setting_SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
 	// 효과음 볼륨 설정 (0 ~ 128)
 	Mix_VolumeChunk(setting_SoundEffect, 12);  // 효과음 볼륨 10% 수준으로 설정
+
+	
 }
 
 //~ 텍스트 로드
@@ -718,7 +720,14 @@ void gamePlay::increaseLevelLogic() {
 void gamePlay::loadMahjongBlocks() {
 	/// 기존 블록 제거 (stack영역 제거때문에 쓰는거임)
 	m_gameLogic.ClearGame();
-
+	srand(time(0));
+	int a = rand() % 2; //둘 중 랜덤으로 고양이 소리 출력
+	if (a == 0) {
+		Mix_PlayChannel(-1, cat_sound, 0);
+	}
+	else {
+		Mix_PlayChannel(-1, cat_sound2, 0);
+	}
 	/// 레벨에 따라 블록 로드
 	string curLevel = "../../res/level/" + to_string(m_gameLogic.getLevel());
 	srand(time(NULL));

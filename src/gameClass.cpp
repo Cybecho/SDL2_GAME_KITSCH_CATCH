@@ -1,6 +1,8 @@
 #include "gameClass.h"
 
 gameClass::gameClass() {
+	
+
 
 	{ //setting button area
 		setting_bt_rect.x = 460;
@@ -76,12 +78,20 @@ gameClass::gameClass() {
 
 		SDL_FreeSurface(volume_off_surface);
 	}
+
+	cat_sound = Mix_LoadWAV("../../res/music/cat_play_sound1.mp3");
+	// 효과음 볼륨 설정 (0 ~ 128)
+	Mix_VolumeChunk(cat_sound, 50); 
+	cat_sound2 = Mix_LoadWAV("../../res/music/cat_play_sound2.mp3");
+	Mix_VolumeChunk(cat_sound2, 50); 
 }
 
 gameClass::~gameClass() {
 	SDL_DestroyTexture(difficulty_bg);
 	SDL_DestroyTexture(volume_bt_off);
 	SDL_DestroyTexture(volume_bt_on);
+	Mix_FreeChunk(cat_sound);
+	Mix_FreeChunk(cat_sound2);
 }
 
 void InitGame() {

@@ -386,17 +386,19 @@ void gameMain::MouseButtonEvents() {
 				//sleep key
 				if (mouseX > sleepBT_rect.x && mouseY > sleepBT_rect.y &&
 					mouseX < sleepBT_rect.x + sleepBT_rect.w && mouseY < sleepBT_rect.y + sleepBT_rect.h) {
+					Mix_PlayChannel(-1, SoundEffect, 0);
 					isBasicCat = false;
 					m_RandCat = 2;
-					Mix_PlayChannel(-1, SoundEffect, 0);
+					Mix_PlayChannel(-1, cat_sound, 0);
 				}
 
 				//sit key
 				if (mouseX > sitBT_rect.x && mouseY > sitBT_rect.y &&
 					mouseX < sitBT_rect.x + sitBT_rect.w && mouseY < sitBT_rect.y + sitBT_rect.h) {
+					Mix_PlayChannel(-1, SoundEffect, 0);
 					isBasicCat = false;
 					m_RandCat = 3;
-					Mix_PlayChannel(-1, SoundEffect, 0);
+					Mix_PlayChannel(-1, cat_sound2, 0);
 				}
 			}
 

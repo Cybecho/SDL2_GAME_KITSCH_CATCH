@@ -29,6 +29,9 @@ public:
 	SDL_Rect volume_rect; //image source rect
 	SDL_Rect resume_rect;
 	SDL_Rect home_rect;
+
+	Mix_Chunk* cat_sound;
+	Mix_Chunk* cat_sound2;
 	
 };
 
