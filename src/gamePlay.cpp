@@ -9,9 +9,6 @@ gamePlay::gamePlay() {
 	srand(time(NULL));
 	isBasicCat = true;
 	isForcedQuit = false;
-	limit_sec = LIMIT_TIME;
-	add_sec = ADD_TIME;
-	addScore = 0;
 	isChanged = false;
 	sec = 0;
 	count_ = 0;
@@ -21,6 +18,12 @@ gamePlay::gamePlay() {
 	//isChanged = false;
 	isSetting = false;
 	isVolumeOff = false;
+
+	setLimitSec(LIMIT_TIME);
+	setAddSec(ADD_TIME);
+	setAddScore(10);
+	m_gameLogic.setAddScore(getAddScore());			//~ 추가 점수 설정 gamePlay의 AddScore를 gameLogic AddScore에 전달
+	m_gameLogic.setAddScoreOrigin(getAddScore());	//~ g_addScore_origin 설정
 
 	loadIMGs();
 	loadSounds();
@@ -111,6 +114,7 @@ void gamePlay::Update() {
 	}
 	for (auto& block : m_gameLogic.getStack()) { block->update(); } //~ 스택 블록 shake 업데이트
 	m_gameLogic.printStatusChange();		//~ 게임 상태 출력
+	m_gameLogic.updateAddScore();			//~ 추가 점수 업데이트 (매 업데이트마다 addScore 1점씩 떨어짐 )
 	checkAndLoadMahjongBlocks();			//~ 맞춰야 할 블록 체크 및 로드
 	stageLimitTime();						//~ 제한시간 설정
 	updateScore(m_gameLogic.getScore());	//~ 점수 업데이트
@@ -208,14 +212,14 @@ void gamePlay::gotoHome() {
 //~ 타이머 리셋
 void gamePlay::resetTimer() {
 	sec = 0;
-	last_sec = limit_sec;
+	last_sec = getLimitSec();
 	changeTimebar();
 }
 
 //~ 제한시간 설정 (LIMIT_TIME은 include.h 에 명시되어있음)
 void gamePlay::stageLimitTime() {
 	switch (stage) {
-	default: limit_sec = LIMIT_TIME; break;
+	default: setLimitSec(getLimitSec()); break;
 	}
 }
 
@@ -225,7 +229,7 @@ void gamePlay::updateTimer() {
 		count_ += 1;
 		if (count_ % 33 == 0) {
 			sec += 1;
-			last_sec = limit_sec - sec;
+			last_sec = getLimitSec() - sec;
 			changeTimebar();
 
 			if (last_sec == 0) {
@@ -241,7 +245,7 @@ void gamePlay::updateTimer() {
 
 //~ 실시간 타임바 렌더링
 void gamePlay::changeTimebar() {
-	timebar_rect.w = 540 * (static_cast<double>(last_sec) / limit_sec);
+	timebar_rect.w = 540 * (static_cast<double>(last_sec) / getLimitSec());
 }
 
 
@@ -252,7 +256,7 @@ void gamePlay::updateScore(int s) {
 
 	string front_score;
 	string new_score;
-	int updateScore_int = s + org_score_int + addScore;
+	int updateScore_int = s + org_score_int;
 	update_score = to_string(updateScore_int); //누적 점수 저장
 
 	//게임플레이 페이즈로 가면 0부터 시작
@@ -294,13 +298,8 @@ void gamePlay::updateScore(int s) {
 //~ gameLogic의 isPop이 true일 경우, 시간 추가
 void gamePlay::addSeconds(int seconds) {
 	sec = max(0, sec - seconds);
-	last_sec = limit_sec - sec;
+	last_sec = getLimitSec() - sec;
 	changeTimebar();
-}
-/// 아래함수 미구현
-//~ 추가점수 구현 (기본 점수 100점, 1초당 25점 감소)
-void gamePlay::updateAddScore() {
-	// 미구현
 }
 
 //~ 점수판에 점수 기록
@@ -492,6 +491,7 @@ void gamePlay::loadSounds() {
 	setting_SoundEffect = Mix_LoadWAV("../../res/testRes/testSound.mp3");
 }
 
+//~ 텍스트 로드
 void gamePlay::loadTxts() {
 	score_font = TTF_OpenFont("../../res/testRes/Galmuri14.ttf", 20);
 	SDL_Color white = { 255,255,255,0 };

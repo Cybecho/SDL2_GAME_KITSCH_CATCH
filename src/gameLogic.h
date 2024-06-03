@@ -51,6 +51,7 @@ public:
     int UpdateScore(int score);
     void printStatusChange();
     int checkMahjongType(string Type);
+    void updateAddScore();
 
     //! Getters and Setters
     vector<unique_ptr<Mahjong>>& getVector() { return g_vector; }	/// g_vector 벡터 getter
@@ -60,6 +61,8 @@ public:
     int getStatus() const { return g_status; }					    /// g_status 게임 상태 getter
     int getPrevStatus() const { return g_prevStatus; }			    /// g_prevStatus 이전 게임 상태 getter
     int getScore() const { return g_score; }					    /// m_score 이 pop되어 합산된 점수 모음 getter
+    int getAddScore() const { return g_addScore; }                  /// 추가 점수 getter
+    int getAddScoreOrigin() const { return g_addScore_origin; }     /// 추가 점수 원본 getter
     bool getIsPop() const { return isPop; }                         /// 마작 블록이 pop 되었는지 여부 getter
 
     vector<unique_ptr<Mahjong>>& getStack() { return g_stack; }     /// g_stack 벡터 getter
@@ -68,6 +71,8 @@ public:
     void setStatus(int status) { g_status = status; }               /// g_status 게임 상태 설정 setter
     void setPrevStatus(int prevStatus) { g_prevStatus = prevStatus;}/// g_prevStatus 이전 게임 상태 setter
     void setScore(int score) { g_score = score; }				    /// m_score 이 pop되어 합산된 점수 모음 setter
+    void setAddScore(int addScore) { g_addScore = addScore; }       /// 추가 점수 setter
+    void setAddScoreOrigin(int addScoreOrigin) { g_addScore_origin = addScoreOrigin; } /// 추가 점수 원본 setter
     void setIsPop(bool value) { isPop = value; };                   /// 마작 블록이 pop 되었는지 여부 setter
 
 private:
@@ -85,12 +90,14 @@ private:
     SDL_Rect g_bg_source_rect;
     SDL_Rect g_bg_destination_rect;
 
-    int g_level;        /// 현재 레벨
-    int MAX_LEVEL;      /// 최대 레벨
-    int g_status;       /// 게임 상태
-    int g_prevStatus;   /// 이전 게임 상태
-    int g_score;        /// m_score 이 pop되어 합산된 점수 모음
-    bool isPop;         /// 마작 블록이 pop 되었는지 여부 (점수 반환을 위함)
+    int g_level;            /// 현재 레벨
+    int MAX_LEVEL;          /// 최대 레벨
+    int g_status;           /// 게임 상태
+    int g_prevStatus;       /// 이전 게임 상태
+    int g_score;            /// m_score 이 pop되어 합산된 점수 모음
+    int g_addScore;         /// 추가 점수j
+    int g_addScore_origin;  /// 추가 점수 원본
+    bool isPop;             /// 마작 블록이 pop 되었는지 여부 (점수 반환을 위함)
 };
 
 //! ******************** 비멤버 함수 ********************

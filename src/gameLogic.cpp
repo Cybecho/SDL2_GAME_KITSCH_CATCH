@@ -15,6 +15,8 @@ gameLogic::gameLogic() {
     game_font_ = nullptr;
     g_level = 0;
     g_score = 0;
+    g_addScore = getAddScore();
+    g_addScore_origin = getAddScore();
     isPop = false;
     MAX_LEVEL = countDir("../../res/level") - 1;
 
@@ -261,7 +263,7 @@ void gameLogic::RemoveSameTypeBlocks() {
             for (int i = it->second.size() - 1; i >= 0; --i) {
                 if (count < 3) {
                     int index = it->second[i];
-                    // 점수 업데이트
+                    // 점수 업데이트 (기본 점수)
                     UpdateScore(g_stack[index]->getScore());
                     // 제거되는 블록의 위치에서 createBonk() 호출
                     int x = g_stack[index]->getX() + BLOCK_SIZE / 2;
@@ -277,8 +279,10 @@ void gameLogic::RemoveSameTypeBlocks() {
                     break;
                 }
             }
+            UpdateScore(getAddScore());             //~ 추가 점수 업데이트
             cout << "Score: " << g_score << endl;
-            setIsPop(true); //~ gamePlay 의 Update에서 따로 false로 초기화해줌
+            setIsPop(true);                         //~ gamePlay 의 Update에서 따로 false로 초기화해줌
+            setAddScore(getAddScoreOrigin());       //~ 추가 점수 초기화
         }
     }
 
@@ -497,6 +501,13 @@ int gameLogic::checkMahjongType(string Type) {
 	else if (Type == "C") { g_curType = MahjongType_2;  return g_curType; }
 	else if (Type == "D") { g_curType = MahjongType_3;  return g_curType; }
 	else                  { g_curType = NONE;  return g_curType; }
+}
+
+void gameLogic::updateAddScore() {
+    if (0 < getAddScore()) {
+        setAddScore(getAddScore() - 1);
+        cout << "Add Score: " << getAddScore() << endl;
+    }
 }
 
 //! ******************** 비멤버 함수 ********************

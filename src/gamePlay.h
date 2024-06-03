@@ -31,7 +31,6 @@ public:
 	//! ********************** 점수 관련 **********************
 	void updateScore(int s);
 	void addSeconds(int seconds);
-	void updateAddScore();
 	void writeScore(const string& s);
 
 	//! ********************** 데이터 import 및 Rendering **********************
@@ -121,7 +120,6 @@ protected:
 	int add_sec; //추가 시간
 	int limit_sec; //제한 시간
 	int last_sec; //last second (stage second)
-	Uint32 lastMatchTime; // 추가 점수 확인용
 	int addScore;	// 추가 점수 멤버 변수
 };
 
