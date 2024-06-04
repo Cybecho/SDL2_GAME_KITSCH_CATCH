@@ -181,7 +181,7 @@ void gamePlay::changePhase(GamePhase status) {
 	case PHASE_ENDING_GAMEOVER:
 		gameover_reset = true;
 		Mix_PlayMusic(gameover_music, -1);
-		writeScore(update_score); //~ 점수판에 점수 기록(누적 점수)
+		writeScore(original_score); //~ 점수판에 점수 기록(누적 점수)
 		resetGame();
 		break;
 	case PHASE_MAIN:
