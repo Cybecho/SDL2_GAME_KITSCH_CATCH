@@ -109,6 +109,7 @@ protected:
 	SDL_Rect cat_play_rect; //스프라이트 그림 4개일때
 	SDL_Rect cat_play_rect2; //스프라이트 그림 3개일때
 	SDL_Rect settingBT_rect;
+	SDL_Rect Difficulty_X_rect; //난이도 x키 
 
 	//score
 	SDL_Rect exp_rect;

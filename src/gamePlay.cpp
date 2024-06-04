@@ -482,6 +482,13 @@ void gamePlay::loadIMGs() {
 		cat_scratcher = SDL_CreateTextureFromSurface(g_renderer, c_surface2);
 		SDL_FreeSurface(c_surface2);
 	}
+
+	{
+		Difficulty_X_rect.x = 440;
+		Difficulty_X_rect.y = 110;
+		Difficulty_X_rect.w = 30;
+		Difficulty_X_rect.h = 30;
+	}
 }
 
 //~ 사운드 로드
@@ -669,7 +676,16 @@ void gamePlay::MouseButtonEvents() {
 					isDifficulty = false;
 					std::cout << getLimitSec() << " " << getAddSec() << " " << getAddScore() << std::endl;
 				}
+
+				//x키 클릭 -> 홈화면으로
+				if (mouseX > Difficulty_X_rect.x && mouseY > Difficulty_X_rect.y &&
+					mouseX < Difficulty_X_rect.x + Difficulty_X_rect.w && mouseY < Difficulty_X_rect.y + Difficulty_X_rect.h) {
+					gotoHome();
+					changePhase(PHASE_MAIN); //~ 메인으로 페이즈 전환
+					isDifficulty = false;
+				}
 			}
+
 			else {
 				//setting key
 				if (isSetting == false && mouseX > setting_bt_rect.x && mouseY > setting_bt_rect.y &&

@@ -48,7 +48,7 @@ gameClass::gameClass() {
 	}
 
 	{//난이도 조절하는 단계 이미지
-		SDL_Surface* surface = IMG_Load("../../res/game_mode/game_mode.png");
+		SDL_Surface* surface = IMG_Load("../../res/game_mode/game_mode_fin.png");
 		difficulty_bg = SDL_CreateTextureFromSurface(g_renderer, surface);
 		SDL_FreeSurface(surface);
 	}
