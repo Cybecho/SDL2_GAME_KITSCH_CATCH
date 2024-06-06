@@ -106,4 +106,14 @@ $(TargetDir)
 
 </aside>
 
--
+# 만약 l value 에러가 발생한다면...
+
+![스크린샷 2024-06-06 113010](https://github.com/Cybecho/SDL2_GAME_KITSCH_CATCH/assets/42949995/b21097f6-a131-4a21-81d8-091dbb1206aa)
+
+  ### 💡 속성 - C/C++ - 언어 - 준수모드 `'기본값'` 으로 설정
+
+
+
+
+![스크린샷 2024-06-06 113135](https://github.com/Cybecho/SDL2_GAME_KITSCH_CATCH/assets/42949995/a5ea14e0-76ee-49b3-bac4-864888bf4c52)
+
