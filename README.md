@@ -3,6 +3,7 @@
 ## 중요 링크
 
 [![발표 자료](https://img.shields.io/badge/발표_자료-Google_Slides-orange?style=for-the-badge&logo=google-slides)](https://docs.google.com/presentation/d/17BshkwMxgfVbaBP5wK954x787edYBFqYjUM-EplO7p8/edit?usp=sharing)
+
 [![플레이 영상](https://img.shields.io/badge/플레이_영상-YouTube-red?style=for-the-badge&logo=youtube)](https://youtu.be/yMTjGi8ggAM)
 
 ---
