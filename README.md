@@ -22,6 +22,8 @@
 - 👥 모든 연령층이 즐길 수 있는 캐주얼 게임
 
 ---
+### 실행 파일 위치
+- x64/Release/SDL2_GAME_KITSCH_CATCH.exe
 
 ### 프로젝트 개요
 
